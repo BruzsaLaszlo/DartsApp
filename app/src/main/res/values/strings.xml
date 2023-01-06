@@ -1,0 +1,25 @@
+<resources>
+    <string name="app_name">DartsApp</string>
+    <string name="nav_header_desc">Navigation header</string>
+    <string name="action_settings">Settings</string>
+
+    <string name="menu_home">Home</string>
+    <string name="menu_gallery">Gallery</string>
+    <string name="menu_slideshow">Slideshow</string>
+    <string name="triple">T</string>
+    <string name="player1">Player1</string>
+    <string name="player2">Player2</string>
+    <string name="D_double">D</string>
+    <string name="_00">0:0</string>
+    <string name="bull">BULL</string>
+    <string name="_501">501</string>
+    <string name="score">score</string>
+    <string name="ok">OK</string>
+    <string name="_10_n100_n180_n26">10\n100\n180\n26</string>
+    <string name="stat">60+\nAvg\nMax\nMin</string>
+    <string name="player22">Player2</string>
+    <string name="cricket">Cricket</string>
+    <string name="dartsapp">DartsApp</string>
+    <string name="lacika007_gmail_com">lacika007@gmail.com</string>
+    <string name="p_nl_na_ny_ne_nr">p\nl\na\ny\ne\nr</string>
+</resources>
