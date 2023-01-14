@@ -6,18 +6,18 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
-public class CricketPlayer {
+import bruzsa.laszlo.dartsapp.dao.Player;
 
-    private long id;
-    private final String name;
+public class CricketPlayer extends Player {
+
     private int points;
     private final Map<Integer, Integer> scores = new HashMap<>();
 
     public CricketPlayer(String name) {
-        this.name = name.substring(0, 2);
+        super(name.substring(0, 2));
     }
 
-    public void addShoot(CricketShoot shoot, Integer opponentMultiplier) {
+    public void addThrow(CricketThrow shoot, Integer opponentMultiplier) {
         if (shoot.isRemoved()) return;
 
         int number = shoot.getValue();
@@ -49,11 +49,11 @@ public class CricketPlayer {
     @NonNull
     @Override
     public String toString() {
-        return name;
+        return getName();
     }
 
     public String getName() {
-        return name;
+        return super.getName();
     }
 
     public int getPoints() {

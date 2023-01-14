@@ -9,26 +9,27 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
+import bruzsa.laszlo.dartsapp.dao.Player;
 import bruzsa.laszlo.dartsapp.ui.cricket.CricketPlayer;
-import bruzsa.laszlo.dartsapp.ui.cricket.CricketShoot;
+import bruzsa.laszlo.dartsapp.ui.cricket.CricketThrow;
 
 public class CricketViewModel extends ViewModel {
 
     private CricketPlayer player1 = new CricketPlayer("p1");
     private CricketPlayer player2 = new CricketPlayer("p2");
-    private final List<CricketShoot> shoots = new ArrayList<>();
+    private final List<CricketThrow> shoots = new ArrayList<>();
     private final MutableLiveData<Boolean> isGameOver = new MutableLiveData<>();
 
-    public void newGame(CricketPlayer player1, CricketPlayer player2) {
-        this.player1 = player1;
-        this.player2 = player2;
+    public void newGame(Player player1, Player player2) {
+        this.player1 = new CricketPlayer(player1.getName());
+        this.player2 = new CricketPlayer(player2.getName());
         shoots.clear();
         isGameOver.setValue(false);
     }
 
-    public void newShoot(int multiplier, int value, int player) {
+    public void newThrow(int multiplier, int value, int player) {
         if (Boolean.TRUE.equals(isGameOver.getValue())) return;
-        shoots.add(new CricketShoot(multiplier, value, player == 1 ? player1 : player2));
+        shoots.add(new CricketThrow(multiplier, value, player == 1 ? player1 : player2));
         updatePoints();
     }
 
@@ -50,18 +51,18 @@ public class CricketViewModel extends ViewModel {
             isGameOver.setValue(true);
     }
 
-    public void shootRemove(CricketShoot cricketShoot) {
-        shoots.remove(cricketShoot);
+    public void shootRemove(CricketThrow cricketThrow) {
+        shoots.remove(cricketThrow);
     }
 
     private void reCalculatePoints() {
-        for (CricketShoot shoot : shoots) {
+        for (CricketThrow shoot : shoots) {
             CricketPlayer opponent = shoot.getPlayer() == player1 ? player2 : player1;
-            shoot.getPlayer().addShoot(shoot, opponent.getScores().get(shoot.getValue()));
+            shoot.getPlayer().addThrow(shoot, opponent.getScores().get(shoot.getValue()));
         }
     }
 
-    public List<CricketShoot> getShoots() {
+    public List<CricketThrow> getThrows() {
         return Collections.unmodifiableList(shoots);
     }
 

@@ -2,13 +2,13 @@ package bruzsa.laszlo.dartsapp.ui.cricket;
 
 import androidx.annotation.NonNull;
 
-public class CricketShoot {
+public class CricketThrow {
     private final int multiply;
     private final int value;
     private final CricketPlayer player;
     private boolean removed;
 
-    public CricketShoot(int multiply, int value, CricketPlayer player) {
+    public CricketThrow(int multiply, int value, CricketPlayer player) {
         this.multiply = multiply;
         this.value = value;
         this.player = player;

@@ -13,6 +13,7 @@ import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.RectF;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 
@@ -27,6 +28,7 @@ import java.util.Map;
 @SuppressLint("ViewConstructor")
 public class CricketTable extends View {
 
+    private static final String TAG = "CricketTable";
     private Map<Integer, Integer> playerScores = new HashMap<>();
     private Map<Integer, Integer> opponentScores = new HashMap<>();
 
@@ -73,8 +75,6 @@ public class CricketTable extends View {
         super.onDraw(canvas);
 
         paint.setAntiAlias(true);
-
-
 
         radius = Math.min(getWidth(), getHeight()) / 2f - circleMargin;
         circleCentreY = circleCentreX = radius + circleMargin;
@@ -140,6 +140,7 @@ public class CricketTable extends View {
     @SuppressLint("ClickableViewAccessibility")
     @Override
     public boolean onTouchEvent(MotionEvent event) {
+        Log.d(TAG, String.format("onTouchEvent(%d): x: %.2f, y:%.2f", event.getAction(),event.getX(),event.getY()));
         if (event.getAction() != MotionEvent.ACTION_DOWN) return false;
 
         double distance = Math.sqrt(Math.pow(event.getX() - circleCentreX, 2) + Math.pow(event.getY() - circleCentreY, 2));

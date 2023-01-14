@@ -2,19 +2,19 @@ package bruzsa.laszlo.dartsapp.ui.darts501;
 
 import androidx.annotation.NonNull;
 
-public class Darts501Shoot {
+public class Darts501Throw {
 
     private final int shoot;
     private final boolean handicap;
     private final boolean valid;
 
-    public Darts501Shoot(int shoot, boolean valid) {
+    public Darts501Throw(int shoot, boolean valid) {
         this.shoot = shoot;
         this.valid = valid;
         handicap = valid && shoot > 180;
     }
 
-    public int getShoot() {
+    public int getThrow() {
         return shoot;
     }
 

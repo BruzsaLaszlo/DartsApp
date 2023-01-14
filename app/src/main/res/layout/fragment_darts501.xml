@@ -15,7 +15,7 @@
         android:text="@string/ok"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/scoreEditText" />
+        app:layout_constraintTop_toBottomOf="@+id/input_text" />
 
     <FrameLayout
         android:id="@+id/frameLayoutNameStat"
@@ -48,7 +48,7 @@
             android:textSize="48sp" />
 
         <TextView
-            android:id="@+id/player1Score"
+            android:id="@+id/player1ScoreText"
             android:layout_width="150dp"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom|start"
@@ -58,7 +58,7 @@
             android:textStyle="bold" />
 
         <TextView
-            android:id="@+id/player2Score"
+            android:id="@+id/player2ScoreText"
             android:layout_width="150dp"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom|end"
@@ -69,7 +69,7 @@
     </FrameLayout>
 
     <bruzsa.laszlo.dartsapp.ui.darts501.input.Darts501EditText
-        android:id="@+id/scoreEditText"
+        android:id="@+id/input_text"
         style="@style/Widget.Material3.TextInputEditText.FilledBox"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -88,7 +88,7 @@
         tools:ignore="EditableContentDescCheck,LabelFor,SpeakableTextPresentCheck" />
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/listPlayer1Shoots"
+        android:id="@+id/listPlayer1Throws"
         android:layout_width="wrap_content"
         android:layout_height="150dp"
         android:layout_marginTop="10dp"
@@ -97,7 +97,7 @@
         app:layout_constraintTop_toBottomOf="@+id/frameLayoutNameStat" />
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/listPlayer2Shoots"
+        android:id="@+id/listPlayer2Throws"
         android:layout_width="wrap_content"
         android:layout_height="150dp"
         android:layout_marginTop="10dp"

@@ -37,7 +37,7 @@ public class Darts501EditText extends AppCompatEditText {
     public void setInputType(MutableLiveData<InputType> inputTypeMutableLiveData) {
         inputTypeMutableLiveData.observeForever(inputType -> {
             switch (inputType) {
-                case SHOOT -> setShootSettings();
+                case SHOOT -> setThrowSettings();
                 case NEW_GAME -> setNewGameSettings();
                 case NAME1, NAME2 -> setNameSettings();
             }
@@ -48,7 +48,7 @@ public class Darts501EditText extends AppCompatEditText {
         setHint("Restart!");
     }
 
-    private void setShootSettings() {
+    private void setThrowSettings() {
         setError(null);
         setHint("");
         setText("");
@@ -64,8 +64,8 @@ public class Darts501EditText extends AppCompatEditText {
         setInputType(EditorInfo.TYPE_CLASS_TEXT);
     }
 
-    public Optional<Integer> getShoot() {
-        return inputValidator.getValidShoot(this);
+    public Optional<Integer> getThrow() {
+        return inputValidator.getValidThrow(this);
     }
 
     public Optional<String> getName() {

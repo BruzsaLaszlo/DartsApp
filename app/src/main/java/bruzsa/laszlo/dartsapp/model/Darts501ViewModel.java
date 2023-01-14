@@ -1,90 +1,114 @@
 package bruzsa.laszlo.dartsapp.model;
 
+import static bruzsa.laszlo.dartsapp.model.ChangeType.ADD_SHOOT;
+import static bruzsa.laszlo.dartsapp.model.ChangeType.ADD_SHOOTS;
+import static bruzsa.laszlo.dartsapp.model.ChangeType.CHANGE_ACTIVE_PLAYER;
+import static bruzsa.laszlo.dartsapp.model.ChangeType.GAME_OVER;
+import static bruzsa.laszlo.dartsapp.model.ChangeType.NO_GAME;
+import static bruzsa.laszlo.dartsapp.model.ChangeType.REMOVE_SHOOT;
+
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
-import bruzsa.laszlo.dartsapp.ui.darts501.Darts501Player;
-import bruzsa.laszlo.dartsapp.ui.darts501.Darts501Shoot;
+import bruzsa.laszlo.dartsapp.dao.Player;
+import bruzsa.laszlo.dartsapp.ui.darts501.Darts501Throw;
+import bruzsa.laszlo.dartsapp.ui.darts501.Darts501SummaryStatistics;
 
 public class Darts501ViewModel extends ViewModel {
 
-    private Darts501Player player1;
-    private Darts501Player player2;
-    private final MutableLiveData<Darts501Player> active = new MutableLiveData<>();
-    private final MutableLiveData<Boolean> gameOver = new MutableLiveData<>();
+    public static final int PLAYER_1 = 0;
+    public static final int PLAYER_2 = 1;
+    private int active = PLAYER_1;
+    private final List<Player> players = new ArrayList<>();
+    private final List<List<Darts501Throw>> shoots = new ArrayList<>();
     public static final int HANDICAP = 181;
-    private OnChangeListener listener;
+    private int startScore;
+    private Darts501Throw lastRemoved;
 
-    public List<Darts501Shoot> getShoots(int player) {
-        return player == 1 ? player1.getShoots() : player2.getShoots();
+    private final MutableLiveData<ChangeType> onPlayerChange = new MutableLiveData<>(NO_GAME);
+
+    public List<Darts501Throw> getThrows(int player) {
+        return Collections.unmodifiableList(shoots.get(player));
     }
 
-    public void newShoot(int shoot) {
+    public void newThrow(int shoot) {
         if (shoot > HANDICAP) {
-            player1.newShoot(shoot);
-            player2.newShoot(shoot);
-            listener.changeOnPlayer(1);
-            listener.changeOnPlayer(2);
+            this.newThrow(PLAYER_1, shoot);
+            this.newThrow(PLAYER_2, shoot);
+            onPlayerChange.setValue(ADD_SHOOTS);
         } else {
-            boolean winner = getActivePlayer().newShoot(shoot);
-            listener.changeOnPlayer(whichActive());
-            if (winner) gameOver.setValue(true);
-            else nextPlayer();
+            if (newThrow(active, shoot)) {
+                onPlayerChange.setValue(GAME_OVER);
+            } else {
+                nextPlayer();
+                onPlayerChange.setValue(ADD_SHOOT);
+            }
         }
     }
 
-    public void newGame(Darts501Player player1, Darts501Player player2) {
-        this.player1 = player1;
-        this.player2 = player2;
+    private boolean newThrow(int player, int shootValue) {
+        int newScore = getStat(player).getScore() - shootValue;
+        Darts501Throw shoot = new Darts501Throw(shootValue, newScore > 1 || newScore == 0);
+        shoots.get(player).add(shoot);
+        return newScore == 0;
     }
 
-    public void startGame() {
-        active.setValue(player1);
-        player1.resetShoots();
-        player2.resetShoots();
-        gameOver.setValue(false);
+    public void newGame(Player player1, Player player2) {
+        players.clear();
+        players.add(PLAYER_1, player1);
+        players.add(PLAYER_2, player2);
+        restartGame();
     }
 
-    public Darts501Player getPlayer1() {
-        return player1;
+    public void restartGame() {
+        shoots.clear();
+        shoots.add(new ArrayList<>());
+        shoots.add(new ArrayList<>());
+        active = PLAYER_1;
+        onPlayerChange.setValue(CHANGE_ACTIVE_PLAYER);
     }
 
-    public Darts501Player getPlayer2() {
-        return player2;
+    public Player getPlayer(int player) {
+        return players.get(player);
     }
 
-    public int whichActive() {
-        return player1 == active.getValue() ? 1 : 2;
-    }
-
-    public void setActivePlayer(int i) {
-        active.setValue(i == 1 ? player1 : player2);
-    }
-
-    public Darts501Player getActivePlayer() {
-        return active.getValue();
-    }
-
-    private void nextPlayer() {
-        active.setValue(active.getValue() == player1 ? player2 : player1);
-    }
-
-    public void setPlayerShootListener(OnChangeListener listener) {
-        this.listener = listener;
-    }
-
-    public LiveData<Darts501Player> getActive() {
+    public int getActivePlayer() {
         return active;
     }
 
-    public interface OnChangeListener {
-        void changeOnPlayer(int player);
+    public void setActivePlayer(int player) {
+        active = player;
     }
 
-    public MutableLiveData<Boolean> isGameOver() {
-        return gameOver;
+    private void nextPlayer() {
+        active = active == PLAYER_1 ? PLAYER_2 : PLAYER_1;
+    }
+
+    public Darts501SummaryStatistics getStat(int player) {
+        return new Darts501SummaryStatistics(getThrows(player), startScore);
+    }
+
+    public LiveData<ChangeType> onPlayerChange() {
+        return onPlayerChange;
+    }
+
+    public void removeThrow(Darts501Throw shoot) {
+        shoots.get(PLAYER_1).remove(shoot);
+        shoots.get(PLAYER_2).remove(shoot);
+        lastRemoved = shoot;
+        onPlayerChange.setValue(REMOVE_SHOOT);
+    }
+
+    public Darts501Throw getLastRemoved() {
+        return lastRemoved;
+    }
+
+    public void setStartScore(int startScore) {
+        this.startScore = startScore;
     }
 }

@@ -3,10 +3,11 @@ package bruzsa.laszlo.dartsapp.ui.darts501;
 import java.util.IntSummaryStatistics;
 import java.util.List;
 import java.util.Locale;
+import java.util.stream.Collectors;
 
 public class Darts501SummaryStatistics {
 
-    private int score = 501;
+    private int score;
     private double average;
     private int max;
     private int min;
@@ -15,26 +16,24 @@ public class Darts501SummaryStatistics {
     private int count;
     private boolean out;
 
-    public Darts501SummaryStatistics(List<Darts501Shoot> shoots) {
+    public Darts501SummaryStatistics(List<Darts501Throw> shoots, int startScore) {
+        this.score = startScore;
         if (shoots.isEmpty()) return;
-        long count60 = shoots.stream()
-                .filter(darts501Shoot -> darts501Shoot.isValid() && darts501Shoot.isNotHandicap())
-                .mapToInt(Darts501Shoot::getShoot)
-                .filter(value -> value >= 60)
+        List<Darts501Throw> countedScores = shoots.stream()
+                .filter(darts501Throw -> darts501Throw.isValid() && darts501Throw.isNotHandicap())
+                .collect(Collectors.toList());
+        long count60 = countedScores.stream()
+                .filter(value -> value.getThrow() >= 60)
                 .count();
-        long count100 = shoots.stream()
-                .filter(darts501Shoot -> darts501Shoot.isValid() && darts501Shoot.isNotHandicap())
-                .mapToInt(Darts501Shoot::getShoot)
-                .filter(value -> value >= 60)
+        long count100 = countedScores.stream()
+                .filter(value -> value.getThrow() >= 100)
                 .count();
-        IntSummaryStatistics stat = shoots.stream()
-                .filter(darts501Shoot -> darts501Shoot.isValid() && darts501Shoot.isNotHandicap())
-                .mapToInt(Darts501Shoot::getShoot)
+        IntSummaryStatistics stat = countedScores.stream()
+                .mapToInt(Darts501Throw::getThrow)
                 .summaryStatistics();
-
         score = (int) (501 - shoots.stream()
-                .filter(Darts501Shoot::isValid)
-                .mapToInt(Darts501Shoot::getShoot)
+                .filter(Darts501Throw::isValid)
+                .mapToInt(Darts501Throw::getThrow)
                 .sum());
         average = stat.getAverage();
         max = stat.getMax();
@@ -84,4 +83,9 @@ public class Darts501SummaryStatistics {
     public boolean isOut() {
         return out;
     }
+
+    public boolean isEmpty() {
+        return count == 0;
+    }
+
 }

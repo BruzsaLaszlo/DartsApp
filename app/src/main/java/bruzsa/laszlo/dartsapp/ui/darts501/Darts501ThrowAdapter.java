@@ -7,16 +7,17 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.lifecycle.MutableLiveData;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.List;
-import java.util.function.Consumer;
 
 import bruzsa.laszlo.dartsapp.R;
 
-public class Darts501ShootsAdapter extends RecyclerView.Adapter<Darts501ShootsAdapter.ViewHolder> {
+public class Darts501ThrowAdapter extends RecyclerView.Adapter<Darts501ThrowAdapter.ViewHolder> {
 
-    private final List<Darts501Shoot> mDataSet;
+    private final List<Darts501Throw> mDataSet;
+    private final MutableLiveData<Darts501Throw> selectedForRemove = new MutableLiveData<>();
 
     @SuppressLint("NotifyDataSetChanged")
     public void clearAllData() {
@@ -25,24 +26,23 @@ public class Darts501ShootsAdapter extends RecyclerView.Adapter<Darts501ShootsAd
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         private final TextView shootTextView;
-        private Darts501Shoot shoot;
+        private Darts501Throw shoot;
 
         public ViewHolder(View v) {
             super(v);
             v.setOnLongClickListener(v1 -> {
-                int position = mDataSet.indexOf(shoot);
-                notifyItemRemoved(position);
+                selectedForRemove.setValue(shoot);
                 return true;
             });
-            shootTextView = v.findViewById(R.id.darts501ShootItem);
+            shootTextView = v.findViewById(R.id.darts501ThrowItem);
         }
 
-        public void setShoot(Darts501Shoot shoot) {
+        public void setThrow(Darts501Throw shoot) {
             this.shoot = shoot;
         }
     }
 
-    public Darts501ShootsAdapter(List<Darts501Shoot> shoots, Consumer<Darts501Shoot> toRemove) {
+    public Darts501ThrowAdapter(List<Darts501Throw> shoots) {
         mDataSet = shoots;
     }
 
@@ -62,11 +62,20 @@ public class Darts501ShootsAdapter extends RecyclerView.Adapter<Darts501ShootsAd
     @Override
     public void onBindViewHolder(ViewHolder viewHolder, final int position) {
         viewHolder.shootTextView.setText(mDataSet.get(position).toString());
-        viewHolder.setShoot(mDataSet.get(position));
+        viewHolder.setThrow(mDataSet.get(position));
     }
 
     @Override
     public int getItemCount() {
         return mDataSet.size();
+    }
+
+    public MutableLiveData<Darts501Throw> getSelectedForRemove() {
+        return selectedForRemove;
+    }
+
+    public void remove(Darts501Throw shoot) {
+        int position = mDataSet.indexOf(shoot);
+        notifyItemRemoved(position);
     }
 }

@@ -22,7 +22,7 @@
     android:gravity="start">
 
     <TextView
-        android:id="@+id/cricketThrowItem"
+        android:id="@+id/playerItem"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:fontFamily="monospace"

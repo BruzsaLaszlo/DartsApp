@@ -19,7 +19,7 @@ public class InputValidator {
         return !s.toString().matches("\\d+|\\d+\\+\\d+|\\d+\\+\\d+\\+\\d+|\\d+\\+|\\d+\\+\\d+\\+");
     }
 
-    public Optional<Integer> getValidShoot(EditText scoreEditText) {
+    public Optional<Integer> getValidThrow(EditText scoreEditText) {
         if (scoreEditText.getText().toString().isBlank()) return Optional.empty();
         if (scoreEditText.getText().toString().matches("^\\d+$")) {
             return Optional.of(Integer.parseInt(scoreEditText.getText().toString()));

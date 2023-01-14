@@ -13,33 +13,33 @@ import java.util.function.Consumer;
 
 import bruzsa.laszlo.dartsapp.R;
 
-public class CricketShootsAdapter extends RecyclerView.Adapter<CricketShootsAdapter.ViewHolder> {
+public class CricketThrowsAdapter extends RecyclerView.Adapter<CricketThrowsAdapter.ViewHolder> {
 
-    private final List<CricketShoot> mDataSet;
-    private final Consumer<CricketShoot> toRemove;
+    private final List<CricketThrow> mDataSet;
+    private final Consumer<CricketThrow> toRemove;
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         private final TextView shootTextView;
-        private CricketShoot cricketShoot;
+        private CricketThrow cricketThrow;
 
         public ViewHolder(View v) {
             super(v);
             v.setOnLongClickListener(v1 -> {
-                int position = mDataSet.indexOf(cricketShoot);
-                toRemove.accept(cricketShoot);
-                cricketShoot.setRemoved();
+                int position = mDataSet.indexOf(cricketThrow);
+                toRemove.accept(cricketThrow);
+                cricketThrow.setRemoved();
                 notifyItemRemoved(position);
                 return true;
             });
-            shootTextView = v.findViewById(R.id.cricketShootItem);
+            shootTextView = v.findViewById(R.id.cricketThrowItem);
         }
 
-        public void setCricketShoot(CricketShoot cricketShoot) {
-            this.cricketShoot = cricketShoot;
+        public void setCricketThrow(CricketThrow cricketThrow) {
+            this.cricketThrow = cricketThrow;
         }
     }
 
-    public CricketShootsAdapter(List<CricketShoot> shoots, Consumer<CricketShoot> toRemove) {
+    public CricketThrowsAdapter(List<CricketThrow> shoots, Consumer<CricketThrow> toRemove) {
         mDataSet = shoots;
         this.toRemove = toRemove;
     }
@@ -56,7 +56,7 @@ public class CricketShootsAdapter extends RecyclerView.Adapter<CricketShootsAdap
     @Override
     public void onBindViewHolder(ViewHolder viewHolder, final int position) {
         viewHolder.shootTextView.setText(mDataSet.get(position).toString());
-        viewHolder.setCricketShoot(mDataSet.get(position));
+        viewHolder.setCricketThrow(mDataSet.get(position));
     }
 
     @Override

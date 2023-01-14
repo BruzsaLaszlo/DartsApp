@@ -15,7 +15,7 @@
         android:text="@string/ok"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/scoreEditText" />
+        app:layout_constraintTop_toBottomOf="@+id/input_text" />
 
     <FrameLayout
         android:id="@+id/frameLayoutNameStat"
@@ -28,6 +28,46 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
+
+        <FrameLayout
+            android:id="@+id/frameLayout2"
+            android:layout_width="199dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|center"
+            android:layout_marginStart="137dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="138dp">
+
+            <TextView
+                android:id="@+id/textViewStat"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
+                android:fontFamily="monospace"
+                android:text="@string/stat"
+                android:textAlignment="center"
+                android:textSize="25sp" />
+
+            <TextView
+                android:id="@+id/player1StatText"
+                android:layout_width="60dp"
+                android:layout_height="match_parent"
+                android:layout_gravity="start"
+                android:fontFamily="monospace"
+                android:text="@string/_10_n100_n180_n26"
+                android:textAlignment="textEnd"
+                android:textSize="25sp" />
+
+            <TextView
+                android:id="@+id/player2StatText"
+                android:layout_width="60dp"
+                android:layout_height="match_parent"
+                android:layout_gravity="end"
+                android:fontFamily="monospace"
+                android:text="@string/_10_n100_n180_n26"
+                android:textAlignment="textStart"
+                android:textSize="25sp" />
+        </FrameLayout>
 
         <TextView
             android:id="@+id/player1NameText"
@@ -48,7 +88,7 @@
             android:textSize="48sp" />
 
         <TextView
-            android:id="@+id/player1Score"
+            android:id="@+id/player1ScoreText"
             android:layout_width="150dp"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom|start"
@@ -57,7 +97,7 @@
             android:textSize="80sp" />
 
         <TextView
-            android:id="@+id/player2Score"
+            android:id="@+id/player2ScoreText"
             android:layout_width="150dp"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom|end"
@@ -67,12 +107,13 @@
     </FrameLayout>
 
     <bruzsa.laszlo.dartsapp.ui.darts501.input.Darts501EditText
-        android:id="@+id/scoreEditText"
+        android:id="@+id/input_text"
         style="@style/Widget.Material3.TextInputEditText.FilledBox"
         android:layout_width="257dp"
         android:layout_height="99dp"
-        android:layout_marginStart="50dp"
-        android:layout_marginEnd="50dp"
+        android:layout_marginStart="93dp"
+        android:layout_marginTop="33dp"
+        android:layout_marginEnd="94dp"
         android:contentDescription="@string/score"
         android:ems="10"
         android:importantForAutofill="no"
@@ -81,72 +122,31 @@
         android:textAlignment="center"
         android:textAppearance="@style/TextAppearance.AppCompat.Body1"
         android:textSize="60sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.666"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/frameLayout2"
+        app:layout_constraintEnd_toStartOf="@+id/listPlayer2Throws"
+        app:layout_constraintStart_toEndOf="@+id/listPlayer1Throws"
+        app:layout_constraintTop_toBottomOf="@+id/frameLayoutNameStat"
         tools:ignore="EditableContentDescCheck,LabelFor,SpeakableTextPresentCheck" />
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/listPlayer1Shoots"
-        android:layout_width="54dp"
-        android:layout_height="148dp"
-        android:layout_marginStart="20dp"
+        android:id="@+id/listPlayer1Throws"
+        android:layout_width="114dp"
+        android:layout_height="220dp"
+        android:layout_marginStart="30dp"
         android:layout_marginTop="10dp"
-        app:layout_constraintEnd_toStartOf="@+id/frameLayout2"
+        android:layout_marginBottom="10dp"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/frameLayoutNameStat" />
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/listPlayer2Shoots"
-        android:layout_width="54dp"
-        android:layout_height="150dp"
+        android:id="@+id/listPlayer2Throws"
+        android:layout_width="118dp"
+        android:layout_height="228dp"
         android:layout_marginTop="10dp"
-        android:layout_marginEnd="20dp"
+        android:layout_marginEnd="30dp"
+        android:layout_marginBottom="10dp"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/frameLayout2"
         app:layout_constraintTop_toBottomOf="@+id/frameLayoutNameStat" />
-
-    <FrameLayout
-        android:id="@+id/frameLayout2"
-        android:layout_width="209dp"
-        android:layout_height="150dp"
-        android:layout_marginStart="137dp"
-        android:layout_marginTop="10dp"
-        android:layout_marginEnd="138dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/frameLayoutNameStat">
-
-        <TextView
-            android:id="@+id/textViewStat"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_gravity="center"
-            android:fontFamily="monospace"
-            android:text="@string/stat"
-            android:textAlignment="center"
-            android:textSize="30sp" />
-
-        <TextView
-            android:id="@+id/player1StatText"
-            android:layout_width="60dp"
-            android:layout_height="match_parent"
-            android:layout_gravity="start"
-            android:fontFamily="monospace"
-            android:text="@string/_10_n100_n180_n26"
-            android:textAlignment="textEnd"
-            android:textSize="30sp" />
-
-        <TextView
-            android:id="@+id/player2StatText"
-            android:layout_width="60dp"
-            android:layout_height="match_parent"
-            android:layout_gravity="end"
-            android:fontFamily="monospace"
-            android:text="@string/_10_n100_n180_n26"
-            android:textAlignment="textStart"
-            android:textSize="30sp" />
-    </FrameLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
