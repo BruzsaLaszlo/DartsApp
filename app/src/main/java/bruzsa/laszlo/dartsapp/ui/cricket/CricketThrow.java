@@ -2,6 +2,8 @@ package bruzsa.laszlo.dartsapp.ui.cricket;
 
 import androidx.annotation.NonNull;
 
+import bruzsa.laszlo.dartsapp.model.cricket.CricketPlayer;
+
 public class CricketThrow {
     private final int multiply;
     private final int value;

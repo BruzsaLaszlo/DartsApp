@@ -9,7 +9,6 @@ import java.util.Collections;
 import java.util.List;
 
 import bruzsa.laszlo.dartsapp.dao.Player;
-import bruzsa.laszlo.dartsapp.ui.darts501.Darts501SummaryStatistics;
 
 public class Darts501Player {
 
@@ -67,15 +66,20 @@ public class Darts501Player {
         return legs;
     }
 
-    public void wonLeg() {
-        legs++;
+    public int wonLeg() {
+        return ++legs;
     }
 
     public int getSets() {
         return sets;
     }
 
-    public void wonSet() {
-        sets++;
+    public int wonSet() {
+        legs=0;
+        return  ++sets;
+    }
+
+    public void loseSet() {
+        legs = 0;
     }
 }

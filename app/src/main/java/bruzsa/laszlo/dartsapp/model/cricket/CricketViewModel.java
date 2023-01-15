@@ -1,4 +1,4 @@
-package bruzsa.laszlo.dartsapp.model;
+package bruzsa.laszlo.dartsapp.model.cricket;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
@@ -10,7 +10,6 @@ import java.util.List;
 import java.util.Map;
 
 import bruzsa.laszlo.dartsapp.dao.Player;
-import bruzsa.laszlo.dartsapp.ui.cricket.CricketPlayer;
 import bruzsa.laszlo.dartsapp.ui.cricket.CricketThrow;
 
 public class CricketViewModel extends ViewModel {

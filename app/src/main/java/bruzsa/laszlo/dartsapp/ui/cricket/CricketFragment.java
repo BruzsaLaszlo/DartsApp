@@ -21,7 +21,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 
 import bruzsa.laszlo.dartsapp.R;
 import bruzsa.laszlo.dartsapp.databinding.FragmentCricketBinding;
-import bruzsa.laszlo.dartsapp.model.CricketViewModel;
+import bruzsa.laszlo.dartsapp.model.cricket.CricketViewModel;
 import bruzsa.laszlo.dartsapp.model.SharedViewModel;
 
 public class CricketFragment extends Fragment {
@@ -38,14 +38,15 @@ public class CricketFragment extends Fragment {
         super.onCreate(savedInstanceState);
         cViewModel = new ViewModelProvider(this).get(CricketViewModel.class);
         sharedViewModel = new ViewModelProvider(this).get(SharedViewModel.class);
-        sharedViewModel.startNewGameCricket().observe(getViewLifecycleOwner(),newGame ->
-                cViewModel.newGame(sharedViewModel.getPlayer1(), sharedViewModel.getPlayer2()));
     }
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
+
+        sharedViewModel.startNewGameCricket().observe(getViewLifecycleOwner(),newGame ->
+                cViewModel.newGame(sharedViewModel.getPlayer1(), sharedViewModel.getPlayer2()));
 
         binding = FragmentCricketBinding.inflate(inflater, container, false);
         setScreenOrientation(SCREEN_ORIENTATION_LANDSCAPE);

@@ -1,4 +1,4 @@
-package bruzsa.laszlo.dartsapp.ui.darts501;
+package bruzsa.laszlo.dartsapp.model.darts501;
 
 import androidx.annotation.NonNull;
 
@@ -6,8 +6,6 @@ import java.util.IntSummaryStatistics;
 import java.util.List;
 import java.util.Locale;
 import java.util.stream.Collectors;
-
-import bruzsa.laszlo.dartsapp.model.darts501.Darts501Throw;
 
 public class Darts501SummaryStatistics {
 
@@ -27,7 +25,7 @@ public class Darts501SummaryStatistics {
     @NonNull
     @Override
     public String toString() {
-        if (throwList.isEmpty()) return "";
+        if (validAndNotHandicapThrows().isEmpty()) return "";
         var allStat = getAllStat();
         return String.format(Locale.ENGLISH, """
                         %d

@@ -27,9 +27,9 @@ import java.util.Objects;
 
 import bruzsa.laszlo.dartsapp.R;
 import bruzsa.laszlo.dartsapp.databinding.FragmentDarts501Binding;
-import bruzsa.laszlo.dartsapp.model.ChangeType;
-import bruzsa.laszlo.dartsapp.model.darts501.Darts501ViewModel;
+import bruzsa.laszlo.dartsapp.model.darts501.ChangeType;
 import bruzsa.laszlo.dartsapp.model.SharedViewModel;
+import bruzsa.laszlo.dartsapp.model.darts501.Darts501ViewModel;
 import bruzsa.laszlo.dartsapp.ui.darts501.input.InputType;
 
 public class Darts501Fragment extends Fragment {
@@ -40,7 +40,7 @@ public class Darts501Fragment extends Fragment {
 
     private Darts501ThrowAdapter player1ThrowAdapter;
     private Darts501ThrowAdapter player2ThrowAdapter;
-    private final MutableLiveData<InputType> inputType = new MutableLiveData<>(InputType.SHOOT);
+    private final MutableLiveData<InputType> inputType = new MutableLiveData<>(InputType.THROW);
 
 
     @Override
@@ -58,17 +58,15 @@ public class Darts501Fragment extends Fragment {
         requireActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         requireActivity().findViewById(R.id.toolbar).setVisibility(View.GONE);
 
-
-        sharedViewModel.getNewGame501().observe(getViewLifecycleOwner(), newGame ->
-                dViewModel.newGame(sharedViewModel.getPlayer1(), sharedViewModel.getPlayer2()));
-        dViewModel.setSettings(sharedViewModel.getSettings());
-
         if (dViewModel.onPlayerChange().getValue() == ChangeType.NO_GAME) {
+            dViewModel.setSettings(sharedViewModel.getSettings());
             dViewModel.newGame(sharedViewModel.getPlayer1(), sharedViewModel.getPlayer2());
         }
-        setObservers();
 
         binding = FragmentDarts501Binding.inflate(inflater, container, false);
+
+        setObservers();
+
         return binding.getRoot();
     }
 
@@ -117,7 +115,7 @@ public class Darts501Fragment extends Fragment {
     private void onClickOkButton(View button) {
 
         switch (Objects.requireNonNull(inputType.getValue())) {
-            case SHOOT ->
+            case THROW ->
                     binding.inputText.getThrow().ifPresent(shoot -> dViewModel.newThrow(shoot));
             case RESTART_GAME -> dViewModel.restartGame();
             case NAME1 ->
@@ -126,12 +124,16 @@ public class Darts501Fragment extends Fragment {
                     binding.player2NameText.setText(binding.inputText.getName().orElse("Player 2"));
         }
 
-        inputType.setValue(InputType.SHOOT);
+        inputType.setValue(InputType.THROW);
     }
 
 
     @SuppressLint("SetTextI18n")
     private void setObservers() {
+        binding.player1ScoreText.setOnClickListener(v -> inputType.setValue(InputType.THROW));
+        binding.player2ScoreText.setOnClickListener(v -> inputType.setValue(InputType.THROW));
+        sharedViewModel.getNewGame501().observe(getViewLifecycleOwner(), newGame ->
+                dViewModel.newGame(sharedViewModel.getPlayer1(), sharedViewModel.getPlayer2()));
         dViewModel.onPlayerChange().observe(getViewLifecycleOwner(), changeType -> {
             switch (changeType) {
                 case GAME_OVER -> {

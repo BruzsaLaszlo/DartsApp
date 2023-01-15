@@ -1,12 +1,15 @@
 package bruzsa.laszlo.dartsapp.model.darts501;
 
-import static bruzsa.laszlo.dartsapp.model.ChangeType.ADD_SHOOT;
-import static bruzsa.laszlo.dartsapp.model.ChangeType.ADD_SHOOTS;
-import static bruzsa.laszlo.dartsapp.model.ChangeType.CHANGE_ACTIVE_PLAYER;
-import static bruzsa.laszlo.dartsapp.model.ChangeType.GAME_OVER;
-import static bruzsa.laszlo.dartsapp.model.ChangeType.NEW_GAME;
-import static bruzsa.laszlo.dartsapp.model.ChangeType.NO_GAME;
-import static bruzsa.laszlo.dartsapp.model.ChangeType.REMOVE_SHOOT;
+import static bruzsa.laszlo.dartsapp.model.darts501.ChangeType.ADD_SHOOT;
+import static bruzsa.laszlo.dartsapp.model.darts501.ChangeType.ADD_SHOOTS;
+import static bruzsa.laszlo.dartsapp.model.darts501.ChangeType.CHANGE_ACTIVE_PLAYER;
+import static bruzsa.laszlo.dartsapp.model.darts501.ChangeType.GAME_OVER;
+import static bruzsa.laszlo.dartsapp.model.darts501.ChangeType.NEW_GAME;
+import static bruzsa.laszlo.dartsapp.model.darts501.ChangeType.NO_GAME;
+import static bruzsa.laszlo.dartsapp.model.darts501.ChangeType.REMOVE_SHOOT;
+import static bruzsa.laszlo.dartsapp.model.darts501.Darts501MatchType.SETS;
+
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
@@ -18,7 +21,6 @@ import java.util.List;
 import java.util.Objects;
 
 import bruzsa.laszlo.dartsapp.dao.Player;
-import bruzsa.laszlo.dartsapp.model.ChangeType;
 
 public class Darts501ViewModel extends ViewModel {
 
@@ -37,6 +39,7 @@ public class Darts501ViewModel extends ViewModel {
 
     public void newThrow(int dartsThrow) {
         if (state.getValue() == GAME_OVER) return;
+        Log.e("TAG", "newThrowException: " + state.getValue());
         if (dartsThrow > settings.getHandicap()) {
             newThrow(PLAYER_1, dartsThrow);
             newThrow(PLAYER_2, dartsThrow);
@@ -45,19 +48,34 @@ public class Darts501ViewModel extends ViewModel {
             if (newThrow(active, dartsThrow)) {
                 state.setValue(GAME_OVER);
             } else {
-                active = changePlayer(active);
+                active = getOpponent(active);
                 state.setValue(ADD_SHOOT);
             }
         }
     }
 
     private boolean newThrow(int player, int shootValue) {
+        Darts501Player aPlayer = players.get(player);
+        Darts501Player opponent = players.get(getOpponent(player));
+        int maxLegSet = settings.getLegSetOf() / 2 + 1;
         int newScore = getScore(player) - shootValue;
         Darts501Throw newThrow = new Darts501Throw(shootValue, newScore > 1 || newScore == 0);
-        players.get(player).addThrow(newThrow);
+        aPlayer.addThrow(newThrow);
         if (newScore == 0) {
-
-            return true;
+            if (settings.getDarts501MatchType() == SETS) {
+                if (aPlayer.getSets() == maxLegSet - 1 && opponent.getSets() == maxLegSet - 1) {
+                    aPlayer.wonLeg();
+                    return aPlayer.getLegs() - 2 >= opponent.wonLeg() || aPlayer.getLegs() == 6;
+                } else if (aPlayer.getLegs() == 2) {
+                    opponent.loseSet();
+                    return maxLegSet == aPlayer.wonSet();
+                } else {
+                    aPlayer.wonLeg();
+                    return false;
+                }
+            } else {
+                return maxLegSet == aPlayer.wonLeg();
+            }
         }
         return false;
     }
@@ -88,7 +106,7 @@ public class Darts501ViewModel extends ViewModel {
         state.setValue(CHANGE_ACTIVE_PLAYER);
     }
 
-    private int changePlayer(int player) {
+    private int getOpponent(int player) {
         return player == PLAYER_1 ? PLAYER_2 : PLAYER_1;
     }
 

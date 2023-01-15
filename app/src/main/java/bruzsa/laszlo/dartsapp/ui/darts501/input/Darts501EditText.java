@@ -39,7 +39,7 @@ public class Darts501EditText extends AppCompatEditText {
     public void setInputType(MutableLiveData<InputType> inputTypeMutableLiveData) {
         inputTypeMutableLiveData.observeForever(inputType -> {
             switch (inputType) {
-                case SHOOT -> setThrowSettings();
+                case THROW -> setThrowSettings();
                 case RESTART_GAME -> setNewGameSettings();
                 case NAME1, NAME2 -> setNameSettings();
             }
