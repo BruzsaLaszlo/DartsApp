@@ -2,11 +2,14 @@ package bruzsa.laszlo.dartsapp.ui.darts501;
 
 import androidx.annotation.NonNull;
 
+import java.time.LocalTime;
+
 public class Darts501Throw {
 
     private final int shoot;
     private final boolean handicap;
     private final boolean valid;
+    private final LocalTime time = LocalTime.now();
 
     public Darts501Throw(int shoot, boolean valid) {
         this.shoot = shoot;

@@ -20,7 +20,7 @@ public class Darts501ThrowAdapter extends RecyclerView.Adapter<Darts501ThrowAdap
     private final MutableLiveData<Darts501Throw> selectedForRemove = new MutableLiveData<>();
 
     @SuppressLint("NotifyDataSetChanged")
-    public void clearAllData() {
+    public void refreshAll() {
         notifyDataSetChanged();
     }
 
@@ -74,8 +74,7 @@ public class Darts501ThrowAdapter extends RecyclerView.Adapter<Darts501ThrowAdap
         return selectedForRemove;
     }
 
-    public void remove(Darts501Throw shoot) {
-        int position = mDataSet.indexOf(shoot);
+    public void remove(int position) {
         notifyItemRemoved(position);
     }
 }

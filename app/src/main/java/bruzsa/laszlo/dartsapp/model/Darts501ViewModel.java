@@ -1,11 +1,15 @@
 package bruzsa.laszlo.dartsapp.model;
 
+import static android.content.ContentValues.TAG;
 import static bruzsa.laszlo.dartsapp.model.ChangeType.ADD_SHOOT;
 import static bruzsa.laszlo.dartsapp.model.ChangeType.ADD_SHOOTS;
 import static bruzsa.laszlo.dartsapp.model.ChangeType.CHANGE_ACTIVE_PLAYER;
 import static bruzsa.laszlo.dartsapp.model.ChangeType.GAME_OVER;
+import static bruzsa.laszlo.dartsapp.model.ChangeType.NEW_GAME;
 import static bruzsa.laszlo.dartsapp.model.ChangeType.NO_GAME;
 import static bruzsa.laszlo.dartsapp.model.ChangeType.REMOVE_SHOOT;
+
+import android.util.Log;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
@@ -28,11 +32,12 @@ public class Darts501ViewModel extends ViewModel {
     private final List<List<Darts501Throw>> shoots = new ArrayList<>();
     public static final int HANDICAP = 181;
     private int startScore;
-    private Darts501Throw lastRemoved;
+    private int lastRemovedIndex;
 
     private final MutableLiveData<ChangeType> onPlayerChange = new MutableLiveData<>(NO_GAME);
 
     public List<Darts501Throw> getThrows(int player) {
+        Log.e(TAG, "getThrows: Exception " + player );
         return Collections.unmodifiableList(shoots.get(player));
     }
 
@@ -70,7 +75,7 @@ public class Darts501ViewModel extends ViewModel {
         shoots.add(new ArrayList<>());
         shoots.add(new ArrayList<>());
         active = PLAYER_1;
-        onPlayerChange.setValue(CHANGE_ACTIVE_PLAYER);
+        onPlayerChange.setValue(NEW_GAME);
     }
 
     public Player getPlayer(int player) {
@@ -83,6 +88,7 @@ public class Darts501ViewModel extends ViewModel {
 
     public void setActivePlayer(int player) {
         active = player;
+        onPlayerChange.setValue(CHANGE_ACTIVE_PLAYER);
     }
 
     private void nextPlayer() {
@@ -97,15 +103,14 @@ public class Darts501ViewModel extends ViewModel {
         return onPlayerChange;
     }
 
-    public void removeThrow(Darts501Throw shoot) {
-        shoots.get(PLAYER_1).remove(shoot);
-        shoots.get(PLAYER_2).remove(shoot);
-        lastRemoved = shoot;
+    public void removeThrow(Darts501Throw shoot,int player) {
+        lastRemovedIndex = shoots.get(player).indexOf(shoot);
+        shoots.get(lastRemovedIndex).remove(lastRemovedIndex);
         onPlayerChange.setValue(REMOVE_SHOOT);
     }
 
-    public Darts501Throw getLastRemoved() {
-        return lastRemoved;
+    public int getLastRemovedIndex() {
+        return lastRemovedIndex;
     }
 
     public void setStartScore(int startScore) {

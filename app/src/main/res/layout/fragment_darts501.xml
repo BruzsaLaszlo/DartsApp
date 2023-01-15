@@ -31,21 +31,21 @@
 
         <TextView
             android:id="@+id/player1NameText"
-            android:layout_width="250dp"
+            android:layout_width="170dp"
             android:layout_height="wrap_content"
             android:layout_gravity="start|top|center_horizontal"
             android:text="@string/player2"
             android:textAlignment="gravity"
-            android:textSize="48sp" />
+            android:textSize="40sp" />
 
         <TextView
             android:id="@+id/player2NameText"
-            android:layout_width="250dp"
+            android:layout_width="170dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal|top|end"
             android:text="@string/player22"
-            android:textAlignment="textEnd"
-            android:textSize="48sp" />
+            android:textAlignment="gravity"
+            android:textSize="40sp" />
 
         <TextView
             android:id="@+id/player1ScoreText"
@@ -53,8 +53,8 @@
             android:layout_height="wrap_content"
             android:layout_gravity="bottom|start"
             android:text="@string/_501"
-            android:textAlignment="textEnd"
-            android:textSize="80sp"
+            android:textAlignment="center"
+            android:textSize="60sp"
             android:textStyle="bold" />
 
         <TextView
@@ -63,7 +63,8 @@
             android:layout_height="wrap_content"
             android:layout_gravity="bottom|end"
             android:text="@string/_501"
-            android:textSize="80sp"
+            android:textAlignment="center"
+            android:textSize="60sp"
             android:textStyle="bold" />
 
     </FrameLayout>
@@ -85,11 +86,11 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/frameLayout2"
-        tools:ignore="EditableContentDescCheck,LabelFor,SpeakableTextPresentCheck" />
+        tools:ignore="EditableContentDescCheck,LabelFor,SpeakableTextPresentCheck,VisualLintTextFieldSize" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/listPlayer1Throws"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="150dp"
         android:layout_marginTop="10dp"
         app:layout_constraintEnd_toStartOf="@+id/frameLayout2"
@@ -98,8 +99,8 @@
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/listPlayer2Throws"
-        android:layout_width="wrap_content"
-        android:layout_height="150dp"
+        android:layout_width="0dp"
+        android:layout_height="145dp"
         android:layout_marginTop="10dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/frameLayout2"
@@ -128,7 +129,7 @@
 
         <TextView
             android:id="@+id/player1StatText"
-            android:layout_width="60dp"
+            android:layout_width="60sp"
             android:layout_height="match_parent"
             android:layout_gravity="start"
             android:fontFamily="monospace"
@@ -138,7 +139,7 @@
 
         <TextView
             android:id="@+id/player2StatText"
-            android:layout_width="60dp"
+            android:layout_width="60sp"
             android:layout_height="match_parent"
             android:layout_gravity="end"
             android:fontFamily="monospace"

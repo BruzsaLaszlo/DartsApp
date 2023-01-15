@@ -18,27 +18,6 @@ public class CricketThrowsAdapter extends RecyclerView.Adapter<CricketThrowsAdap
     private final List<CricketThrow> mDataSet;
     private final Consumer<CricketThrow> toRemove;
 
-    public class ViewHolder extends RecyclerView.ViewHolder {
-        private final TextView shootTextView;
-        private CricketThrow cricketThrow;
-
-        public ViewHolder(View v) {
-            super(v);
-            v.setOnLongClickListener(v1 -> {
-                int position = mDataSet.indexOf(cricketThrow);
-                toRemove.accept(cricketThrow);
-                cricketThrow.setRemoved();
-                notifyItemRemoved(position);
-                return true;
-            });
-            shootTextView = v.findViewById(R.id.cricketThrowItem);
-        }
-
-        public void setCricketThrow(CricketThrow cricketThrow) {
-            this.cricketThrow = cricketThrow;
-        }
-    }
-
     public CricketThrowsAdapter(List<CricketThrow> shoots, Consumer<CricketThrow> toRemove) {
         mDataSet = shoots;
         this.toRemove = toRemove;
@@ -62,5 +41,26 @@ public class CricketThrowsAdapter extends RecyclerView.Adapter<CricketThrowsAdap
     @Override
     public int getItemCount() {
         return mDataSet.size();
+    }
+
+    public class ViewHolder extends RecyclerView.ViewHolder {
+        private final TextView shootTextView;
+        private CricketThrow cricketThrow;
+
+        public ViewHolder(View v) {
+            super(v);
+            v.setOnLongClickListener(v1 -> {
+                int position = mDataSet.indexOf(cricketThrow);
+                toRemove.accept(cricketThrow);
+                cricketThrow.setRemoved();
+                notifyItemRemoved(position);
+                return true;
+            });
+            shootTextView = v.findViewById(R.id.cricketThrowItem);
+        }
+
+        public void setCricketThrow(CricketThrow cricketThrow) {
+            this.cricketThrow = cricketThrow;
+        }
     }
 }

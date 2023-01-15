@@ -1,5 +1,6 @@
 package bruzsa.laszlo.dartsapp.ui.darts501;
 
+import static android.text.InputType.TYPE_NULL;
 import static androidx.recyclerview.widget.LinearLayoutManager.VERTICAL;
 import static bruzsa.laszlo.dartsapp.model.Darts501ViewModel.PLAYER_1;
 import static bruzsa.laszlo.dartsapp.model.Darts501ViewModel.PLAYER_2;
@@ -12,7 +13,6 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.inputmethod.EditorInfo;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -70,11 +70,12 @@ public class Darts501Fragment extends Fragment {
         return binding.getRoot();
     }
 
+    @Override
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        setPlayerNamesStyle(binding.player1NameText, darts501ViewModel.getPlayer(PLAYER_1), 1, InputType.NAME1);
-        setPlayerNamesStyle(binding.player2NameText, darts501ViewModel.getPlayer(PLAYER_2), 2, InputType.NAME2);
+        refreshNamesStyle(binding.player1NameText, darts501ViewModel.getPlayer(PLAYER_1), PLAYER_1, InputType.NAME1);
+        refreshNamesStyle(binding.player2NameText, darts501ViewModel.getPlayer(PLAYER_2), PLAYER_2, InputType.NAME2);
 
         binding.player1ScoreText.setTextColor(Color.BLUE);
         binding.player2ScoreText.setTextColor(Color.BLUE);
@@ -94,14 +95,14 @@ public class Darts501Fragment extends Fragment {
 
     private void inicThrowList(RecyclerView listPlayerThrows, int player) {
         listPlayerThrows.setLayoutManager(new LinearLayoutManager(getActivity(), VERTICAL, true));
-        Darts501ThrowAdapter shootAdapter = new Darts501ThrowAdapter(darts501ViewModel.getThrows(player));
-        if (player == PLAYER_1) player1ThrowAdapter = shootAdapter;
-        else player2ThrowAdapter = shootAdapter;
-        shootAdapter.getSelectedForRemove().observe(getViewLifecycleOwner(), shoot -> darts501ViewModel.removeThrow(shoot));
-        listPlayerThrows.setAdapter(shootAdapter);
+        Darts501ThrowAdapter throwAdapter = new Darts501ThrowAdapter(darts501ViewModel.getThrows(player));
+        if (player == PLAYER_1) player1ThrowAdapter = throwAdapter;
+        else player2ThrowAdapter = throwAdapter;
+        throwAdapter.getSelectedForRemove().observe(getViewLifecycleOwner(), shoot -> darts501ViewModel.removeThrow(shoot,player));
+        listPlayerThrows.setAdapter(throwAdapter);
     }
 
-    private void setPlayerNamesStyle(TextView playerNameText, Player player, int i, InputType inputType) {
+    private void refreshNamesStyle(TextView playerNameText, Player player, int i, InputType inputType) {
         playerNameText.setText(player.getName());
         playerNameText.setOnClickListener(v -> darts501ViewModel.setActivePlayer(i));
         playerNameText.setOnLongClickListener(v -> {
@@ -132,19 +133,20 @@ public class Darts501Fragment extends Fragment {
             switch (changeType) {
                 case GAME_OVER -> {
                     binding.okButton.setText("Winner: " + darts501ViewModel.getPlayer(darts501ViewModel.getActivePlayer()).getName());
-                    binding.inputText.setInputType(EditorInfo.TYPE_NULL);
+                    binding.inputText.setInputType(TYPE_NULL);
                     binding.inputText.clearFocus();
                 }
                 case NEW_GAME -> {
-                    player1ThrowAdapter.clearAllData();
-                    player2ThrowAdapter.clearAllData();
-                    refreshGUI();
+                    player1ThrowAdapter.refreshAll();
+                    player2ThrowAdapter.refreshAll();
                     binding.inputText.requestFocus();
                 }
                 case CHANGE_ACTIVE_PLAYER -> { // nothing only refresh
                 }
+                case NO_GAME -> { // never happens
+                }
                 case ADD_SHOOT -> {
-                    if (darts501ViewModel.getActivePlayer() == PLAYER_1)
+                    if (darts501ViewModel.getActivePlayer() == PLAYER_2)
                         player1ThrowAdapter.inserted();
                     else player2ThrowAdapter.inserted();
                 }
@@ -153,8 +155,8 @@ public class Darts501Fragment extends Fragment {
                     player2ThrowAdapter.inserted();
                 }
                 case REMOVE_SHOOT -> {
-                    player1ThrowAdapter.remove(darts501ViewModel.getLastRemoved());
-                    player2ThrowAdapter.remove(darts501ViewModel.getLastRemoved());
+                    player1ThrowAdapter.remove(darts501ViewModel.getLastRemovedIndex());
+                    player2ThrowAdapter.remove(darts501ViewModel.getLastRemovedIndex());
                 }
             }
             refreshGUI();
@@ -166,9 +168,7 @@ public class Darts501Fragment extends Fragment {
                 binding.player1StatText, binding.listPlayer1Throws);
         refreshGUI(darts501ViewModel.getStat(PLAYER_2), binding.player2ScoreText,
                 binding.player2StatText, binding.listPlayer2Throws);
-        if (darts501ViewModel.getActivePlayer() == PLAYER_1)
-            setPlayerNamesStyle(binding.player1NameText, binding.player2NameText);
-        else setPlayerNamesStyle(binding.player2NameText, binding.player1NameText);
+        refreshNamesStyle(binding.player1NameText, binding.player2NameText);
     }
 
     private void refreshGUI(Darts501SummaryStatistics statPlayer, TextView playerScoreText,
@@ -185,7 +185,12 @@ public class Darts501Fragment extends Fragment {
         listPlayerThrows.smoothScrollToPosition(100);
     }
 
-    private void setPlayerNamesStyle(TextView player1NameText, TextView player2NameText) {
+    private void refreshNamesStyle(TextView player1NameText, TextView player2NameText) {
+        if (darts501ViewModel.getActivePlayer() == PLAYER_2) {
+            var temp = player1NameText;
+            player1NameText = player2NameText;
+            player2NameText = temp;
+        }
         player1NameText.setTypeface(Typeface.DEFAULT_BOLD);
         player1NameText.setTextColor(Color.RED);
         player2NameText.setTypeface(Typeface.DEFAULT);
