@@ -38,6 +38,8 @@ public class CricketFragment extends Fragment {
         super.onCreate(savedInstanceState);
         cViewModel = new ViewModelProvider(this).get(CricketViewModel.class);
         sharedViewModel = new ViewModelProvider(this).get(SharedViewModel.class);
+        sharedViewModel.startNewGameCricket().observe(getViewLifecycleOwner(),newGame ->
+                cViewModel.newGame(sharedViewModel.getPlayer1(), sharedViewModel.getPlayer2()));
     }
 
     @Nullable
@@ -50,9 +52,10 @@ public class CricketFragment extends Fragment {
         return binding.getRoot();
     }
 
+    @Override
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        Log.d("CricketFragment", "onViewCreated");
+        Log.d(TAG, "onViewCreated");
 
 
         if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
@@ -64,10 +67,10 @@ public class CricketFragment extends Fragment {
             cViewModel.newGame(sharedViewModel.getPlayer1(), sharedViewModel.getPlayer2());
         }
 
-        sharedViewModel.getNewGame().observe(getViewLifecycleOwner(), this::newGame);
+        sharedViewModel.startNewGameCricket().observe(getViewLifecycleOwner(), this::newGame);
 
         cViewModel.isGameOver().observe(getViewLifecycleOwner(), isGameOver ->
-                binding.scoreTextView.setTextColor(isGameOver ? Color.RED : Color.BLACK));
+                binding.scoreTextView.setTextColor(Boolean.TRUE.equals(isGameOver) ? Color.RED : Color.BLACK));
 
         setOnClickListenersForTable(binding.cricketTable1, 1);
         setOnClickListenersForTable(binding.cricketTable2, 2);

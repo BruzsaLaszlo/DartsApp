@@ -1,8 +1,10 @@
 package bruzsa.laszlo.dartsapp.ui.darts501.input;
 
+import static android.text.InputType.TYPE_CLASS_PHONE;
+import static android.text.InputType.TYPE_CLASS_TEXT;
+
 import android.content.Context;
 import android.util.AttributeSet;
-import android.view.inputmethod.EditorInfo;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -38,7 +40,7 @@ public class Darts501EditText extends AppCompatEditText {
         inputTypeMutableLiveData.observeForever(inputType -> {
             switch (inputType) {
                 case SHOOT -> setThrowSettings();
-                case NEW_GAME -> setNewGameSettings();
+                case RESTART_GAME -> setNewGameSettings();
                 case NAME1, NAME2 -> setNameSettings();
             }
         });
@@ -53,7 +55,7 @@ public class Darts501EditText extends AppCompatEditText {
         setHint("");
         setText("");
         scoreInputWatcher.setIgnoreValidation(false);
-        setInputType(EditorInfo.TYPE_CLASS_PHONE);
+        setInputType(TYPE_CLASS_PHONE);
     }
 
     private void setNameSettings() {
@@ -61,7 +63,7 @@ public class Darts501EditText extends AppCompatEditText {
         setError(null);
         setHint("name");
         setText("");
-        setInputType(EditorInfo.TYPE_CLASS_TEXT);
+        setInputType(TYPE_CLASS_TEXT);
     }
 
     public Optional<Integer> getThrow() {

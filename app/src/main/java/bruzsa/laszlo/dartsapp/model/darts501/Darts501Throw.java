@@ -1,4 +1,4 @@
-package bruzsa.laszlo.dartsapp.ui.darts501;
+package bruzsa.laszlo.dartsapp.model.darts501;
 
 import androidx.annotation.NonNull;
 
