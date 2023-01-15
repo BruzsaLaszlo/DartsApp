@@ -16,7 +16,7 @@ public class InputValidator {
             int input = Integer.parseInt(s.toString());
             return input > 180 && input % 100 != 0;
         }
-        return !s.toString().matches("\\d+|\\d+\\+\\d+|\\d+\\+\\d+\\+\\d+|\\d+\\+|\\d+\\+\\d+\\+");
+        return !s.toString().matches("^\\d*\\+?\\d+\\+?\\d*$");
     }
 
     public Optional<Integer> getValidThrow(EditText scoreEditText) {
@@ -24,7 +24,7 @@ public class InputValidator {
         if (scoreEditText.getText().toString().matches("^\\d+$")) {
             return Optional.of(Integer.parseInt(scoreEditText.getText().toString()));
         } else if (scoreEditText.getError() != null &&
-                scoreEditText.getError().toString().matches("^[0-9]+$")) {
+                scoreEditText.getError().toString().matches("^\\d+$")) {
             return Optional.of(Integer.parseInt(scoreEditText.getError().toString()));
         }
         return Optional.empty();

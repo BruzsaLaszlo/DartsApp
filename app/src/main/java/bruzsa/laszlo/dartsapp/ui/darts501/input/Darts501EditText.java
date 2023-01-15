@@ -41,7 +41,8 @@ public class Darts501EditText extends AppCompatEditText {
             switch (inputType) {
                 case THROW -> setThrowSettings();
                 case RESTART_GAME -> setNewGameSettings();
-                case NAME1, NAME2 -> setNameSettings();
+                case NAME1 -> setNameSettings();
+                case NAME2 -> setNameSettings();
             }
         });
     }

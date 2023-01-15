@@ -19,10 +19,12 @@ public class ScoreInputWatcher implements TextWatcher {
 
     @Override
     public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+        // default implementation ignored
     }
 
     @Override
     public void onTextChanged(CharSequence s, int start, int before, int count) {
+        // default implementation ignored
     }
 
     @Override
@@ -32,7 +34,7 @@ public class ScoreInputWatcher implements TextWatcher {
             else s.replace(s.length() - 1, s.length(), "+");
         } else if (s.toString().contains("+")) {
             int sum = Arrays.stream(s.toString().split("[+]"))
-                    .filter(s1 -> s1.matches("[0-9]+"))
+                    .filter(s1 -> s1.matches("\\d+"))
                     .mapToInt(Integer::parseInt)
                     .sum();
             scoreEditText.setError(String.valueOf(sum));

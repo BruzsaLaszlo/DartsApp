@@ -27,8 +27,8 @@ import java.util.Objects;
 
 import bruzsa.laszlo.dartsapp.R;
 import bruzsa.laszlo.dartsapp.databinding.FragmentDarts501Binding;
-import bruzsa.laszlo.dartsapp.model.darts501.ChangeType;
 import bruzsa.laszlo.dartsapp.model.SharedViewModel;
+import bruzsa.laszlo.dartsapp.model.darts501.ChangeType;
 import bruzsa.laszlo.dartsapp.model.darts501.Darts501ViewModel;
 import bruzsa.laszlo.dartsapp.ui.darts501.input.InputType;
 

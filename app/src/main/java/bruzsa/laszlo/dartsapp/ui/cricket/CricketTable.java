@@ -17,9 +17,7 @@ import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.constraintlayout.widget.ConstraintLayout;
 
 import java.util.HashMap;
 import java.util.List;
@@ -36,9 +34,9 @@ public class CricketTable extends View {
     public static final List<Integer> activeNumbers = List.of(15, 16, 17, 18, 19, 20, 25);
     private final Paint paint = new Paint();
     private final RectF oval = new RectF();
-    public float radius;
+    private float radius;
     private float radiusOfBull;
-    private static final int circleMargin = 50;
+    private static final int CIRCLE_MARGIN = 50;
     private float circleCentreX;
     private float circleCentreY;
 
@@ -76,11 +74,11 @@ public class CricketTable extends View {
 
         paint.setAntiAlias(true);
 
-        radius = Math.min(getWidth(), getHeight()) / 2f - circleMargin;
-        circleCentreY = circleCentreX = radius + circleMargin;
+        radius = Math.min(getWidth(), getHeight()) / 2f - CIRCLE_MARGIN;
+        circleCentreY = circleCentreX = radius + CIRCLE_MARGIN;
         radiusOfBull = radius / 4;
 
-        oval.set(circleMargin, circleMargin, radius * 2 + circleMargin, radius * 2 + circleMargin);
+        oval.set(CIRCLE_MARGIN, CIRCLE_MARGIN, radius * 2 + CIRCLE_MARGIN, radius * 2 + CIRCLE_MARGIN);
 
         paint.setStyle(Paint.Style.FILL);
         paint.setColor(WHITE);
@@ -109,23 +107,19 @@ public class CricketTable extends View {
 
     }
 
-    @Override
-    protected void onVisibilityChanged(@NonNull View changedView, int visibility) {
-        super.onVisibilityChanged(changedView, visibility);
-
-    }
-
     @SuppressWarnings("ConstantConditions")
     private int getColorByValue(int actual) {
-        if (!playerScores.containsKey(actual) || (playerScores.containsKey(actual) && playerScores.get(actual) < 3))
-            if (!opponentScores.containsKey(actual) || (opponentScores.containsKey(actual) && opponentScores.get(actual) < 3))
+        if (!playerScores.containsKey(actual) || (playerScores.containsKey(actual) && playerScores.get(actual) < 3)) {
+            if (!opponentScores.containsKey(actual) || (opponentScores.containsKey(actual) && opponentScores.get(actual) < 3)) {
                 return BLUE;
-            else
+            } else {
                 return RED;
-        else if (!opponentScores.containsKey(actual) || (opponentScores.containsKey(actual) && opponentScores.get(actual) < 3))
+            }
+        } else if (!opponentScores.containsKey(actual) || (opponentScores.containsKey(actual) && opponentScores.get(actual) < 3)) {
             return GREEN;
-        else return BLACK;
-
+        } else {
+            return BLACK;
+        }
     }
 
     private void drawStyleCircles(Canvas canvas) {
@@ -140,7 +134,7 @@ public class CricketTable extends View {
     @SuppressLint("ClickableViewAccessibility")
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-        Log.d(TAG, String.format("onTouchEvent(%d): x: %.2f, y:%.2f", event.getAction(),event.getX(),event.getY()));
+        Log.d(TAG, String.format("onTouchEvent(%d): x: %.2f, y:%.2f", event.getAction(), event.getX(), event.getY()));
         if (event.getAction() != MotionEvent.ACTION_DOWN) return false;
 
         double distance = Math.sqrt(Math.pow(event.getX() - circleCentreX, 2) + Math.pow(event.getY() - circleCentreY, 2));

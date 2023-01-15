@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -29,16 +28,17 @@ public class HomeFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+        requireActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
         homeViewModel = new ViewModelProvider(this).get(HomeViewModel.class);
         sharedViewModel = new ViewModelProvider(requireActivity()).get(SharedViewModel.class);
     }
 
+    @Override
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         binding = FragmentHomeBinding.inflate(inflater, container, false);
-        getActivity().findViewById(R.id.toolbar).setVisibility(View.VISIBLE);
+        requireActivity().findViewById(R.id.toolbar).setVisibility(View.VISIBLE);
         return inflater.inflate(R.layout.fragment_home, container, false);
     }
 
@@ -50,7 +50,7 @@ public class HomeFragment extends Fragment {
     }
 
     private void inicListOfPlayers() {
-        binding.listOfPlayers.setLayoutManager(new LinearLayoutManager(getActivity(),RecyclerView.VERTICAL,false));
+        binding.listOfPlayers.setLayoutManager(new LinearLayoutManager(getActivity(), RecyclerView.VERTICAL, false));
         binding.listOfPlayers.setAdapter(new PlayersAdapter(homeViewModel.getPlayers()));
     }
 

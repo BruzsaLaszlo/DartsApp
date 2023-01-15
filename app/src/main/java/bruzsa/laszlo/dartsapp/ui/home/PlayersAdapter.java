@@ -41,6 +41,7 @@ public class PlayersAdapter extends RecyclerView.Adapter<PlayersAdapter.ViewHold
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         private final TextView player;
+
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             player = itemView.findViewById(R.id.playerItem);

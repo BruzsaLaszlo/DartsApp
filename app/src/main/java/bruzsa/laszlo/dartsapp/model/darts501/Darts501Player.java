@@ -75,8 +75,8 @@ public class Darts501Player {
     }
 
     public int wonSet() {
-        legs=0;
-        return  ++sets;
+        legs = 0;
+        return ++sets;
     }
 
     public void loseSet() {

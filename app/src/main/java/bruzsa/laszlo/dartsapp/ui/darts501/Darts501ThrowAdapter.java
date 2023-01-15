@@ -17,7 +17,7 @@ import bruzsa.laszlo.dartsapp.model.darts501.Darts501Throw;
 
 public class Darts501ThrowAdapter extends RecyclerView.Adapter<Darts501ThrowAdapter.ViewHolder> {
 
-    private  List<Darts501Throw> mDataSet;
+    private List<Darts501Throw> mDataSet;
     private final MutableLiveData<Darts501Throw> selectedForRemove = new MutableLiveData<>();
 
     @SuppressLint("NotifyDataSetChanged")

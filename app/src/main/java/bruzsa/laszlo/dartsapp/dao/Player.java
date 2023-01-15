@@ -4,13 +4,12 @@ import java.util.Objects;
 
 public class Player {
 
-    private long id = (long) (Math.random()*10000000);
+    private long id = (long) (Math.random() * 10000000);
     private final String name;
 
     public Player(String name) {
         this.name = name;
     }
-
 
 
     public long getId() {

@@ -46,7 +46,7 @@ public class CricketViewModel extends ViewModel {
         boolean player2ThrowAll = player2.getScores().size() == 7 &&
                 player2.getScores().values().stream().allMatch(m -> m >= 3);
         if ((player1ThrowAll && player1.getPoints() > player2.getPoints()) ||
-                (player2ThrowAll && player2.getPoints() > player1.getPoints()) )
+                (player2ThrowAll && player2.getPoints() > player1.getPoints()))
             isGameOver.setValue(true);
     }
 

@@ -5,7 +5,6 @@ import static android.content.pm.ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED;
 import static androidx.recyclerview.widget.LinearLayoutManager.VERTICAL;
 
 import android.annotation.SuppressLint;
-import android.content.res.Configuration;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
@@ -21,8 +20,8 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 
 import bruzsa.laszlo.dartsapp.R;
 import bruzsa.laszlo.dartsapp.databinding.FragmentCricketBinding;
-import bruzsa.laszlo.dartsapp.model.cricket.CricketViewModel;
 import bruzsa.laszlo.dartsapp.model.SharedViewModel;
+import bruzsa.laszlo.dartsapp.model.cricket.CricketViewModel;
 
 public class CricketFragment extends Fragment {
 
@@ -45,11 +44,12 @@ public class CricketFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
 
-        sharedViewModel.startNewGameCricket().observe(getViewLifecycleOwner(),newGame ->
+        sharedViewModel.startNewGameCricket().observe(getViewLifecycleOwner(), newGame ->
                 cViewModel.newGame(sharedViewModel.getPlayer1(), sharedViewModel.getPlayer2()));
 
         binding = FragmentCricketBinding.inflate(inflater, container, false);
         setScreenOrientation(SCREEN_ORIENTATION_LANDSCAPE);
+        requireActivity().findViewById(R.id.toolbar).setVisibility(View.INVISIBLE);
         return binding.getRoot();
     }
 
@@ -57,12 +57,6 @@ public class CricketFragment extends Fragment {
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         Log.d(TAG, "onViewCreated");
-
-
-        if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
-            requireActivity().findViewById(R.id.toolbar).setVisibility(View.INVISIBLE);
-        }
-
 
         if (cViewModel.isGameNotStarted()) {
             cViewModel.newGame(sharedViewModel.getPlayer1(), sharedViewModel.getPlayer2());
@@ -75,7 +69,6 @@ public class CricketFragment extends Fragment {
 
         setOnClickListenersForTable(binding.cricketTable1, 1);
         setOnClickListenersForTable(binding.cricketTable2, 2);
-
 
         binding.shootList.setLayoutManager(new LinearLayoutManager(getActivity(), VERTICAL, true));
         cricketThrowsAdapter = new CricketThrowsAdapter(

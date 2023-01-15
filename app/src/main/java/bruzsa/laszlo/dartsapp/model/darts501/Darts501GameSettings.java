@@ -3,7 +3,7 @@ package bruzsa.laszlo.dartsapp.model.darts501;
 public class Darts501GameSettings {
 
     private int legSetOf = 1;
-    private   int handicap = 181;
+    private int handicap = 181;
     private int startScore = 501;
     private Darts501MatchType darts501MatchType = Darts501MatchType.SINGLE_LEG;
 
