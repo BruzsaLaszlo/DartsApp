@@ -1,4 +1,4 @@
-package bruzsa.laszlo.dartsapp.ui.dartsX01single;
+package bruzsa.laszlo.dartsapp.ui.singleX01;
 
 import android.annotation.SuppressLint;
 import android.content.pm.ActivityInfo;
@@ -16,15 +16,15 @@ import androidx.lifecycle.ViewModelProvider;
 import bruzsa.laszlo.dartsapp.R;
 import bruzsa.laszlo.dartsapp.databinding.FragmentDartsx01SinglePlayerBinding;
 import bruzsa.laszlo.dartsapp.model.SharedViewModel;
-import bruzsa.laszlo.dartsapp.model.dartsX01single.DartsX01SinglePlayerViewModel;
-import bruzsa.laszlo.dartsapp.ui.dartsX01.DartsX01ThrowAdapter;
-import bruzsa.laszlo.dartsapp.ui.dartsX01.input.InputType;
+import bruzsa.laszlo.dartsapp.model.singleX01.SingleX01PlayerViewModel;
+import bruzsa.laszlo.dartsapp.ui.X01.X01ThrowAdapter;
+import bruzsa.laszlo.dartsapp.ui.X01.input.InputType;
 
-public class DartsX01SinglePlayerFragment extends Fragment {
+public class SingleX01PlayerFragment extends Fragment {
 
-    private DartsX01SinglePlayerViewModel mViewModel;
+    private SingleX01PlayerViewModel mViewModel;
     private SharedViewModel sharedViewModel;
-    private DartsX01ThrowAdapter playerThrowAdapter;
+    private X01ThrowAdapter playerThrowAdapter;
     private final MutableLiveData<InputType> inputType = new MutableLiveData<>(InputType.THROW);
     private FragmentDartsx01SinglePlayerBinding binding;
 
@@ -39,7 +39,7 @@ public class DartsX01SinglePlayerFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-        mViewModel = new ViewModelProvider(this).get(DartsX01SinglePlayerViewModel.class);
+        mViewModel = new ViewModelProvider(this).get(SingleX01PlayerViewModel.class);
         binding = FragmentDartsx01SinglePlayerBinding.inflate(inflater, container, false);
         return binding.getRoot();
     }
@@ -54,4 +54,5 @@ public class DartsX01SinglePlayerFragment extends Fragment {
         super.onDestroy();
         requireActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
     }
+
 }

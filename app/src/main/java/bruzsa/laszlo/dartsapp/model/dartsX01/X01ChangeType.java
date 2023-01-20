@@ -1,6 +1,6 @@
 package bruzsa.laszlo.dartsapp.model.dartsX01;
 
-public enum ChangeType {
+public enum X01ChangeType {
 
     ADD_SHOOT,
     ADD_SHOOTS,

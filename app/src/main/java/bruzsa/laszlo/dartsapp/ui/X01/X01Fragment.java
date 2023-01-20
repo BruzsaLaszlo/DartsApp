@@ -1,4 +1,4 @@
-package bruzsa.laszlo.dartsapp.ui.dartsX01;
+package bruzsa.laszlo.dartsapp.ui.X01;
 
 import static android.content.pm.PackageManager.PERMISSION_DENIED;
 import static android.graphics.Color.BLACK;
@@ -43,24 +43,24 @@ import java.util.Set;
 
 import bruzsa.laszlo.dartsapp.R;
 import bruzsa.laszlo.dartsapp.dao.Player;
-import bruzsa.laszlo.dartsapp.databinding.FragmentDartsx01Binding;
+import bruzsa.laszlo.dartsapp.databinding.FragmentX01Binding;
 import bruzsa.laszlo.dartsapp.model.SharedViewModel;
 import bruzsa.laszlo.dartsapp.model.Team;
 import bruzsa.laszlo.dartsapp.model.TeamPlayer;
-import bruzsa.laszlo.dartsapp.model.dartsX01.ChangeType;
-import bruzsa.laszlo.dartsapp.model.dartsX01.DartsX01ViewModel;
+import bruzsa.laszlo.dartsapp.model.dartsX01.X01ChangeType;
+import bruzsa.laszlo.dartsapp.model.dartsX01.X01ViewModel;
 import bruzsa.laszlo.dartsapp.model.home.GameMode;
 import bruzsa.laszlo.dartsapp.ui.Speech;
-import bruzsa.laszlo.dartsapp.ui.dartsX01.input.InputType;
+import bruzsa.laszlo.dartsapp.ui.X01.input.InputType;
 
-public class DartsX01Fragment extends Fragment {
+public class X01Fragment extends Fragment {
 
-    private DartsX01ViewModel dViewModel;
-    private FragmentDartsx01Binding binding;
+    private X01ViewModel dViewModel;
+    private FragmentX01Binding binding;
     private SharedViewModel sharedViewModel;
 
-    private DartsX01ThrowAdapter player1ThrowAdapter;
-    private DartsX01ThrowAdapter player2ThrowAdapter;
+    private X01ThrowAdapter player1ThrowAdapter;
+    private X01ThrowAdapter player2ThrowAdapter;
 
     private TextView lastOnLongClicked;
 
@@ -75,7 +75,7 @@ public class DartsX01Fragment extends Fragment {
         super.onCreate(savedInstanceState);
         requireActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         sharedViewModel = new ViewModelProvider(requireActivity()).get(SharedViewModel.class);
-        dViewModel = new ViewModelProvider(this).get(DartsX01ViewModel.class);
+        dViewModel = new ViewModelProvider(this).get(X01ViewModel.class);
 
         if (checkSelfPermission(requireContext(), Manifest.permission.RECORD_AUDIO) == PERMISSION_DENIED) {
             Log.d("DartsX01Fragment", "onCreate: RECORD_AUDIO permission denied");
@@ -96,9 +96,9 @@ public class DartsX01Fragment extends Fragment {
                              @Nullable Bundle savedInstanceState) {
         requireActivity().findViewById(R.id.toolbar).setVisibility(View.GONE);
 
-        binding = FragmentDartsx01Binding.inflate(inflater, container, false);
+        binding = FragmentX01Binding.inflate(inflater, container, false);
 
-        if (dViewModel.onPlayerChange().getValue() == ChangeType.NO_GAME) {
+        if (dViewModel.onPlayerChange().getValue() == X01ChangeType.NO_GAME) {
             dViewModel.setSettings(sharedViewModel.getSettings());
             startNewGame();
         }
@@ -151,7 +151,7 @@ public class DartsX01Fragment extends Fragment {
 
     private void inicThrowList(RecyclerView listPlayerThrows, Team team) {
         listPlayerThrows.setLayoutManager(new LinearLayoutManager(getActivity(), VERTICAL, true));
-        DartsX01ThrowAdapter throwAdapter = new DartsX01ThrowAdapter(dViewModel.getThrows(team));
+        X01ThrowAdapter throwAdapter = new X01ThrowAdapter(dViewModel.getThrows(team));
         if (team.isTeam1()) player1ThrowAdapter = throwAdapter;
         else player2ThrowAdapter = throwAdapter;
         throwAdapter.getSelectedForRemove().observe(getViewLifecycleOwner(), shoot -> dViewModel.removeThrow(shoot, team));

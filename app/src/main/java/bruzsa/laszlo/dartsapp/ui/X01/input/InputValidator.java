@@ -1,4 +1,4 @@
-package bruzsa.laszlo.dartsapp.ui.dartsX01.input;
+package bruzsa.laszlo.dartsapp.ui.X01.input;
 
 import android.text.Editable;
 import android.widget.EditText;

@@ -15,7 +15,7 @@ import java.util.List;
 import java.util.Map;
 
 import bruzsa.laszlo.dartsapp.dao.Player;
-import bruzsa.laszlo.dartsapp.model.dartsX01.DartsX01GameSettings;
+import bruzsa.laszlo.dartsapp.model.dartsX01.X01GameSettings;
 import bruzsa.laszlo.dartsapp.model.home.GameMode;
 import bruzsa.laszlo.dartsapp.model.home.GameType;
 import bruzsa.laszlo.dartsapp.repository.home.PlayersRepository;
@@ -28,7 +28,7 @@ public class SharedViewModel extends ViewModel {
     private final Map<TeamPlayer, Player> selectedPlayers = new EnumMap<>(TeamPlayer.class);
     private TeamPlayer selectedPlayer;
 
-    private final DartsX01GameSettings settings = DartsX01GameSettings.getDefault();
+    private final X01GameSettings settings = X01GameSettings.getDefault();
 
     private GameType gameType = GameType.NO_GAME;
     private GameMode gameMode = GameMode.PLAYER;
@@ -57,7 +57,7 @@ public class SharedViewModel extends ViewModel {
         this.gameMode = gameMode;
     }
 
-    public DartsX01GameSettings getSettings() {
+    public X01GameSettings getSettings() {
         return settings;
     }
 

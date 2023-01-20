@@ -7,16 +7,16 @@ import java.util.List;
 import java.util.Locale;
 import java.util.stream.Collectors;
 
-public class DartsX01SummaryStatistics {
+public class X01SummaryStatistics {
 
-    private final List<DartsX01Throw> throwList;
+    private final List<X01Throw> throwList;
 
-    public DartsX01SummaryStatistics(List<DartsX01Throw> throwList) {
+    public X01SummaryStatistics(List<X01Throw> throwList) {
         this.throwList = throwList;
     }
 
     @NonNull
-    private List<DartsX01Throw> validAndNotHandicapThrows() {
+    private List<X01Throw> validAndNotHandicapThrows() {
         return throwList.stream()
                 .filter(dartsX01Throw -> dartsX01Throw.isValid() && dartsX01Throw.isNotHandicap())
                 .collect(Collectors.toList());
@@ -40,8 +40,8 @@ public class DartsX01SummaryStatistics {
 
     public int getSum() {
         return throwList.stream()
-                .filter(DartsX01Throw::isValid)
-                .mapToInt(DartsX01Throw::getThrow)
+                .filter(X01Throw::isValid)
+                .mapToInt(X01Throw::getThrow)
                 .sum();
     }
 
@@ -59,7 +59,7 @@ public class DartsX01SummaryStatistics {
 
     public IntSummaryStatistics getAllStat() {
         return validAndNotHandicapThrows().stream()
-                .mapToInt(DartsX01Throw::getThrow)
+                .mapToInt(X01Throw::getThrow)
                 .summaryStatistics();
     }
 

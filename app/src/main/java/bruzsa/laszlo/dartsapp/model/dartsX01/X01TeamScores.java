@@ -6,26 +6,26 @@ import java.util.List;
 
 import bruzsa.laszlo.dartsapp.dao.Player;
 
-public class DartsX01TeamScores {
+public class X01TeamScores {
 
-    private final List<DartsX01Throw> throwsList = new ArrayList<>();
-    private final DartsX01SummaryStatistics stat = new DartsX01SummaryStatistics(throwsList);
+    private final List<X01Throw> throwsList = new ArrayList<>();
+    private final X01SummaryStatistics stat = new X01SummaryStatistics(throwsList);
     private int legs;
     private int sets;
 
     private final Player player1;
     private final Player player2;
 
-    public DartsX01TeamScores(Player... players) {
+    public X01TeamScores(Player... players) {
         player1 = players[0];
         player2 = players.length == 2 ? players[1] : null;
     }
 
-    public void addThrow(DartsX01Throw dartsThrow) {
+    public void addThrow(X01Throw dartsThrow) {
         throwsList.add(dartsThrow);
     }
 
-    public int removeThrow(DartsX01Throw dartsThrow) {
+    public int removeThrow(X01Throw dartsThrow) {
         int position = throwsList.indexOf(dartsThrow);
         throwsList.remove(position);
         return position;
@@ -35,7 +35,7 @@ public class DartsX01TeamScores {
         return stat.toString();
     }
 
-    public List<DartsX01Throw> getThrowsList() {
+    public List<X01Throw> getThrowsList() {
         return Collections.unmodifiableList(throwsList);
     }
 

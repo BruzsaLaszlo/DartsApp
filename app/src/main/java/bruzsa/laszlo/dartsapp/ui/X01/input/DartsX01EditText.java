@@ -1,4 +1,4 @@
-package bruzsa.laszlo.dartsapp.ui.dartsX01.input;
+package bruzsa.laszlo.dartsapp.ui.X01.input;
 
 import static android.text.InputType.TYPE_CLASS_PHONE;
 import static android.text.InputType.TYPE_CLASS_TEXT;

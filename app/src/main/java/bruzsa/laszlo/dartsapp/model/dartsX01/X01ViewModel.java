@@ -2,13 +2,13 @@ package bruzsa.laszlo.dartsapp.model.dartsX01;
 
 import static bruzsa.laszlo.dartsapp.model.Team.TEAM1;
 import static bruzsa.laszlo.dartsapp.model.Team.TEAM2;
-import static bruzsa.laszlo.dartsapp.model.dartsX01.ChangeType.ADD_SHOOT;
-import static bruzsa.laszlo.dartsapp.model.dartsX01.ChangeType.ADD_SHOOTS;
-import static bruzsa.laszlo.dartsapp.model.dartsX01.ChangeType.CHANGE_ACTIVE_PLAYER;
-import static bruzsa.laszlo.dartsapp.model.dartsX01.ChangeType.GAME_OVER;
-import static bruzsa.laszlo.dartsapp.model.dartsX01.ChangeType.NEW_GAME;
-import static bruzsa.laszlo.dartsapp.model.dartsX01.ChangeType.NO_GAME;
-import static bruzsa.laszlo.dartsapp.model.dartsX01.ChangeType.REMOVE_SHOOT;
+import static bruzsa.laszlo.dartsapp.model.dartsX01.X01ChangeType.ADD_SHOOT;
+import static bruzsa.laszlo.dartsapp.model.dartsX01.X01ChangeType.ADD_SHOOTS;
+import static bruzsa.laszlo.dartsapp.model.dartsX01.X01ChangeType.CHANGE_ACTIVE_PLAYER;
+import static bruzsa.laszlo.dartsapp.model.dartsX01.X01ChangeType.GAME_OVER;
+import static bruzsa.laszlo.dartsapp.model.dartsX01.X01ChangeType.NEW_GAME;
+import static bruzsa.laszlo.dartsapp.model.dartsX01.X01ChangeType.NO_GAME;
+import static bruzsa.laszlo.dartsapp.model.dartsX01.X01ChangeType.REMOVE_SHOOT;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
@@ -22,17 +22,17 @@ import bruzsa.laszlo.dartsapp.dao.Player;
 import bruzsa.laszlo.dartsapp.model.Team;
 import bruzsa.laszlo.dartsapp.model.TeamPlayer;
 
-public class DartsX01ViewModel extends ViewModel {
+public class X01ViewModel extends ViewModel {
 
     private TeamPlayer active = TEAM1.player1();
     private TeamPlayer startLeg = TEAM1.player1();
     private TeamPlayer startSet = TEAM1.player1();
-    private DartsX01GameSettings settings = DartsX01GameSettings.getDefault();
+    private X01GameSettings settings = X01GameSettings.getDefault();
     private boolean teamPlay;
-    private Map<Team, DartsX01TeamScores> teamScores;
+    private Map<Team, X01TeamScores> teamScores;
     private int lastRemovedIndex = -1;
 
-    private final MutableLiveData<ChangeType> state = new MutableLiveData<>(NO_GAME);
+    private final MutableLiveData<X01ChangeType> state = new MutableLiveData<>(NO_GAME);
 
 
     public void newThrow(int dartsThrow) {
@@ -51,19 +51,19 @@ public class DartsX01ViewModel extends ViewModel {
         }
     }
 
-    private boolean newThrow(Team team, int shootValue) {
-        DartsX01TeamScores aPlayer = teamScores.get(team);
-        DartsX01TeamScores opponent = teamScores.get(team.opponent());
+    private boolean newThrow(Team team, int throwValue) {
+        X01TeamScores aPlayer = teamScores.get(team);
+        X01TeamScores opponent = teamScores.get(team.opponent());
         int maxLegSet = settings.getLegSetOf() / 2 + 1;
-        int newScore = getScore(team) - shootValue;
+        int newScore = getScore(team) - throwValue;
 
-        DartsX01Throw newThrow = new DartsX01Throw(shootValue, newScore > 1 || newScore == 0);
+        X01Throw newThrow = new X01Throw(throwValue, newScore > 1 || newScore == 0);
         aPlayer.addThrow(newThrow);
         if (newScore != 0) return false;
         return isGameOver(aPlayer, opponent, maxLegSet);
     }
 
-    private boolean isGameOver(DartsX01TeamScores aPlayer, DartsX01TeamScores opponent, int maxLegSet) {
+    private boolean isGameOver(X01TeamScores aPlayer, X01TeamScores opponent, int maxLegSet) {
         switch (settings.getDartsX01MatchType()) {
             case SINGLE_LEG:
                 return true;
@@ -99,12 +99,12 @@ public class DartsX01ViewModel extends ViewModel {
     }
 
 
-    public LiveData<ChangeType> onPlayerChange() {
+    public LiveData<X01ChangeType> onPlayerChange() {
         return state;
     }
 
-    public void removeThrow(DartsX01Throw dartsX01Throw, Team team) {
-        lastRemovedIndex = teamScores.get(team).removeThrow(dartsX01Throw);
+    public void removeThrow(X01Throw x01Throw, Team team) {
+        lastRemovedIndex = teamScores.get(team).removeThrow(x01Throw);
         state.setValue(REMOVE_SHOOT);
     }
 
@@ -125,17 +125,17 @@ public class DartsX01ViewModel extends ViewModel {
         return teamScores.get(team).getStat();
     }
 
-    public List<DartsX01Throw> getThrows(Team team) {
+    public List<X01Throw> getThrows(Team team) {
         return teamScores.get(team).getThrowsList();
     }
 
-    public void setSettings(@NonNull DartsX01GameSettings settings) {
+    public void setSettings(@NonNull X01GameSettings settings) {
         this.settings = settings;
     }
 
     public void newGame(Map<TeamPlayer, Player> activePlayersMap) {
-        DartsX01TeamScores team1 = new DartsX01TeamScores(activePlayersMap.get(TEAM1.player1()), activePlayersMap.get(TEAM1.player2()));
-        DartsX01TeamScores team2 = new DartsX01TeamScores(activePlayersMap.get(TEAM2.player1()), activePlayersMap.get(TEAM2.player2()));
+        X01TeamScores team1 = new X01TeamScores(activePlayersMap.get(TEAM1.player1()), activePlayersMap.get(TEAM1.player2()));
+        X01TeamScores team2 = new X01TeamScores(activePlayersMap.get(TEAM2.player1()), activePlayersMap.get(TEAM2.player2()));
         teamScores = Map.of(TEAM1,team1, TEAM2,team2);
         active = TEAM1.player1();
         teamPlay = activePlayersMap.size() == TeamPlayer.values().length;
