@@ -7,15 +7,21 @@ import java.util.HashMap;
 import java.util.Map;
 
 import bruzsa.laszlo.dartsapp.dao.Player;
-import bruzsa.laszlo.dartsapp.ui.cricket.CricketThrow;
 
-public class CricketPlayer extends Player {
+public class CricketTeam {
 
+    private final Player player1;
+    private Player player2;
+
+    private final boolean teamPlay;
     private int points;
     private final Map<Integer, Integer> scores = new HashMap<>();
 
-    public CricketPlayer(String name) {
-        super(name.substring(0, 2));
+    public CricketTeam(Player... players) {
+        player1 = players[0];
+        teamPlay = players.length == 2 && players[1] != null;
+        if (teamPlay)
+            player2 = players[1];
     }
 
     public void addThrow(CricketThrow shoot, Integer opponentMultiplier) {
@@ -48,7 +54,7 @@ public class CricketPlayer extends Player {
     @NonNull
     @Override
     public String toString() {
-        return getName();
+        return player1.getNickName() + (teamPlay ? player2.getNickName() : "");
     }
 
     public int getPoints() {
@@ -58,10 +64,8 @@ public class CricketPlayer extends Player {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof CricketPlayer)) return false;
+        if (!(o instanceof CricketTeam that)) return false;
         if (!super.equals(o)) return false;
-
-        CricketPlayer that = (CricketPlayer) o;
 
         if (getPoints() != that.getPoints()) return false;
         return getScores() != null ? getScores().equals(that.getScores()) : that.getScores() == null;

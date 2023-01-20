@@ -23,4 +23,21 @@
     <string name="lacika007_gmail_com">lacika007@gmail.com</string>
     <string name="p_nl_na_ny_ne_nr">p\nl\na\ny\ne\nr</string>
     <string name="valvmi">valami</string>
+    <string name="_501Single">501 Single Player</string>
+    <string name="new_game">NEW GAME</string>
+    <string name="start_game">Start Game!</string>
+    <string name="_501_single">501 Single</string>
+    <string name="cricket_single">Cricket Single</string>
+    <string name="_1">1</string>
+    <string name="valami">Valami</string>
+    <string name="_0_n0">0\n0</string>
+    <string name="SetLeg">S\nL</string>
+    <string name="team">Team</string>
+    <string name="sp">SP</string>
+    <string name="player_team_1">Player/Team 1</string>
+    <string name="player_team_2">Player/Team 2</string>
+    <string name="add_player">add player</string>
+    <string name="speech_recognizer">SpeechRecognizer</string>
+    <string name="player">Player</string>
+    <string name="single">Single</string>
 </resources>

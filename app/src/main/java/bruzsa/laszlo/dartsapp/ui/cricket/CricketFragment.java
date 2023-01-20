@@ -2,6 +2,7 @@ package bruzsa.laszlo.dartsapp.ui.cricket;
 
 import static android.content.pm.ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE;
 import static android.content.pm.ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED;
+import static android.view.View.GONE;
 import static androidx.recyclerview.widget.LinearLayoutManager.VERTICAL;
 
 import android.annotation.SuppressLint;
@@ -27,7 +28,6 @@ public class CricketFragment extends Fragment {
 
     private static final String TAG = "CricketFragment";
     private CricketViewModel cViewModel;
-
     private SharedViewModel sharedViewModel;
     private CricketThrowsAdapter cricketThrowsAdapter;
     private FragmentCricketBinding binding;
@@ -36,51 +36,47 @@ public class CricketFragment extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         cViewModel = new ViewModelProvider(this).get(CricketViewModel.class);
-        sharedViewModel = new ViewModelProvider(this).get(SharedViewModel.class);
+        sharedViewModel = new ViewModelProvider(requireActivity()).get(SharedViewModel.class);
     }
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-
-        sharedViewModel.startNewGameCricket().observe(getViewLifecycleOwner(), newGame ->
-                cViewModel.newGame(sharedViewModel.getPlayer1(), sharedViewModel.getPlayer2()));
-
-        binding = FragmentCricketBinding.inflate(inflater, container, false);
         setScreenOrientation(SCREEN_ORIENTATION_LANDSCAPE);
-        requireActivity().findViewById(R.id.toolbar).setVisibility(View.INVISIBLE);
+        binding = FragmentCricketBinding.inflate(inflater, container, false);
+        requireActivity().findViewById(R.id.toolbar).setVisibility(GONE);
         return binding.getRoot();
     }
 
     @Override
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        Log.d(TAG, "onViewCreated");
-
-        if (cViewModel.isGameNotStarted()) {
-            cViewModel.newGame(sharedViewModel.getPlayer1(), sharedViewModel.getPlayer2());
-        }
-
-        sharedViewModel.startNewGameCricket().observe(getViewLifecycleOwner(), this::newGame);
-
         cViewModel.isGameOver().observe(getViewLifecycleOwner(), isGameOver ->
                 binding.scoreTextView.setTextColor(Boolean.TRUE.equals(isGameOver) ? Color.RED : Color.BLACK));
 
+        ScreenSize screenSize = new ScreenSize(requireActivity());
+        binding.cricketTable1.setSize(screenSize.getSize());
+        binding.cricketTable1.setLeft(true);
         setOnClickListenersForTable(binding.cricketTable1, 1);
+        binding.cricketTable2.setSize(screenSize.getSize());
         setOnClickListenersForTable(binding.cricketTable2, 2);
 
-        binding.shootList.setLayoutManager(new LinearLayoutManager(getActivity(), VERTICAL, true));
+        binding.listThrows.setLayoutManager(new LinearLayoutManager(getActivity(), VERTICAL, true));
         cricketThrowsAdapter = new CricketThrowsAdapter(
                 cViewModel.getThrows(),
                 cricketThrow -> {
                     cViewModel.shootRemove(cricketThrow);
                     refreshGUI();
                 });
-        binding.shootList.setAdapter(cricketThrowsAdapter);
-        binding.shootList.setPadding(0, 0, 0, 0);
+        binding.listThrows.setAdapter(cricketThrowsAdapter);
+        binding.listThrows.setPadding(0, 0, 0, 0);
 
-        refreshGUI();
+        if (cViewModel.isGameNotStarted()) {
+            startNewGame();
+        } else {
+            refreshGUI();
+        }
     }
 
     @SuppressLint("NotifyDataSetChanged")
@@ -89,7 +85,7 @@ public class CricketFragment extends Fragment {
         binding.cricketTable2.refreshState(cViewModel.getPlayerScore(2), cViewModel.getPlayerScore(1));
         binding.scoreTextView.setText(cViewModel.updatePoints());
         cricketThrowsAdapter.notifyDataSetChanged();
-        binding.shootList.smoothScrollToPosition(100);
+        binding.listThrows.smoothScrollToPosition(100);
     }
 
     private void setOnClickListenersForTable(CricketTable table, int i) {
@@ -105,8 +101,8 @@ public class CricketFragment extends Fragment {
         });
     }
 
-    private void newGame(boolean isNewGame) {
-        cViewModel.newGame(sharedViewModel.getPlayer1(), sharedViewModel.getPlayer2());
+    private void startNewGame() {
+        cViewModel.newGame(sharedViewModel.getSelectedPlayersMap());
         refreshGUI();
     }
 

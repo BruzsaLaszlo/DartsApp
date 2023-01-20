@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ui.darts501.Darts501SinglePlayerFragment">
+
+    <TextView
+        android:id="@+id/textNamePlayer"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="start|top|center_horizontal"
+        android:text="@string/player2"
+        android:textAlignment="center"
+        android:textSize="40sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/textScorePlayer"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|start"
+        android:text="@string/_501"
+        android:textAlignment="center"
+        android:textSize="60sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textNamePlayer" />
+
+    <bruzsa.laszlo.dartsapp.ui.darts501.input.Darts501EditText
+        android:id="@+id/textInput2"
+        style="@style/Widget.Material3.TextInputEditText.FilledBox"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="25dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginEnd="25dp"
+        android:contentDescription="@string/score"
+        android:ems="10"
+        android:importantForAutofill="no"
+        android:inputType="phone"
+        android:singleLine="true"
+        android:textAlignment="center"
+        android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+        android:textSize="60sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/frameStat"
+        tools:ignore="EditableContentDescCheck,LabelFor,SpeakableTextPresentCheck,VisualLintTextFieldSize" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/buttonOk2"
+        android:layout_width="200dp"
+        android:layout_height="93dp"
+        android:text="@string/ok"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textInput2" />
+
+    <FrameLayout
+        android:id="@+id/frameStat"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="100dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="100dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textScorePlayer">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/listThrowsPlayer1"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_gravity="start|fill_vertical"
+            android:scrollbars="vertical" />
+
+        <FrameLayout
+            android:layout_width="132dp"
+            android:layout_height="130dp"
+            android:layout_gravity="center|end">
+
+            <TextView
+                android:id="@+id/textViewStat"
+                android:layout_width="58dp"
+                android:layout_height="match_parent"
+                android:layout_gravity="start"
+                android:fontFamily="monospace"
+                android:text="@string/stat"
+                android:textAlignment="center"
+                android:textSize="24sp" />
+
+            <TextView
+                android:id="@+id/textStatPlayer2"
+                android:layout_width="60sp"
+                android:layout_height="match_parent"
+                android:layout_gravity="end"
+                android:fontFamily="monospace"
+                android:text="@string/_10_n100_n180_n26"
+                android:textAlignment="textStart"
+                android:textSize="24sp" />
+        </FrameLayout>
+    </FrameLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

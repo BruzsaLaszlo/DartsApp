@@ -1,6 +1,7 @@
 package bruzsa.laszlo.dartsapp.ui.darts501;
 
 import android.annotation.SuppressLint;
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -63,8 +64,13 @@ public class Darts501ThrowAdapter extends RecyclerView.Adapter<Darts501ThrowAdap
 
     @Override
     public void onBindViewHolder(ViewHolder viewHolder, final int position) {
-        viewHolder.shootTextView.setText(mDataSet.get(position).toString());
-        viewHolder.setThrow(mDataSet.get(position));
+        Darts501Throw darts501Throw = mDataSet.get(position);
+        viewHolder.shootTextView.setText(darts501Throw.toString());
+        if (!darts501Throw.isNotHandicap())
+            viewHolder.shootTextView.setTextColor(Color.rgb(100, 100, 0));
+        else if (!darts501Throw.isValid())
+            viewHolder.shootTextView.setTextColor(Color.RED);
+        viewHolder.setThrow(darts501Throw);
     }
 
     @Override

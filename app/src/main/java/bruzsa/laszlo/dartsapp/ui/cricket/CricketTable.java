@@ -14,6 +14,7 @@ import android.graphics.Paint;
 import android.graphics.RectF;
 import android.util.AttributeSet;
 import android.util.Log;
+import android.util.Size;
 import android.view.MotionEvent;
 import android.view.View;
 
@@ -40,6 +41,10 @@ public class CricketTable extends View {
     private float circleCentreX;
     private float circleCentreY;
 
+    private Size size;
+    private boolean left = true;
+
+
     private int touchedValue;
     private static final float DEGREE = 18;
 
@@ -64,8 +69,11 @@ public class CricketTable extends View {
 
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-        super.onMeasure(widthMeasureSpec, heightMeasureSpec);
-        getLayoutParams().width = heightMeasureSpec;
+        if (size.getWidth() == 0 || size.getHeight() == 0)
+            //noinspection SuspiciousNameCombination
+            setMeasuredDimension(heightMeasureSpec, heightMeasureSpec);
+        else
+            setMeasuredDimension((int) Math.min(size.getWidth() / 2.2f, size.getHeight()), heightMeasureSpec);
     }
 
     @Override
@@ -74,11 +82,19 @@ public class CricketTable extends View {
 
         paint.setAntiAlias(true);
 
+        Log.d(TAG, String.format("onDraw: %s, %s", getWidth(), getHeight()));
         radius = Math.min(getWidth(), getHeight()) / 2f - CIRCLE_MARGIN;
-        circleCentreY = circleCentreX = radius + CIRCLE_MARGIN;
+        circleCentreY = radius + CIRCLE_MARGIN;
         radiusOfBull = radius / 4;
 
-        oval.set(CIRCLE_MARGIN, CIRCLE_MARGIN, radius * 2 + CIRCLE_MARGIN, radius * 2 + CIRCLE_MARGIN);
+
+        if (left) {
+            circleCentreX = circleCentreY;
+            oval.set(CIRCLE_MARGIN, CIRCLE_MARGIN, radius * 2 + CIRCLE_MARGIN, radius * 2 + CIRCLE_MARGIN);
+        } else {
+            circleCentreX = getWidth() - circleCentreY;
+            oval.set(circleCentreX + CIRCLE_MARGIN, CIRCLE_MARGIN, circleCentreX + radius * 2 + CIRCLE_MARGIN, radius * 2 + CIRCLE_MARGIN);
+        }
 
         paint.setStyle(Paint.Style.FILL);
         paint.setColor(WHITE);
@@ -162,5 +178,13 @@ public class CricketTable extends View {
 
     public int getTouchedValue() {
         return touchedValue;
+    }
+
+    public void setSize(Size size) {
+        this.size = size;
+    }
+
+    public void setLeft(boolean left) {
+        this.left = left;
     }
 }

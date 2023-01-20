@@ -6,44 +6,49 @@
     android:layout_height="match_parent"
     tools:context=".ui.cricket.CricketFragment">
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/shootList"
+    <FrameLayout
+        android:id="@+id/frameTablePlayer1"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom|center"
-        android:layout_marginTop="10dp"
-        android:layout_marginBottom="5dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/cricketTable2"
-        app:layout_constraintHorizontal_bias="0.487"
-        app:layout_constraintStart_toEndOf="@+id/cricketTable1"
-        app:layout_constraintTop_toBottomOf="@+id/frameLayout"
-        app:layout_constraintVertical_bias="0.0" />
-
-    <bruzsa.laszlo.dartsapp.ui.cricket.CricketTable
-        android:id="@+id/cricketTable1"
-        android:layout_width="380dp"
-        android:layout_height="match_parent"
+        android:layout_height="0dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent">
 
-    <bruzsa.laszlo.dartsapp.ui.cricket.CricketTable
-        android:id="@+id/cricketTable2"
-        android:layout_width="380dp"
-        android:layout_height="match_parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        <bruzsa.laszlo.dartsapp.ui.cricket.CricketTable
+            android:id="@+id/cricketTable1"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="center|start"
+            android:layout_marginBottom="0dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+    </FrameLayout>
 
     <FrameLayout
-        android:id="@+id/frameLayout"
+        android:id="@+id/frameTablePlayer2"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <bruzsa.laszlo.dartsapp.ui.cricket.CricketTable
+            android:id="@+id/cricketTable2"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="end" />
+    </FrameLayout>
+
+    <FrameLayout
+        android:id="@+id/frameNamesScores"
         android:layout_width="241dp"
         android:layout_height="117dp"
-        android:layout_marginStart="-50dp"
-        android:layout_marginEnd="-50dp"
-        app:layout_constraintEnd_toStartOf="@+id/cricketTable2"
-        app:layout_constraintStart_toEndOf="@+id/cricketTable1"
+        android:layout_marginStart="-20dp"
+        android:layout_marginEnd="-20dp"
+        app:layout_constraintEnd_toStartOf="@+id/frameTablePlayer2"
+        app:layout_constraintStart_toEndOf="@+id/frameTablePlayer1"
         app:layout_constraintTop_toTopOf="parent">
 
         <TextView
@@ -74,5 +79,16 @@
             android:textSize="50sp" />
 
     </FrameLayout>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/listThrows"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginBottom="20dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/frameTablePlayer2"
+        app:layout_constraintStart_toEndOf="@+id/frameTablePlayer1"
+        app:layout_constraintTop_toBottomOf="@+id/frameNamesScores" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -8,12 +8,13 @@ import android.util.AttributeSet;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.widget.AppCompatEditText;
 import androidx.lifecycle.MutableLiveData;
+
+import com.google.android.material.textfield.TextInputEditText;
 
 import java.util.Optional;
 
-public class Darts501EditText extends AppCompatEditText {
+public class Darts501EditText extends TextInputEditText {
 
     private final InputValidator inputValidator = new InputValidator();
     private final ScoreInputWatcher scoreInputWatcher = new ScoreInputWatcher(this, inputValidator);
@@ -41,8 +42,7 @@ public class Darts501EditText extends AppCompatEditText {
             switch (inputType) {
                 case THROW -> setThrowSettings();
                 case RESTART_GAME -> setNewGameSettings();
-                case NAME1 -> setNameSettings();
-                case NAME2 -> setNameSettings();
+                case NAME -> setNameSettings();
             }
         });
     }

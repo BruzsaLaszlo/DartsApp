@@ -1,16 +1,14 @@
-package bruzsa.laszlo.dartsapp.ui.cricket;
+package bruzsa.laszlo.dartsapp.model.cricket;
 
 import androidx.annotation.NonNull;
-
-import bruzsa.laszlo.dartsapp.model.cricket.CricketPlayer;
 
 public class CricketThrow {
     private final int multiply;
     private final int value;
-    private final CricketPlayer player;
+    private final CricketTeam player;
     private boolean removed;
 
-    public CricketThrow(int multiply, int value, CricketPlayer player) {
+    public CricketThrow(int multiply, int value, CricketTeam player) {
         this.multiply = multiply;
         this.value = value;
         this.player = player;
@@ -24,7 +22,7 @@ public class CricketThrow {
         return value;
     }
 
-    public CricketPlayer getPlayer() {
+    public CricketTeam getPlayer() {
         return player;
     }
 
@@ -35,7 +33,7 @@ public class CricketThrow {
             case 2 -> "D" + value;
             case 3 -> "T" + value;
             default -> throw new IllegalStateException("Unexpected value: " + multiply);
-        } + " " + player.getName();
+        } + " " + player.toString();
     }
 
     public boolean isRemoved() {

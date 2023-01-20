@@ -1,31 +1,24 @@
 package bruzsa.laszlo.dartsapp.model.darts501;
 
-import androidx.annotation.NonNull;
-
-import org.jetbrains.annotations.NotNull;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
 import bruzsa.laszlo.dartsapp.dao.Player;
 
-public class Darts501Player {
+public class Darts501TeamScores {
 
-    private final Player player;
     private final List<Darts501Throw> throwsList = new ArrayList<>();
     private final Darts501SummaryStatistics stat = new Darts501SummaryStatistics(throwsList);
-
     private int legs;
     private int sets;
 
+    private final Player player1;
+    private final Player player2;
 
-    public Darts501Player(Player player) {
-        this.player = player;
-    }
-
-    public Darts501Player(Darts501Player darts501Player) {
-        player = darts501Player.player;
+    public Darts501TeamScores(Player... players) {
+        player1 = players[0];
+        player2 = players.length == 2 ? players[1] : null;
     }
 
     public void addThrow(Darts501Throw dartsThrow) {
@@ -44,18 +37,6 @@ public class Darts501Player {
 
     public List<Darts501Throw> getThrowsList() {
         return Collections.unmodifiableList(throwsList);
-    }
-
-    @NonNull
-    @NotNull
-    public String getPlayerName() {
-        return player.getName();
-    }
-
-    @NonNull
-    @NotNull
-    public Player getPlayer() {
-        return player;
     }
 
     public int getSum() {

@@ -1,18 +1,27 @@
 package bruzsa.laszlo.dartsapp.dao;
 
+import androidx.annotation.NonNull;
+
+import java.time.LocalDate;
 import java.util.Objects;
 
 public class Player {
 
-    private long id = (long) (Math.random() * 10000000);
+    private final Long id;
     private final String name;
+    private final String nickName;
+    private final LocalDate dateOfBirth;
+    private final byte[] image;
 
-    public Player(String name) {
+    public Player(Long id, String name, String nickName, LocalDate dateOfBirth, byte[] image) {
+        this.id = id;
         this.name = name;
+        this.nickName = nickName;
+        this.dateOfBirth = dateOfBirth;
+        this.image = image;
     }
 
-
-    public long getId() {
+    public Long getId() {
         return id;
     }
 
@@ -20,16 +29,37 @@ public class Player {
         return name;
     }
 
+    public String getNickName() {
+        return nickName;
+    }
+
+    public LocalDate getDateOfBirth() {
+        return dateOfBirth;
+    }
+
+    public byte[] getImage() {
+        return image;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (!(o instanceof Player)) return false;
         Player player = (Player) o;
-        return id == player.id;
+        return Objects.equals(getId(), player.getId());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id);
+        return Objects.hash(getId());
+    }
+
+    @NonNull
+    @Override
+    public String toString() {
+        return "Player{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                '}';
     }
 }

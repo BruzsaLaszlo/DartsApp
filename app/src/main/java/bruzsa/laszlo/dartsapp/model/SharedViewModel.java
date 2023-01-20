@@ -1,64 +1,100 @@
 package bruzsa.laszlo.dartsapp.model;
 
-import androidx.lifecycle.LiveData;
-import androidx.lifecycle.MutableLiveData;
+import static bruzsa.laszlo.dartsapp.model.TeamPlayer.PLAYER_1_1;
+import static bruzsa.laszlo.dartsapp.model.TeamPlayer.PLAYER_1_2;
+import static bruzsa.laszlo.dartsapp.model.TeamPlayer.PLAYER_2_1;
+import static bruzsa.laszlo.dartsapp.model.TeamPlayer.PLAYER_2_2;
+
 import androidx.lifecycle.ViewModel;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.EnumMap;
+import java.util.List;
+import java.util.Map;
 
 import bruzsa.laszlo.dartsapp.dao.Player;
 import bruzsa.laszlo.dartsapp.model.darts501.Darts501GameSettings;
+import bruzsa.laszlo.dartsapp.model.home.GameMode;
+import bruzsa.laszlo.dartsapp.model.home.GameType;
+import bruzsa.laszlo.dartsapp.repository.home.PlayersRepository;
 
 public class SharedViewModel extends ViewModel {
 
-    private Player player1 = new Player("Default 1\nDefault 3");
-    private Player player2 = new Player("Default 2\nDefault 4");
+    PlayersRepository playersRepository = new PlayersRepository() {
+    };
 
-    private Darts501GameSettings settings = Darts501GameSettings.getDefault();
+    private final Map<TeamPlayer, Player> selectedPlayers = new EnumMap<>(TeamPlayer.class);
+    private TeamPlayer selectedPlayer;
 
-    private MutableLiveData<Boolean> newGameCricket = new MutableLiveData<>();
-    private MutableLiveData<Boolean> newGame501 = new MutableLiveData<>();
+    private final Darts501GameSettings settings = Darts501GameSettings.getDefault();
 
+    private GameType gameType = GameType.NO_GAME;
+    private GameMode gameMode = GameMode.PLAYER;
 
-    public Player getPlayer1() {
-        return player1;
+    public SharedViewModel() {
+        selectedPlayers.put(PLAYER_1_1, getAllPlayers().get(0));
+        selectedPlayers.put(PLAYER_2_1, getAllPlayers().get(1));
+        selectedPlayers.put(PLAYER_1_2, getAllPlayers().get(2));
+        selectedPlayers.put(PLAYER_2_2, getAllPlayers().get(3));
+        //TODO delete this
     }
 
-    public Player getPlayer2() {
-        return player2;
+    public GameType getGameType() {
+        return gameType;
     }
 
-    public void setPlayer1(Player player1) {
-        this.player1 = player1;
+    public void setGameType(GameType gameType) {
+        this.gameType = gameType;
     }
 
-    public void setPlayer2(Player player2) {
-        this.player2 = player2;
+    public GameMode getGameMode() {
+        return gameMode;
     }
 
-    public void newGameCricket() {
-        newGameCricket.setValue(true);
-    }
-
-    public LiveData<Boolean> startNewGameCricket() {
-        return newGameCricket;
-    }
-
-    public void setNewGameCricket() {
-        newGameCricket.setValue(true);
-    }
-
-    public LiveData<Boolean> getNewGame501() {
-        return newGame501;
-    }
-
-    public void startNewGame501() {
-        newGame501.setValue(true);
+    public void setGameMode(GameMode gameMode) {
+        this.gameMode = gameMode;
     }
 
     public Darts501GameSettings getSettings() {
         return settings;
     }
 
-    public void setSettings(Darts501GameSettings settings) {
-        this.settings = settings;
+    public Collection<Player> getSelectedPlayersCollection() {
+        return getSelectedPlayersMap().values();
+    }
+
+    public Map<TeamPlayer, Player> getSelectedPlayersMap() {
+        if (gameMode == GameMode.SINGLE) removePLayers(PLAYER_1_2, PLAYER_2_1, PLAYER_2_2);
+        else if (gameMode == GameMode.PLAYER) removePLayers(PLAYER_1_2, PLAYER_2_2);
+
+        return Collections.unmodifiableMap(selectedPlayers);
+    }
+
+    public Player getPlayer(TeamPlayer player) {
+        return selectedPlayers.get(player);
+    }
+
+    public void addPlayer(Player player) {
+        selectedPlayers.put(selectedPlayer, player);
+    }
+
+    public void removePlayerEnum(TeamPlayer teamPlayer) {
+        this.selectedPlayers.remove(teamPlayer);
+    }
+
+    public void setSelectedPlayer(TeamPlayer selectedPlayer) {
+        this.selectedPlayer = selectedPlayer;
+    }
+
+    public List<Player> getAllPlayers() {
+        return new ArrayList<>(playersRepository.getAllPlayers());
+    }
+
+    private void removePLayers(TeamPlayer... players) {
+        for (TeamPlayer player : players) {
+            this.selectedPlayers.remove(player);
+        }
     }
 }

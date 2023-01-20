@@ -11,51 +11,211 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="50dp"
         android:layout_marginEnd="8dp"
-        android:text="NEW GAME"
+        android:text="@string/new_game"
         android:textAlignment="center"
         android:textSize="20sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.035" />
 
+    <FrameLayout
+        android:id="@+id/layoutModes"
+        android:layout_width="0dp"
+        android:layout_height="242dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="20dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textHome">
+
+        <com.google.android.material.chip.ChipGroup
+            android:id="@+id/chipGroupGameTypes"
+            android:layout_width="193dp"
+            android:layout_height="177dp"
+            android:layout_gravity="center|top"
+            android:layout_marginStart="166dp"
+            android:layout_marginEnd="167dp"
+            android:textAlignment="center"
+            app:singleLine="false"
+            app:singleSelection="true">
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/chip501"
+                style="@style/Widget.Material3.Chip.Filter"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:checkable="true"
+                android:checked="true"
+                android:text="@string/_501"
+                android:textAlignment="center"
+                android:textSize="26sp"
+                app:checkedIcon="@drawable/_000_f_113982111_9v5bfunvmzjcdh3ht4gzlqio3dxr7kq6" />
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/chipCricket"
+                style="@style/Widget.Material3.Chip.Filter"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:checkable="true"
+                android:text="@string/cricket"
+                android:textAlignment="center"
+                android:textSize="26sp"
+                app:checkedIcon="@drawable/_000_f_113982111_9v5bfunvmzjcdh3ht4gzlqio3dxr7kq6" />
+
+        </com.google.android.material.chip.ChipGroup>
+
+        <com.google.android.material.chip.ChipGroup
+            android:id="@+id/chipGroupPlayersMode"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|start"
+            app:singleLine="true"
+            app:singleSelection="true">
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/chipTeamPlayMode"
+                style="@style/Widget.Material3.Chip.Filter"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:checkable="true"
+                android:checked="false"
+                android:text="@string/team"
+                android:textSize="24sp"
+                app:checkedIcon="@drawable/check"
+                app:checkedIconVisible="true" />
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/chipSinglePlayerMode"
+                style="@style/Widget.Material3.Chip.Filter"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:checkable="true"
+                android:checked="false"
+                android:text="@string/single"
+                android:textSize="24sp"
+                app:checkedIcon="@drawable/check"
+                app:checkedIconVisible="true" />
+        </com.google.android.material.chip.ChipGroup>
+
+    </FrameLayout>
+
     <Button
-        android:id="@+id/buttonCricket"
+        android:id="@+id/button_start_game"
+        style="@style/Widget.Material3.Button"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="48dp"
         android:layout_marginStart="112dp"
-        android:layout_marginTop="12dp"
+        android:layout_marginTop="20dp"
         android:layout_marginEnd="112dp"
-        android:text="New Cricket"
+        android:text="@string/start_game"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/listOfPlayers" />
+        app:layout_constraintTop_toBottomOf="@+id/layoutTeams" />
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/listOfPlayers"
-        android:layout_width="294dp"
-        android:layout_height="116dp"
-        android:layout_marginStart="130dp"
-        android:layout_marginTop="12dp"
-        android:layout_marginEnd="130dp"
+    <FrameLayout
+        android:id="@+id/layoutTeams"
+        android:layout_width="0dp"
+        android:layout_height="120dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="15dp"
+        android:layout_marginEnd="20dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textHome" />
+        app:layout_constraintTop_toBottomOf="@+id/layoutModes">
 
-    <Button
-        android:id="@+id/button501"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="133dp"
-        android:layout_marginTop="3dp"
-        android:layout_marginEnd="133dp"
-        android:text="@string/_501"
+        <com.google.android.material.chip.Chip
+            android:id="@+id/chipTeam1Player1"
+            style="@style/Widget.Material3.Chip.Assist"
+            android:layout_width="139dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center|start"
+            android:checkable="false"
+            android:text="@string/add_player"
+            app:chipIcon="@drawable/add_player"
+            app:closeIcon="@drawable/close_player"
+            app:closeIconVisible="false" />
+
+        <com.google.android.material.chip.Chip
+            android:id="@+id/chipTeam1Player2"
+            style="@style/Widget.Material3.Chip.Assist"
+            android:layout_width="139dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|start"
+            android:checkable="false"
+            android:text="@string/add_player"
+            app:chipIcon="@drawable/add_player"
+            app:closeIcon="@drawable/close_player"
+            app:closeIconVisible="false" />
+
+        <com.google.android.material.chip.Chip
+            android:id="@+id/chipTeam2Player1"
+            style="@style/Widget.Material3.Chip.Assist"
+            android:layout_width="139dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center|end"
+            android:checkable="false"
+            android:text="@string/add_player"
+            app:chipIcon="@drawable/add_player"
+            app:closeIcon="@drawable/close_player"
+            app:closeIconVisible="false" />
+
+        <com.google.android.material.chip.Chip
+            android:id="@+id/chipTeam2Player2"
+            style="@style/Widget.Material3.Chip.Assist"
+            android:layout_width="139dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|end"
+            android:checkable="false"
+            android:text="@string/add_player"
+            app:chipIcon="@drawable/add_player"
+            app:closeIcon="@drawable/close_player"
+            app:closeIconVisible="false" />
+
+        <TextView
+            android:id="@+id/textInfoPlayerTeam1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="start|top"
+            android:layout_marginStart="20dp"
+            android:text="@string/player_team_1"
+            android:textSize="20sp" />
+
+        <TextView
+            android:id="@+id/textInfoPlayerTeam2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="top|end"
+            android:layout_marginEnd="35dp"
+            android:text="@string/player_team_2"
+            android:textSize="20sp" />
+
+        <View
+            android:id="@+id/divider"
+            android:layout_width="3dp"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:background="?android:attr/listDivider" />
+
+    </FrameLayout>
+
+    <View
+        android:id="@+id/divider3"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="6dp"
+        android:layout_marginEnd="10dp"
+        android:layout_marginBottom="6dp"
+        android:background="?android:attr/listDivider"
+        app:layout_constraintBottom_toTopOf="@+id/layoutTeams"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/buttonCricket" />
+        app:layout_constraintTop_toBottomOf="@+id/layoutModes" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

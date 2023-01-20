@@ -1,5 +1,10 @@
 package bruzsa.laszlo.dartsapp.model.cricket;
 
+import static bruzsa.laszlo.dartsapp.model.Team.TEAM1;
+import static bruzsa.laszlo.dartsapp.model.Team.TEAM2;
+
+import android.util.Log;
+
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
@@ -10,43 +15,48 @@ import java.util.List;
 import java.util.Map;
 
 import bruzsa.laszlo.dartsapp.dao.Player;
-import bruzsa.laszlo.dartsapp.ui.cricket.CricketThrow;
+import bruzsa.laszlo.dartsapp.model.TeamPlayer;
 
 public class CricketViewModel extends ViewModel {
+    private static int count;
 
-    private CricketPlayer player1 = new CricketPlayer("p1");
-    private CricketPlayer player2 = new CricketPlayer("p2");
+    public CricketViewModel() {
+        count++;
+        Log.d("Model", "CricketViewModel: " + count);
+
+    }
+
+    private CricketTeam team1;
+    private CricketTeam team2;
     private final List<CricketThrow> shoots = new ArrayList<>();
     private final MutableLiveData<Boolean> isGameOver = new MutableLiveData<>();
 
-    public void newGame(Player player1, Player player2) {
-        this.player1 = new CricketPlayer(player1.getName());
-        this.player2 = new CricketPlayer(player2.getName());
-        shoots.clear();
-        isGameOver.setValue(false);
+    public void newGame(Map<TeamPlayer, Player> players) {
+        this.team1 = new CricketTeam(players.get(TEAM1.player1()), players.get(TEAM1.player2()));
+        this.team2 = new CricketTeam(players.get(TEAM2.player1()), players.get(TEAM2.player2()));
     }
 
     public void newThrow(int multiplier, int value, int player) {
         if (Boolean.TRUE.equals(isGameOver.getValue())) return;
-        shoots.add(new CricketThrow(multiplier, value, player == 1 ? player1 : player2));
+        shoots.add(new CricketThrow(multiplier, value, player == 1 ? team1 : team2));
         updatePoints();
     }
 
     public String updatePoints() {
-        player1.clearPoints();
-        player2.clearPoints();
+        team1.clearPoints();
+        team2.clearPoints();
         reCalculatePoints();
         isGameEnd();
-        return player1.getPoints() + " : " + player2.getPoints();
+        return team1.getPoints() + " : " + team2.getPoints();
     }
 
     private void isGameEnd() {
-        boolean player1ThrowAll = player1.getScores().size() == 7 &&
-                player1.getScores().values().stream().allMatch(m -> m >= 3);
-        boolean player2ThrowAll = player2.getScores().size() == 7 &&
-                player2.getScores().values().stream().allMatch(m -> m >= 3);
-        if ((player1ThrowAll && player1.getPoints() > player2.getPoints()) ||
-                (player2ThrowAll && player2.getPoints() > player1.getPoints()))
+        boolean player1ThrowAll = team1.getScores().size() == 7 &&
+                team1.getScores().values().stream().allMatch(m -> m >= 3);
+        boolean player2ThrowAll = team2.getScores().size() == 7 &&
+                team2.getScores().values().stream().allMatch(m -> m >= 3);
+        if ((player1ThrowAll && team1.getPoints() > team2.getPoints()) ||
+                (player2ThrowAll && team2.getPoints() > team1.getPoints()))
             isGameOver.setValue(true);
     }
 
@@ -56,7 +66,7 @@ public class CricketViewModel extends ViewModel {
 
     private void reCalculatePoints() {
         for (CricketThrow shoot : shoots) {
-            CricketPlayer opponent = shoot.getPlayer() == player1 ? player2 : player1;
+            CricketTeam opponent = shoot.getPlayer() == team1 ? team2 : team1;
             shoot.getPlayer().addThrow(shoot, opponent.getScores().get(shoot.getValue()));
         }
     }
@@ -70,7 +80,7 @@ public class CricketViewModel extends ViewModel {
     }
 
     public Map<Integer, Integer> getPlayerScore(int player) {
-        return player == 1 ? player1.getScores() : player2.getScores();
+        return player == 1 ? team1.getScores() : team2.getScores();
     }
 
     public LiveData<Boolean> isGameOver() {

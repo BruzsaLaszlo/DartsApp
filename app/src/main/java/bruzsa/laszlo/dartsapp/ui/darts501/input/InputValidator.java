@@ -3,7 +3,9 @@ package bruzsa.laszlo.dartsapp.ui.darts501.input;
 import android.text.Editable;
 import android.widget.EditText;
 
+import java.util.Arrays;
 import java.util.Optional;
+import java.util.Set;
 
 public class InputValidator {
 
@@ -12,11 +14,13 @@ public class InputValidator {
     public boolean isInvalidScore(Editable s) {
         if (s.length() == 0) return false;
 
-        if (s.toString().matches("\\d+")) {
-            int input = Integer.parseInt(s.toString());
-            return input > 180 && input % 100 != 0;
-        }
-        return !s.toString().matches("^\\d*\\+?\\d+\\+?\\d*$");
+        if (!s.toString().matches("^\\d*\\+?\\d+\\+?\\d*$")) return true;
+
+        int sum = Arrays.stream(s.toString().split("[+]"))
+                .mapToInt(Integer::parseInt)
+                .sum();
+
+        return sum > 180 || Set.of(179, 178, 176, 175, 173, 172, 169, 166, 163).contains(sum);
     }
 
     public Optional<Integer> getValidThrow(EditText scoreEditText) {

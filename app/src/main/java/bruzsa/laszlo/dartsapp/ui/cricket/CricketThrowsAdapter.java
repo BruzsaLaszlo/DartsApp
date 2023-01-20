@@ -12,6 +12,7 @@ import java.util.List;
 import java.util.function.Consumer;
 
 import bruzsa.laszlo.dartsapp.R;
+import bruzsa.laszlo.dartsapp.model.cricket.CricketThrow;
 
 public class CricketThrowsAdapter extends RecyclerView.Adapter<CricketThrowsAdapter.ViewHolder> {
 
@@ -25,17 +26,17 @@ public class CricketThrowsAdapter extends RecyclerView.Adapter<CricketThrowsAdap
 
     @NonNull
     @Override
-    public ViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
-        View v = LayoutInflater.from(viewGroup.getContext())
-                .inflate(R.layout.adapter_cricket, viewGroup, false);
+    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        View v = LayoutInflater.from(parent.getContext())
+                .inflate(R.layout.adapter_cricket, parent, false);
 
         return new ViewHolder(v);
     }
 
     @Override
     public void onBindViewHolder(ViewHolder viewHolder, final int position) {
+        viewHolder.cricketThrow = mDataSet.get(position);
         viewHolder.shootTextView.setText(mDataSet.get(position).toString());
-        viewHolder.setCricketThrow(mDataSet.get(position));
     }
 
     @Override
@@ -57,10 +58,6 @@ public class CricketThrowsAdapter extends RecyclerView.Adapter<CricketThrowsAdap
                 return true;
             });
             shootTextView = v.findViewById(R.id.cricketThrowItem);
-        }
-
-        public void setCricketThrow(CricketThrow cricketThrow) {
-            this.cricketThrow = cricketThrow;
         }
     }
 }
