@@ -1,4 +1,4 @@
-package bruzsa.laszlo.dartsapp.model.darts501;
+package bruzsa.laszlo.dartsapp.model.dartsX01;
 
 import androidx.annotation.NonNull;
 
@@ -7,18 +7,18 @@ import java.util.List;
 import java.util.Locale;
 import java.util.stream.Collectors;
 
-public class Darts501SummaryStatistics {
+public class DartsX01SummaryStatistics {
 
-    private final List<Darts501Throw> throwList;
+    private final List<DartsX01Throw> throwList;
 
-    public Darts501SummaryStatistics(List<Darts501Throw> throwList) {
+    public DartsX01SummaryStatistics(List<DartsX01Throw> throwList) {
         this.throwList = throwList;
     }
 
     @NonNull
-    private List<Darts501Throw> validAndNotHandicapThrows() {
+    private List<DartsX01Throw> validAndNotHandicapThrows() {
         return throwList.stream()
-                .filter(darts501Throw -> darts501Throw.isValid() && darts501Throw.isNotHandicap())
+                .filter(dartsX01Throw -> dartsX01Throw.isValid() && dartsX01Throw.isNotHandicap())
                 .collect(Collectors.toList());
     }
 
@@ -40,8 +40,8 @@ public class Darts501SummaryStatistics {
 
     public int getSum() {
         return throwList.stream()
-                .filter(Darts501Throw::isValid)
-                .mapToInt(Darts501Throw::getThrow)
+                .filter(DartsX01Throw::isValid)
+                .mapToInt(DartsX01Throw::getThrow)
                 .sum();
     }
 
@@ -59,7 +59,7 @@ public class Darts501SummaryStatistics {
 
     public IntSummaryStatistics getAllStat() {
         return validAndNotHandicapThrows().stream()
-                .mapToInt(Darts501Throw::getThrow)
+                .mapToInt(DartsX01Throw::getThrow)
                 .summaryStatistics();
     }
 

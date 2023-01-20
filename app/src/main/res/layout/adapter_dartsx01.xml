@@ -6,7 +6,7 @@
     android:layout_marginRight="10sp">
 
     <TextView
-        android:id="@+id/darts501ThrowItem"
+        android:id="@+id/dartsX01ThrowItem"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:fontFamily="monospace"

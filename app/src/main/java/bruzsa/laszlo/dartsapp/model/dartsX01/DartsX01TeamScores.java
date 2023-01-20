@@ -1,4 +1,4 @@
-package bruzsa.laszlo.dartsapp.model.darts501;
+package bruzsa.laszlo.dartsapp.model.dartsX01;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -6,26 +6,26 @@ import java.util.List;
 
 import bruzsa.laszlo.dartsapp.dao.Player;
 
-public class Darts501TeamScores {
+public class DartsX01TeamScores {
 
-    private final List<Darts501Throw> throwsList = new ArrayList<>();
-    private final Darts501SummaryStatistics stat = new Darts501SummaryStatistics(throwsList);
+    private final List<DartsX01Throw> throwsList = new ArrayList<>();
+    private final DartsX01SummaryStatistics stat = new DartsX01SummaryStatistics(throwsList);
     private int legs;
     private int sets;
 
     private final Player player1;
     private final Player player2;
 
-    public Darts501TeamScores(Player... players) {
+    public DartsX01TeamScores(Player... players) {
         player1 = players[0];
         player2 = players.length == 2 ? players[1] : null;
     }
 
-    public void addThrow(Darts501Throw dartsThrow) {
+    public void addThrow(DartsX01Throw dartsThrow) {
         throwsList.add(dartsThrow);
     }
 
-    public int removeThrow(Darts501Throw dartsThrow) {
+    public int removeThrow(DartsX01Throw dartsThrow) {
         int position = throwsList.indexOf(dartsThrow);
         throwsList.remove(position);
         return position;
@@ -35,7 +35,7 @@ public class Darts501TeamScores {
         return stat.toString();
     }
 
-    public List<Darts501Throw> getThrowsList() {
+    public List<DartsX01Throw> getThrowsList() {
         return Collections.unmodifiableList(throwsList);
     }
 

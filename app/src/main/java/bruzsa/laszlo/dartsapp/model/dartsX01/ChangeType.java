@@ -1,4 +1,4 @@
-package bruzsa.laszlo.dartsapp.model.darts501;
+package bruzsa.laszlo.dartsapp.model.dartsX01;
 
 public enum ChangeType {
 

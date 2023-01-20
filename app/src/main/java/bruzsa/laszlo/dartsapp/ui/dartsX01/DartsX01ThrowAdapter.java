@@ -1,4 +1,4 @@
-package bruzsa.laszlo.dartsapp.ui.darts501;
+package bruzsa.laszlo.dartsapp.ui.dartsX01;
 
 import android.annotation.SuppressLint;
 import android.graphics.Color;
@@ -14,22 +14,22 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.List;
 
 import bruzsa.laszlo.dartsapp.R;
-import bruzsa.laszlo.dartsapp.model.darts501.Darts501Throw;
+import bruzsa.laszlo.dartsapp.model.dartsX01.DartsX01Throw;
 
-public class Darts501ThrowAdapter extends RecyclerView.Adapter<Darts501ThrowAdapter.ViewHolder> {
+public class DartsX01ThrowAdapter extends RecyclerView.Adapter<DartsX01ThrowAdapter.ViewHolder> {
 
-    private List<Darts501Throw> mDataSet;
-    private final MutableLiveData<Darts501Throw> selectedForRemove = new MutableLiveData<>();
+    private List<DartsX01Throw> mDataSet;
+    private final MutableLiveData<DartsX01Throw> selectedForRemove = new MutableLiveData<>();
 
     @SuppressLint("NotifyDataSetChanged")
-    public void refreshAll(List<Darts501Throw> throwList) {
+    public void refreshAll(List<DartsX01Throw> throwList) {
         mDataSet = throwList;
         notifyDataSetChanged();
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         private final TextView shootTextView;
-        private Darts501Throw shoot;
+        private DartsX01Throw shoot;
 
         public ViewHolder(View v) {
             super(v);
@@ -37,15 +37,15 @@ public class Darts501ThrowAdapter extends RecyclerView.Adapter<Darts501ThrowAdap
                 selectedForRemove.setValue(shoot);
                 return true;
             });
-            shootTextView = v.findViewById(R.id.darts501ThrowItem);
+            shootTextView = v.findViewById(R.id.dartsX01ThrowItem);
         }
 
-        public void setThrow(Darts501Throw shoot) {
+        public void setThrow(DartsX01Throw shoot) {
             this.shoot = shoot;
         }
     }
 
-    public Darts501ThrowAdapter(List<Darts501Throw> shoots) {
+    public DartsX01ThrowAdapter(List<DartsX01Throw> shoots) {
         mDataSet = shoots;
     }
 
@@ -57,20 +57,20 @@ public class Darts501ThrowAdapter extends RecyclerView.Adapter<Darts501ThrowAdap
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
         View v = LayoutInflater.from(viewGroup.getContext())
-                .inflate(R.layout.adapter_darts501, viewGroup, false);
+                .inflate(R.layout.adapter_dartsx01, viewGroup, false);
 
         return new ViewHolder(v);
     }
 
     @Override
     public void onBindViewHolder(ViewHolder viewHolder, final int position) {
-        Darts501Throw darts501Throw = mDataSet.get(position);
-        viewHolder.shootTextView.setText(darts501Throw.toString());
-        if (!darts501Throw.isNotHandicap())
+        DartsX01Throw dartsX01Throw = mDataSet.get(position);
+        viewHolder.shootTextView.setText(dartsX01Throw.toString());
+        if (!dartsX01Throw.isNotHandicap())
             viewHolder.shootTextView.setTextColor(Color.rgb(100, 100, 0));
-        else if (!darts501Throw.isValid())
+        else if (!dartsX01Throw.isValid())
             viewHolder.shootTextView.setTextColor(Color.RED);
-        viewHolder.setThrow(darts501Throw);
+        viewHolder.setThrow(dartsX01Throw);
     }
 
     @Override
@@ -78,7 +78,7 @@ public class Darts501ThrowAdapter extends RecyclerView.Adapter<Darts501ThrowAdap
         return mDataSet.size();
     }
 
-    public MutableLiveData<Darts501Throw> getSelectedForRemove() {
+    public MutableLiveData<DartsX01Throw> getSelectedForRemove() {
         return selectedForRemove;
     }
 

@@ -88,8 +88,8 @@ public class HomeFragment extends Fragment {
                 sharedViewModel.setGameType(GameType.NO_GAME);
             } else {
                 int id = checkedIds.get(0);
-                if (id == binding.chip501.getId()) {
-                    sharedViewModel.setGameType(GameType.NORMAL_501);
+                if (id == binding.chipX01.getId()) {
+                    sharedViewModel.setGameType(GameType.NORMAL_X01);
                 } else if (id == binding.chipCricket.getId()) {
                     sharedViewModel.setGameType(GameType.CRICKET);
                 }
@@ -139,12 +139,12 @@ public class HomeFragment extends Fragment {
 
             switch (type) {
                 case NO_GAME -> showSnack("Please, set game mode!");
-                case NORMAL_501 -> {
+                case NORMAL_X01 -> {
                     switch (mode) {
                         case TEAM, PLAYER ->
-                                navigateToFragment(R.id.action_nav_home_to_nav_darts501Fragment, mode);
+                                navigateToFragment(R.id.action_nav_home_to_nav_dartsX01Fragment, mode);
                         case SINGLE ->
-                                navigateToFragment(R.id.action_nav_home_to_darts501SinglePlayer, mode);
+                                navigateToFragment(R.id.action_nav_home_to_dartsX01SinglePlayer, mode);
                     }
                 }
                 case CRICKET -> {
@@ -211,7 +211,7 @@ public class HomeFragment extends Fragment {
         }
 
         switch (sharedViewModel.getGameType()) {
-            case NORMAL_501 -> binding.chip501.setChecked(true);
+            case NORMAL_X01 -> binding.chipX01.setChecked(true);
             case CRICKET -> binding.chipCricket.setChecked(true);
             case NO_GAME -> binding.chipGroupGameTypes.clearCheck();
         }

@@ -9,9 +9,9 @@
             android:icon="@drawable/ic_menu_camera"
             android:title="@string/menu_home" />
         <item
-            android:id="@+id/nav_darts501Fragment"
-            android:icon="@drawable/d501"
-            android:title="@string/_501" />
+            android:id="@+id/nav_dartsX01Fragment"
+            android:icon="@drawable/x01"
+            android:title="@string/_X01" />
         <item
             android:id="@+id/nav_cricketFragment"
             android:icon="@drawable/_bulls_eye"

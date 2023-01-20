@@ -1,4 +1,4 @@
-package bruzsa.laszlo.dartsapp.ui.darts501.input;
+package bruzsa.laszlo.dartsapp.ui.dartsX01.input;
 
 import static android.text.InputType.TYPE_CLASS_PHONE;
 import static android.text.InputType.TYPE_CLASS_TEXT;
@@ -14,20 +14,20 @@ import com.google.android.material.textfield.TextInputEditText;
 
 import java.util.Optional;
 
-public class Darts501EditText extends TextInputEditText {
+public class DartsX01EditText extends TextInputEditText {
 
     private final InputValidator inputValidator = new InputValidator();
     private final ScoreInputWatcher scoreInputWatcher = new ScoreInputWatcher(this, inputValidator);
 
-    public Darts501EditText(@NonNull Context context) {
+    public DartsX01EditText(@NonNull Context context) {
         super(context);
     }
 
-    public Darts501EditText(@NonNull Context context, @Nullable AttributeSet attrs) {
+    public DartsX01EditText(@NonNull Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
     }
 
-    public Darts501EditText(@NonNull Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
+    public DartsX01EditText(@NonNull Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
     }
 

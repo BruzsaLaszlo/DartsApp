@@ -1,17 +1,17 @@
-package bruzsa.laszlo.dartsapp.model.darts501;
+package bruzsa.laszlo.dartsapp.model.dartsX01;
 
 import androidx.annotation.NonNull;
 
 import java.time.LocalTime;
 
-public class Darts501Throw {
+public class DartsX01Throw {
 
     private final int shoot;
     private final boolean handicap;
     private final boolean valid;
     private final LocalTime time = LocalTime.now();
 
-    public Darts501Throw(int shoot, boolean valid) {
+    public DartsX01Throw(int shoot, boolean valid) {
         this.shoot = shoot;
         this.valid = valid;
         handicap = valid && shoot > 180;

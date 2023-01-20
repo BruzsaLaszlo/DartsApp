@@ -45,13 +45,13 @@
             app:singleSelection="true">
 
             <com.google.android.material.chip.Chip
-                android:id="@+id/chip501"
+                android:id="@+id/chip_x_01"
                 style="@style/Widget.Material3.Chip.Filter"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:checkable="true"
                 android:checked="true"
-                android:text="@string/_501"
+                android:text="@string/_X01"
                 android:textAlignment="center"
                 android:textSize="26sp"
                 app:checkedIcon="@drawable/_000_f_113982111_9v5bfunvmzjcdh3ht4gzlqio3dxr7kq6" />

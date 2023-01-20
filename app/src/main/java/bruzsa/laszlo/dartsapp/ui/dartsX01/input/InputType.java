@@ -1,4 +1,4 @@
-package bruzsa.laszlo.dartsapp.ui.darts501.input;
+package bruzsa.laszlo.dartsapp.ui.dartsX01.input;
 
 public enum InputType {
 

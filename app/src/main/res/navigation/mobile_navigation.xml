@@ -16,11 +16,11 @@
             android:id="@+id/action_nav_home_to_nav_cricketFragment"
             app:destination="@id/nav_cricketFragment" />
         <action
-            android:id="@+id/action_nav_home_to_nav_darts501Fragment"
-            app:destination="@id/nav_darts501Fragment" />
+            android:id="@+id/action_nav_home_to_nav_dartsX01Fragment"
+            app:destination="@id/nav_dartsX01Fragment" />
         <action
-            android:id="@+id/action_nav_home_to_darts501SinglePlayer"
-            app:destination="@id/darts501SinglePlayer" />
+            android:id="@+id/action_nav_home_to_dartsX01SinglePlayer"
+            app:destination="@id/dartsX01SinglePlayer" />
     </fragment>
 
     <fragment
@@ -29,15 +29,15 @@
         android:label="CricketFragment"
         tools:layout="@layout/fragment_cricket"/>
     <fragment
-        android:id="@+id/nav_darts501Fragment"
-        android:name="bruzsa.laszlo.dartsapp.ui.darts501.Darts501Fragment"
-        android:label="Darts501Fragment"
-        tools:layout="@layout/fragment_darts501"/>
+        android:id="@+id/nav_dartsX01Fragment"
+        android:name="bruzsa.laszlo.dartsapp.ui.dartsX01.DartsX01Fragment"
+        android:label="DartsX01Fragment"
+        tools:layout="@layout/fragment_dartsx01"/>
     <fragment
-        android:id="@+id/darts501SinglePlayer"
-        android:name="bruzsa.laszlo.dartsapp.ui.darts501.Darts501SinglePlayerFragment"
-        android:label="fragment_darts501_single_player"
-        tools:layout="@layout/fragment_darts501_single_player" />
+        android:id="@+id/dartsX01SinglePlayer"
+        android:name="bruzsa.laszlo.dartsapp.ui.dartsX01single.DartsX01SinglePlayerFragment"
+        android:label="fragment_dartsX01_single_player"
+        tools:layout="@layout/fragment_dartsx01_single_player" />
     <fragment
         android:id="@+id/playerFragment"
         android:name="bruzsa.laszlo.dartsapp.ui.home.player.PlayerFragment"
