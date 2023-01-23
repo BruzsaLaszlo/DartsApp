@@ -1,11 +1,9 @@
-package bruzsa.laszlo.dartsapp.ui.X01;
+package bruzsa.laszlo.dartsapp.ui.x01;
 
-import static android.content.pm.PackageManager.PERMISSION_DENIED;
 import static android.graphics.Color.BLACK;
 import static android.graphics.Color.BLUE;
 import static android.graphics.Color.RED;
 import static android.text.InputType.TYPE_NULL;
-import static androidx.core.content.ContextCompat.checkSelfPermission;
 import static androidx.recyclerview.widget.LinearLayoutManager.VERTICAL;
 import static bruzsa.laszlo.dartsapp.model.Team.TEAM1;
 import static bruzsa.laszlo.dartsapp.model.Team.TEAM2;
@@ -14,20 +12,17 @@ import static bruzsa.laszlo.dartsapp.model.TeamPlayer.PLAYER_1_2;
 import static bruzsa.laszlo.dartsapp.model.TeamPlayer.PLAYER_2_1;
 import static bruzsa.laszlo.dartsapp.model.TeamPlayer.PLAYER_2_2;
 
-import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.pm.ActivityInfo;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
-import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
@@ -41,6 +36,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 
+import bruzsa.laszlo.dartsapp.Helper;
 import bruzsa.laszlo.dartsapp.R;
 import bruzsa.laszlo.dartsapp.dao.Player;
 import bruzsa.laszlo.dartsapp.databinding.FragmentX01Binding;
@@ -51,7 +47,7 @@ import bruzsa.laszlo.dartsapp.model.dartsX01.X01ChangeType;
 import bruzsa.laszlo.dartsapp.model.dartsX01.X01ViewModel;
 import bruzsa.laszlo.dartsapp.model.home.GameMode;
 import bruzsa.laszlo.dartsapp.ui.Speech;
-import bruzsa.laszlo.dartsapp.ui.X01.input.InputType;
+import bruzsa.laszlo.dartsapp.ui.x01.input.InputType;
 
 public class X01Fragment extends Fragment {
 
@@ -65,7 +61,7 @@ public class X01Fragment extends Fragment {
     private TextView lastOnLongClicked;
 
     private Map<TeamPlayer, Button> playerTextNameBindings;
-    private final MutableLiveData<InputType> inputType = new MutableLiveData<>(InputType.THROW);
+    private final MutableLiveData<InputType> inputType = new MutableLiveData<>(InputType.NUMPAD);
 
     private Speech speech;
 
@@ -77,16 +73,9 @@ public class X01Fragment extends Fragment {
         sharedViewModel = new ViewModelProvider(requireActivity()).get(SharedViewModel.class);
         dViewModel = new ViewModelProvider(this).get(X01ViewModel.class);
 
-        if (checkSelfPermission(requireContext(), Manifest.permission.RECORD_AUDIO) == PERMISSION_DENIED) {
-            Log.d("DartsX01Fragment", "onCreate: RECORD_AUDIO permission denied");
-            if (shouldShowRequestPermissionRationale(Manifest.permission.RECORD_AUDIO)) {
-//                showInContextUI(...);
-            } else {
-                registerForActivityResult(new ActivityResultContracts.RequestPermission(), result -> {
-                }).launch(Manifest.permission.RECORD_AUDIO);
-            }
+        if (Helper.requestRecordPermission(this)) {
+            speech = new Speech(requireContext());
         }
-        speech = new Speech(requireContext());
     }
 
     @SuppressLint({"SetTextI18n", "SourceLockedOrientationActivity"})
@@ -127,6 +116,8 @@ public class X01Fragment extends Fragment {
         binding.textInput.setInputType(inputType);
 
         binding.buttonOk.setOnClickListener(this::onClickButtonOk);
+
+        binding.buttonSpeach.setVisibility(Helper.isRecordPermissionGranted(this) ? View.VISIBLE : View.INVISIBLE);
 
         binding.textViewStat.setOnLongClickListener(v -> {
             inputType.setValue(InputType.RESTART_GAME);
@@ -182,29 +173,30 @@ public class X01Fragment extends Fragment {
 
     private void onClickButtonOk(View button) {
         switch (Objects.requireNonNull(inputType.getValue())) {
-            case THROW ->
-                    binding.textInput.getThrow().ifPresent(shoot -> dViewModel.newThrow(shoot));
+            case NUMPAD ->
+                    binding.textInput.getThrow().ifPresent(dartsTrhow -> dViewModel.newThrow(dartsTrhow));
             case RESTART_GAME -> dViewModel.newGame(sharedViewModel.getSelectedPlayersMap());
             case NAME -> lastOnLongClicked.setText(binding.textInput.getName().orElse("Player"));
         }
-        inputType.setValue(InputType.THROW);
+        inputType.setValue(InputType.NUMPAD);
     }
 
     @SuppressLint("SetTextI18n")
     private void setObservers() {
-        binding.buttonSpeach.setOnCheckedChangeListener((buttonView, isChecked) -> {
-            if (isChecked) {
-                speech.startListening();
-            } else {
-                speech.stopListening();
-            }
-        });
+        if (Helper.isRecordPermissionGranted(this)) {
+            binding.buttonSpeach.setOnCheckedChangeListener((buttonView, isChecked) -> {
+                if (isChecked) {
+                    speech.startListening();
+                } else {
+                    speech.stopListening();
+                }
+            });
+            speech.getResultLiveData().observe(getViewLifecycleOwner(), numbers ->
+                    binding.textInput.setText(String.join("+", numbers)));
+        }
 
-        speech.getResultLiveData().observe(getViewLifecycleOwner(), numbers ->
-                binding.textInput.setText(String.join("+", numbers)));
-
-        binding.textScorePlayer1.setOnClickListener(v -> inputType.setValue(InputType.THROW));
-        binding.textScorePlayer2.setOnClickListener(v -> inputType.setValue(InputType.THROW));
+        binding.textScorePlayer1.setOnClickListener(v -> inputType.setValue(InputType.NUMPAD));
+        binding.textScorePlayer2.setOnClickListener(v -> inputType.setValue(InputType.NUMPAD));
 
         dViewModel.onPlayerChange().observe(getViewLifecycleOwner(), changeType -> {
             switch (changeType) {

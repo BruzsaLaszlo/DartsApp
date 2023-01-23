@@ -1,4 +1,4 @@
-package bruzsa.laszlo.dartsapp.ui.X01.input;
+package bruzsa.laszlo.dartsapp.ui.x01.input;
 
 import android.text.Editable;
 import android.text.TextWatcher;

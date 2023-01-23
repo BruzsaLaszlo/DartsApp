@@ -1,0 +1,108 @@
+package bruzsa.laszlo.dartsapp.ui.x01.input;
+
+import static bruzsa.laszlo.dartsapp.ui.x01.input.InputText.InputValidator.NUMBER;
+
+import android.content.Context;
+import android.util.AttributeSet;
+import android.widget.EditText;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+
+import com.google.android.material.textview.MaterialTextView;
+
+import java.util.Arrays;
+import java.util.Optional;
+import java.util.Set;
+
+public class InputText extends MaterialTextView {
+
+    public InputText(@NonNull Context context) {
+        super(context);
+    }
+
+    public InputText(@NonNull Context context, @Nullable AttributeSet attrs) {
+        super(context, attrs);
+    }
+
+    public InputText(@NonNull Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
+        super(context, attrs, defStyleAttr);
+    }
+
+    public Optional<Integer> add(String character) {
+        String s = getText().toString().concat(character);
+        InputValidator inputValidator = new InputValidator();
+        if (!inputValidator.isInvalidScore(s)) {
+            if (s.contains("+")) {
+                int sum = Arrays.stream(s.split("[+]"))
+                        .filter(s1 -> s1.matches(NUMBER))
+                        .mapToInt(Integer::parseInt)
+                        .sum();
+                setText(s);
+                return Optional.of(sum);
+            }
+            setText(s);
+        }
+        return Optional.empty();
+    }
+
+    public void removeLast() {
+        if (getText() != null && !getText().toString().isEmpty())
+            setText(getText().subSequence(0, getText().length() - 1));
+    }
+
+    public void clear() {
+        setText("");
+    }
+
+    public Optional<Integer> getThrow() {
+        if (getText() == null || getText().toString().isEmpty())
+            return Optional.empty();
+        else return Optional.of(Arrays.stream(getText().toString().split("[+]"))
+                .mapToInt(Integer::parseInt)
+                .sum());
+    }
+
+    static class InputValidator {
+
+        private static final int MAX_NAME_LENGTH = 20;
+        public static final String NUMBER = "^\\d+$";
+
+        public boolean isInvalidScore(String s) {
+            if (s.length() == 0) return false;
+
+            if (!s.matches("^\\d*\\+?\\d+\\+?\\d*$")) return true;
+
+            int sum = Arrays.stream(s.split("[+]"))
+                    .mapToInt(Integer::parseInt)
+                    .sum();
+
+            return sum > 180 || Set.of(179, 178, 176, 175, 173, 172, 169, 166, 163).contains(sum);
+        }
+
+        public Optional<Integer> getValidThrow(EditText scoreEditText) {
+            if (scoreEditText.getText().toString().isBlank()) return Optional.empty();
+            if (scoreEditText.getText().toString().matches(NUMBER)) {
+                return Optional.of(Integer.parseInt(scoreEditText.getText().toString()));
+            } else if (scoreEditText.getError() != null &&
+                    scoreEditText.getError().toString().matches(NUMBER)) {
+                return Optional.of(Integer.parseInt(scoreEditText.getError().toString()));
+            }
+            return Optional.empty();
+        }
+
+        public Optional<String> validateName(EditText nameText) {
+            String name = nameText.getText().toString()
+                    .strip()
+                    .replaceFirst(" ", "\n");
+            if (name.isBlank()) return Optional.empty();
+            name = name.split(" ")[0];
+            if (name.length() > MAX_NAME_LENGTH) {
+                return Optional.of(name.substring(0, MAX_NAME_LENGTH));
+            }
+            return Optional.of(name);
+        }
+
+    }
+
+}

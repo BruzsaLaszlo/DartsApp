@@ -24,8 +24,7 @@ public class Speech {
     private static final int REQUEST_RECORD_PERMISSION = 100;
     private static final String TAG = "Speech";
 
-
-    private final MutableLiveData<List<String>> resultLiveData = new MutableLiveData<List<String>>();
+    private final MutableLiveData<List<String>> resultLiveData = new MutableLiveData<>();
 
     public Speech(Context context) {
         Log.i(TAG, "isRecognitionAvailable: " + SpeechRecognizer.isRecognitionAvailable(context));
@@ -72,6 +71,7 @@ public class Speech {
                 ArrayList<String> data = results.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION);
                 Log.d(TAG, "onResults: " + data);
                 List<String> numbers = data.stream()
+                        .flatMap(s -> Arrays.stream(s.split("\\s")))
                         .filter(s -> {
                             try {
                                 Integer.parseInt(s);
@@ -95,10 +95,6 @@ public class Speech {
 
             }
         });
-    }
-
-    public SpeechRecognizer getSpeechRecognizer() {
-        return speechRecognizer;
     }
 
     public LiveData<List<String>> getResultLiveData() {

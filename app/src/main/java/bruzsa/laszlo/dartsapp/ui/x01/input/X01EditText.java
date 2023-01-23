@@ -1,4 +1,4 @@
-package bruzsa.laszlo.dartsapp.ui.X01.input;
+package bruzsa.laszlo.dartsapp.ui.x01.input;
 
 import static android.text.InputType.TYPE_CLASS_PHONE;
 import static android.text.InputType.TYPE_CLASS_TEXT;
@@ -14,20 +14,20 @@ import com.google.android.material.textfield.TextInputEditText;
 
 import java.util.Optional;
 
-public class DartsX01EditText extends TextInputEditText {
+public class X01EditText extends TextInputEditText {
 
     private final InputValidator inputValidator = new InputValidator();
     private final ScoreInputWatcher scoreInputWatcher = new ScoreInputWatcher(this, inputValidator);
 
-    public DartsX01EditText(@NonNull Context context) {
+    public X01EditText(@NonNull Context context) {
         super(context);
     }
 
-    public DartsX01EditText(@NonNull Context context, @Nullable AttributeSet attrs) {
+    public X01EditText(@NonNull Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
     }
 
-    public DartsX01EditText(@NonNull Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
+    public X01EditText(@NonNull Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
     }
 
@@ -40,11 +40,20 @@ public class DartsX01EditText extends TextInputEditText {
     public void setInputType(MutableLiveData<InputType> inputTypeMutableLiveData) {
         inputTypeMutableLiveData.observeForever(inputType -> {
             switch (inputType) {
-                case THROW -> setThrowSettings();
+                case NUMPAD -> setThrowSettings();
                 case RESTART_GAME -> setNewGameSettings();
                 case NAME -> setNameSettings();
+                case VOICE -> setVoiceSettings();
             }
         });
+    }
+
+    private void setVoiceSettings() {
+        scoreInputWatcher.setIgnoreValidation(true);
+        setError(null);
+        setHint("VOICE");
+        setText("");
+        setInputType(TYPE_CLASS_TEXT);
     }
 
     private void setNewGameSettings() {

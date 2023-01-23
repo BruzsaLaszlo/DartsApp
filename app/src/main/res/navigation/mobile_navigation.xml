@@ -30,12 +30,12 @@
         tools:layout="@layout/fragment_cricket"/>
     <fragment
         android:id="@+id/nav_dartsX01Fragment"
-        android:name="bruzsa.laszlo.dartsapp.ui.X01.X01Fragment"
+        android:name="bruzsa.laszlo.dartsapp.ui.x01.X01Fragment"
         android:label="DartsX01Fragment"
         tools:layout="@layout/fragment_x01"/>
     <fragment
         android:id="@+id/dartsX01SinglePlayer"
-        android:name="bruzsa.laszlo.dartsapp.ui.singleX01.SingleX01PlayerFragment"
+        android:name="bruzsa.laszlo.dartsapp.ui.singlex01.SingleX01Fragment"
         android:label="fragment_dartsX01_single_player"
         tools:layout="@layout/fragment_singlex01" />
     <fragment

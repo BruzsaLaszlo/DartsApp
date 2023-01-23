@@ -9,6 +9,7 @@ import bruzsa.laszlo.dartsapp.dao.Player;
 public class X01TeamScores {
 
     private final List<X01Throw> throwsList = new ArrayList<>();
+    private final List<Integer> checkout = new ArrayList<>();
     private final X01SummaryStatistics stat = new X01SummaryStatistics(throwsList);
     private int legs;
     private int sets;
@@ -39,8 +40,8 @@ public class X01TeamScores {
         return Collections.unmodifiableList(throwsList);
     }
 
-    public int getSum() {
-        return stat.getSum();
+    public int getSum(int leg) {
+        return stat.getSum(leg);
     }
 
     public int getLegs() {

@@ -1,4 +1,4 @@
-package bruzsa.laszlo.dartsapp.ui.X01;
+package bruzsa.laszlo.dartsapp.ui.x01;
 
 import android.annotation.SuppressLint;
 import android.graphics.Color;
@@ -29,24 +29,24 @@ public class X01ThrowAdapter extends RecyclerView.Adapter<X01ThrowAdapter.ViewHo
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         private final TextView shootTextView;
-        private X01Throw shoot;
+        private X01Throw x01Throw;
 
         public ViewHolder(View v) {
             super(v);
             v.setOnLongClickListener(v1 -> {
-                selectedForRemove.setValue(shoot);
+                selectedForRemove.setValue(x01Throw);
                 return true;
             });
             shootTextView = v.findViewById(R.id.dartsX01ThrowItem);
         }
 
         public void setThrow(X01Throw shoot) {
-            this.shoot = shoot;
+            this.x01Throw = shoot;
         }
     }
 
-    public X01ThrowAdapter(List<X01Throw> shoots) {
-        mDataSet = shoots;
+    public X01ThrowAdapter(List<X01Throw> dartsThrows) {
+        mDataSet = dartsThrows;
     }
 
     public void inserted() {

@@ -17,7 +17,7 @@
         android:layout_height="82dp"
         android:contentDescription="@string/nav_header_desc"
         android:paddingTop="@dimen/nav_header_vertical_spacing"
-        app:srcCompat="@drawable/_000_f_113982111_9v5bfunvmzjcdh3ht4gzlqio3dxr7kq6" />
+        app:srcCompat="@drawable/table" />
 
     <TextView
         android:layout_width="match_parent"

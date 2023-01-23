@@ -31,6 +31,7 @@ public class X01ViewModel extends ViewModel {
     private boolean teamPlay;
     private Map<Team, X01TeamScores> teamScores;
     private int lastRemovedIndex = -1;
+    private int leg;
 
     private final MutableLiveData<X01ChangeType> state = new MutableLiveData<>(NO_GAME);
 
@@ -57,9 +58,11 @@ public class X01ViewModel extends ViewModel {
         int maxLegSet = settings.getLegSetOf() / 2 + 1;
         int newScore = getScore(team) - throwValue;
 
-        X01Throw newThrow = new X01Throw(throwValue, newScore > 1 || newScore == 0);
+        boolean checkedOut = newScore == 0;
+        X01Throw newThrow = new X01Throw(
+                throwValue, newScore > 1 || checkedOut, leg, 3, checkedOut);
         aPlayer.addThrow(newThrow);
-        if (newScore != 0) return false;
+        if (!checkedOut) return false;
         return isGameOver(aPlayer, opponent, maxLegSet);
     }
 
@@ -86,6 +89,7 @@ public class X01ViewModel extends ViewModel {
                 }
         }
         active = startLeg;
+        leg++;
         return false;
     }
 
@@ -113,7 +117,7 @@ public class X01ViewModel extends ViewModel {
     }
 
     public int getScore(Team team) {
-        return settings.getStartScore() - teamScores.get(team).getSum();
+        return settings.getStartScore() - teamScores.get(team).getSum(leg);
     }
 
     public boolean isOut(Team team) {
@@ -136,7 +140,7 @@ public class X01ViewModel extends ViewModel {
     public void newGame(Map<TeamPlayer, Player> activePlayersMap) {
         X01TeamScores team1 = new X01TeamScores(activePlayersMap.get(TEAM1.player1()), activePlayersMap.get(TEAM1.player2()));
         X01TeamScores team2 = new X01TeamScores(activePlayersMap.get(TEAM2.player1()), activePlayersMap.get(TEAM2.player2()));
-        teamScores = Map.of(TEAM1,team1, TEAM2,team2);
+        teamScores = Map.of(TEAM1, team1, TEAM2, team2);
         active = TEAM1.player1();
         teamPlay = activePlayersMap.size() == TeamPlayer.values().length;
         state.setValue(NEW_GAME);
