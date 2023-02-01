@@ -1,4 +1,4 @@
-package bruzsa.laszlo.dartsapp.model.dartsX01;
+package bruzsa.laszlo.dartsapp.model.x01;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -6,7 +6,6 @@ import org.assertj.core.util.DoubleComparator;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.util.IntSummaryStatistics;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -15,25 +14,25 @@ class X01SummaryStatisticsTest {
 
     List<X01SummaryStatistics> stats = List.of(
             new X01SummaryStatistics(List.of(
-                    new X01Throw(180, true, 0, 3, false),
-                    new X01Throw(180, true, 0, 3, false),
-                    new X01Throw(180, false, 0, 3, false),
-                    new X01Throw(141, true, 0, 3, true))),
+                    new X01Throw(180, true, 0, 3, false, null),
+                    new X01Throw(180, true, 0, 3, false, null),
+                    new X01Throw(180, false, 0, 3, false, null),
+                    new X01Throw(141, true, 0, 3, true, null))),
             new X01SummaryStatistics(List.of(
-                    new X01Throw(180, true, 0, 3, false),
-                    new X01Throw(180, true, 0, 3, false),
-                    new X01Throw(101, true, 0, 3, false),
-                    new X01Throw(40, true, 0, 1, true))),
+                    new X01Throw(180, true, 0, 3, false, null),
+                    new X01Throw(180, true, 0, 3, false, null),
+                    new X01Throw(101, true, 0, 3, false, null),
+                    new X01Throw(40, true, 0, 1, true, null))),
             new X01SummaryStatistics(List.of(
-                    new X01Throw(170, true, 0, 3, false),
-                    new X01Throw(170, true, 0, 3, false),
-                    new X01Throw(161, true, 0, 3, true),
-                    new X01Throw(100, true, 1, 3, false))),
+                    new X01Throw(170, true, 0, 3, false, null),
+                    new X01Throw(170, true, 0, 3, false, null),
+                    new X01Throw(161, true, 0, 3, true, null),
+                    new X01Throw(100, true, 1, 3, false, null))),
             new X01SummaryStatistics(List.of(
-                    new X01Throw(60, true, 0, 3, false),
-                    new X01Throw(60, true, 0, 3, false),
-                    new X01Throw(200, true, 0, 1000, false),
-                    new X01Throw(26, true, 0, 3, false)))
+                    new X01Throw(60, true, 0, 3, false, null),
+                    new X01Throw(60, true, 0, 3, false, null),
+                    new X01Throw(200, true, 0, 1000, false, null),
+                    new X01Throw(26, true, 0, 3, false, null)))
     );
 
     @BeforeEach
@@ -42,12 +41,10 @@ class X01SummaryStatisticsTest {
 
     @Test
     void getAllStat() {
-        assertThat(stats.stream().map(X01SummaryStatistics::getAllStat).collect(Collectors.toList()))
-                .extracting(IntSummaryStatistics::getMax)
+        assertThat(stats.stream().map(X01SummaryStatistics::getMax).collect(Collectors.toList()))
                 .usingComparatorForType(new DoubleComparator(0.9), Double.class)
                 .containsSequence(180, 180, 170, 60);
-        assertThat(stats.stream().map(X01SummaryStatistics::getAllStat).collect(Collectors.toList()))
-                .extracting(IntSummaryStatistics::getMin)
+        assertThat(stats.stream().map(X01SummaryStatistics::getMin).collect(Collectors.toList()))
                 .usingComparatorForType(new DoubleComparator(0.9), Double.class)
                 .containsSequence(141, 40, 100, 26);
     }

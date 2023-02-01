@@ -1,17 +1,19 @@
-package bruzsa.laszlo.dartsapp.model.dartsX01;
+package bruzsa.laszlo.dartsapp.model.x01;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
 import bruzsa.laszlo.dartsapp.dao.Player;
+import lombok.Getter;
 
 public class X01TeamScores {
 
     private final List<X01Throw> throwsList = new ArrayList<>();
-    private final List<Integer> checkout = new ArrayList<>();
     private final X01SummaryStatistics stat = new X01SummaryStatistics(throwsList);
+    @Getter
     private int legs;
+    @Getter
     private int sets;
 
     private final Player player1;
@@ -26,14 +28,8 @@ public class X01TeamScores {
         throwsList.add(dartsThrow);
     }
 
-    public int removeThrow(X01Throw dartsThrow) {
-        int position = throwsList.indexOf(dartsThrow);
-        throwsList.remove(position);
-        return position;
-    }
-
-    public String getStat() {
-        return stat.toString();
+    public X01SummaryStatistics getStat() {
+        return stat;
     }
 
     public List<X01Throw> getThrowsList() {
@@ -44,16 +40,8 @@ public class X01TeamScores {
         return stat.getSum(leg);
     }
 
-    public int getLegs() {
-        return legs;
-    }
-
     public int wonLeg() {
         return ++legs;
-    }
-
-    public int getSets() {
-        return sets;
     }
 
     public int wonSet() {

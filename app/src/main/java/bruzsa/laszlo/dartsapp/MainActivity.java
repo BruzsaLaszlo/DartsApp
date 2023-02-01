@@ -1,8 +1,15 @@
 package bruzsa.laszlo.dartsapp;
 
+import static android.speech.tts.TextToSpeech.Engine.EXTRA_AVAILABLE_VOICES;
+
+import android.content.Intent;
 import android.os.Bundle;
+import android.speech.tts.TextToSpeech;
+import android.util.Log;
 import android.view.Menu;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.navigation.NavController;
@@ -20,9 +27,28 @@ public class MainActivity extends AppCompatActivity {
     private AppBarConfiguration mAppBarConfiguration;
     private ActivityMainBinding binding;
 
+    ActivityResultLauncher<Intent> mStartForResult = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(),
+            result -> {
+                if (result.getResultCode() == TextToSpeech.Engine.CHECK_VOICE_DATA_PASS) {
+                    Log.d("MainActivity", "EXTRA_AVAILABLE_VOICES: " + result.getData()
+                            .getCharSequenceArrayListExtra(EXTRA_AVAILABLE_VOICES));
+                } else {
+                    // missing data, install it
+                    Intent installIntent = new Intent();
+                    installIntent.setAction(
+                            TextToSpeech.Engine.ACTION_INSTALL_TTS_DATA);
+                    startActivity(installIntent);
+                }
+            });
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        Intent checkIntent = new Intent();
+        checkIntent.setAction(TextToSpeech.Engine.ACTION_CHECK_TTS_DATA);
+        mStartForResult.launch(checkIntent);
 
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());

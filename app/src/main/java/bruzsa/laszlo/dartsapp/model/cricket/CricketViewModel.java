@@ -3,8 +3,6 @@ package bruzsa.laszlo.dartsapp.model.cricket;
 import static bruzsa.laszlo.dartsapp.model.Team.TEAM1;
 import static bruzsa.laszlo.dartsapp.model.Team.TEAM2;
 
-import android.util.Log;
-
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
@@ -18,18 +16,11 @@ import bruzsa.laszlo.dartsapp.dao.Player;
 import bruzsa.laszlo.dartsapp.model.TeamPlayer;
 
 public class CricketViewModel extends ViewModel {
-    private static int count;
-
-    public CricketViewModel() {
-        count++;
-        Log.d("Model", "CricketViewModel: " + count);
-
-    }
 
     private CricketTeam team1;
     private CricketTeam team2;
     private final List<CricketThrow> shoots = new ArrayList<>();
-    private final MutableLiveData<Boolean> isGameOver = new MutableLiveData<>();
+    private final MutableLiveData<Boolean> isGameOver = new MutableLiveData<>(false);
 
     public void newGame(Map<TeamPlayer, Player> players) {
         this.team1 = new CricketTeam(players.get(TEAM1.player1()), players.get(TEAM1.player2()));
@@ -60,8 +51,8 @@ public class CricketViewModel extends ViewModel {
             isGameOver.setValue(true);
     }
 
-    public void shootRemove(CricketThrow cricketThrow) {
-        shoots.remove(cricketThrow);
+    public boolean shootRemove(CricketThrow cricketThrow) {
+        return cricketThrow.setRemoved() && !isGameOver.getValue();
     }
 
     private void reCalculatePoints() {

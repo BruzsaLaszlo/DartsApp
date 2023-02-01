@@ -1,5 +1,7 @@
 package bruzsa.laszlo.dartsapp.ui.cricket;
 
+import android.graphics.Paint;
+import android.graphics.Typeface;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,11 +19,11 @@ import bruzsa.laszlo.dartsapp.model.cricket.CricketThrow;
 public class CricketThrowsAdapter extends RecyclerView.Adapter<CricketThrowsAdapter.ViewHolder> {
 
     private final List<CricketThrow> mDataSet;
-    private final Consumer<CricketThrow> toRemove;
+    private final Consumer<CricketThrow> removeThrow;
 
-    public CricketThrowsAdapter(List<CricketThrow> shoots, Consumer<CricketThrow> toRemove) {
-        mDataSet = shoots;
-        this.toRemove = toRemove;
+    public CricketThrowsAdapter(List<CricketThrow> mDataSet, Consumer<CricketThrow> removeThrow) {
+        this.mDataSet = mDataSet;
+        this.removeThrow = removeThrow;
     }
 
     @NonNull
@@ -35,8 +37,13 @@ public class CricketThrowsAdapter extends RecyclerView.Adapter<CricketThrowsAdap
 
     @Override
     public void onBindViewHolder(ViewHolder viewHolder, final int position) {
-        viewHolder.cricketThrow = mDataSet.get(position);
-        viewHolder.shootTextView.setText(mDataSet.get(position).toString());
+        CricketThrow cricketThrow = mDataSet.get(position);
+        viewHolder.cricketThrow = cricketThrow;
+        viewHolder.throwTextView.setText(cricketThrow.toString());
+        if (cricketThrow.isRemoved()) {
+            viewHolder.throwTextView.setTypeface(null, Typeface.ITALIC);
+            viewHolder.throwTextView.setPaintFlags(Paint.STRIKE_THRU_TEXT_FLAG);
+        }
     }
 
     @Override
@@ -45,19 +52,17 @@ public class CricketThrowsAdapter extends RecyclerView.Adapter<CricketThrowsAdap
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
-        private final TextView shootTextView;
+        private final TextView throwTextView;
         private CricketThrow cricketThrow;
 
         public ViewHolder(View v) {
             super(v);
             v.setOnLongClickListener(v1 -> {
-                int position = mDataSet.indexOf(cricketThrow);
-                toRemove.accept(cricketThrow);
-                cricketThrow.setRemoved();
-                notifyItemRemoved(position);
+                removeThrow.accept(cricketThrow);
+                notifyItemChanged(mDataSet.indexOf(cricketThrow));
                 return true;
             });
-            shootTextView = v.findViewById(R.id.cricketThrowItem);
+            throwTextView = v.findViewById(R.id.cricketThrowItem);
         }
     }
 }

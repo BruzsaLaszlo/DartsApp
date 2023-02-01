@@ -1,9 +1,10 @@
-package bruzsa.laszlo.dartsapp.ui.x01;
+package bruzsa.laszlo.dartsapp.ui.x01.input;
 
 import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;
 
 import android.content.Context;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 
@@ -12,13 +13,10 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipDrawable;
 
-import java.util.function.Consumer;
-
 public class NumberPad extends TableLayout {
 
     private final Context context;
-    Consumer<Integer> onClick;
-    Consumer<Integer> onLongClick;
+    private InputTextNumber inputTextNumber;
 
     public static final int OK = 10;
     public static final int BACK = 11;
@@ -36,6 +34,11 @@ public class NumberPad extends TableLayout {
         createChips09();
     }
 
+    public void setInputTextNumber(InputTextNumber inputTextNumber) {
+        Log.d("NumberPad", "setInputTextNumber: " + inputTextNumber);
+        this.inputTextNumber = inputTextNumber;
+    }
+
     private void createChips09() {
         for (int i = 0; i < 3; i++) {
             TableRow row = createTableRow();
@@ -47,18 +50,15 @@ public class NumberPad extends TableLayout {
         }
         TableRow row = createTableRow();
         row.addView(getChip("OK", OK));
-        row.addView(getChip("0", 0));
-        row.addView(getChip("<x", BACK));
+        row.addView(getChip("  0  ", 0));
+        row.addView(getChip("<-", BACK));
         addView(row, getTableLayoutParams());
     }
 
     private Chip getChip(String text, int id) {
         Chip chip = new Chip(context);
-        chip.setOnClickListener(v -> onClick.accept(id));
-        chip.setOnLongClickListener(v -> {
-            onLongClick.accept(id);
-            return true;
-        });
+        chip.setOnClickListener(v -> getChipOnClickListener(id));
+        chip.setOnLongClickListener(v -> getChipOnLongClickListener(id));
         ChipDrawable chipDrawable = ChipDrawable.createFromAttributes(context,
                 null,
                 0,
@@ -68,8 +68,25 @@ public class NumberPad extends TableLayout {
         chip.setText(text);
         chip.setTextAlignment(TEXT_ALIGNMENT_CENTER);
         chip.setTextSize(50);
-//        chip.setTextColor(Color.BLACK);         // color
         return chip;
+    }
+
+    private boolean getChipOnLongClickListener(int key) {
+        switch (key) {
+            case OK -> inputTextNumber.setReady();
+            case BACK -> inputTextNumber.clear();
+            default -> inputTextNumber.plusAdd(key);
+        }
+        return false;
+    }
+
+    private void getChipOnClickListener(int key) {
+        Log.d("NumberPad", "getChipOnClickListener: " + inputTextNumber);
+        switch (key) {
+            case OK -> inputTextNumber.setReady();
+            case BACK -> inputTextNumber.removeLast();
+            default -> inputTextNumber.add(key);
+        }
     }
 
     private TableRow createTableRow() {
@@ -90,14 +107,6 @@ public class NumberPad extends TableLayout {
         lp.weight = 0.5f;
         lp.setMargins(5, 0, 5, 0);
         return lp;
-    }
-
-    public void setOnClickListener(Consumer<Integer> onClick) {
-        this.onClick = onClick;
-    }
-
-    public void setOnLongClickListener(Consumer<Integer> onLongClick) {
-        this.onLongClick = onLongClick;
     }
 
 }

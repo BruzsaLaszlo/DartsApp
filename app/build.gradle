@@ -1,5 +1,10 @@
 plugins {
+//    id 'kotlin-kapt'
+    id 'org.jetbrains.kotlin.android'
     id 'com.android.application'
+
+    id("io.freefair.lombok") version "5.3.0"
+    id("org.jetbrains.kotlin.plugin.lombok") version "1.8.0"
 }
 
 android {
@@ -10,8 +15,8 @@ android {
         applicationId "bruzsa.laszlo.dartsapp"
         minSdk 29
         targetSdk 33
-        versionCode 1
-        versionName "1.0"
+        versionCode 3
+        versionName "0.1"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -23,8 +28,8 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_19
-        targetCompatibility JavaVersion.VERSION_19
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
     }
     buildFeatures {
         viewBinding true
@@ -37,13 +42,33 @@ android {
         }
     }
 
+    dataBinding {
+        enabled true
+    }
+
+    kotlinOptions {
+        jvmTarget = '1.8'
+    }
+
 }
 
+//kapt {
+//    correctErrorTypes true
+//    keepJavacAnnotationProcessors = true
+//}
+
+kotlinLombok {
+    lombokConfigurationFile(file("lombok.config"))
+}
 
 dependencies {
+    compileOnly("org.projectlombok:lombok:1.18.24")
+    annotationProcessor("org.projectlombok:lombok:1.18.24")
+
+    implementation 'org.nanohttpd:nanohttpd:2.3.1'
 
     implementation 'androidx.appcompat:appcompat:1.6.0'
-    implementation 'com.google.android.material:material:1.7.0'
+    implementation 'com.google.android.material:material:1.8.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
     implementation "androidx.lifecycle:lifecycle-viewmodel-savedstate:2.5.1"
     implementation 'androidx.lifecycle:lifecycle-livedata-ktx:2.5.1'

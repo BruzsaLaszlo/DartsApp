@@ -7,6 +7,7 @@ import static bruzsa.laszlo.dartsapp.model.TeamPlayer.PLAYER_2_2;
 
 import androidx.lifecycle.ViewModel;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -15,10 +16,11 @@ import java.util.List;
 import java.util.Map;
 
 import bruzsa.laszlo.dartsapp.dao.Player;
-import bruzsa.laszlo.dartsapp.model.dartsX01.X01GameSettings;
 import bruzsa.laszlo.dartsapp.model.home.GameMode;
 import bruzsa.laszlo.dartsapp.model.home.GameType;
+import bruzsa.laszlo.dartsapp.model.x01.X01GameSettings;
 import bruzsa.laszlo.dartsapp.repository.home.PlayersRepository;
+import bruzsa.laszlo.dartsapp.ui.Nano;
 
 public class SharedViewModel extends ViewModel {
 
@@ -32,6 +34,7 @@ public class SharedViewModel extends ViewModel {
 
     private GameType gameType = GameType.NO_GAME;
     private GameMode gameMode = GameMode.PLAYER;
+    private static Nano nano = new Nano(9000);
 
     public SharedViewModel() {
         selectedPlayers.put(PLAYER_1_1, getAllPlayers().get(0));
@@ -39,6 +42,13 @@ public class SharedViewModel extends ViewModel {
         selectedPlayers.put(PLAYER_1_2, getAllPlayers().get(2));
         selectedPlayers.put(PLAYER_2_2, getAllPlayers().get(3));
         //TODO delete this
+
+        try {
+            if (!nano.wasStarted())
+                nano.start();
+        } catch (IOException e) {
+            throw new IllegalStateException("Nano webserver can not start!", e);
+        }
     }
 
     public GameType getGameType() {
@@ -96,5 +106,9 @@ public class SharedViewModel extends ViewModel {
         for (TeamPlayer player : players) {
             this.selectedPlayers.remove(player);
         }
+    }
+
+    public void setWebServerContent(String content) {
+        nano.setResponse(content);
     }
 }

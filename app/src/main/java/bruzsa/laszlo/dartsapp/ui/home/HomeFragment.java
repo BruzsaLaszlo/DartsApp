@@ -28,6 +28,7 @@ import com.google.android.material.snackbar.Snackbar;
 
 import java.util.Map;
 
+import bruzsa.laszlo.dartsapp.Helper;
 import bruzsa.laszlo.dartsapp.R;
 import bruzsa.laszlo.dartsapp.dao.Player;
 import bruzsa.laszlo.dartsapp.databinding.FragmentHomeBinding;
@@ -80,6 +81,8 @@ public class HomeFragment extends Fragment {
         setOnClickListenerForChip(binding.chipTeam1Player2, PLAYER_1_2);
         setOnClickListenerForChip(binding.chipTeam2Player1, PLAYER_2_1);
         setOnClickListenerForChip(binding.chipTeam2Player2, PLAYER_2_2);
+
+        Helper.getIPv4Address(requireContext()).ifPresent(binding.textIPAdress::setText);
     }
 
     private ChipGroup.OnCheckedStateChangeListener getOnCheckedStateChangeListenerForGameTypes() {
@@ -151,7 +154,7 @@ public class HomeFragment extends Fragment {
                     switch (mode) {
                         case TEAM, PLAYER ->
                                 navigateToFragment(R.id.action_nav_home_to_nav_cricketFragment, mode);
-                        case SINGLE -> {
+                        case SINGLE -> {// TODO
                         }
                     }
                 }

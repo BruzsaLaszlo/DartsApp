@@ -6,89 +6,83 @@
     android:layout_height="match_parent"
     tools:context=".ui.cricket.CricketFragment">
 
-    <FrameLayout
-        android:id="@+id/frameTablePlayer1"
+    <bruzsa.laszlo.dartsapp.ui.cricket.CricketTable
+        android:id="@+id/cricketTable1"
         android:layout_width="wrap_content"
-        android:layout_height="0dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center|start"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toTopOf="parent" />
 
-        <bruzsa.laszlo.dartsapp.ui.cricket.CricketTable
-            android:id="@+id/cricketTable1"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_gravity="center|start"
-            android:layout_marginBottom="0dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-    </FrameLayout>
-
-    <FrameLayout
-        android:id="@+id/frameTablePlayer2"
+    <bruzsa.laszlo.dartsapp.ui.cricket.CricketTable
+        android:id="@+id/cricketTable2"
         android:layout_width="wrap_content"
-        android:layout_height="0dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toTopOf="parent" />
 
-        <bruzsa.laszlo.dartsapp.ui.cricket.CricketTable
-            android:id="@+id/cricketTable2"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_gravity="end" />
-    </FrameLayout>
+    <TextView
+        android:id="@+id/text_name_cricket_player_2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="top|end"
+        android:layout_marginStart="5dp"
+        android:layout_marginEnd="-80dp"
+        android:autoSizeTextType="none"
+        android:drawablePadding="0dp"
+        android:includeFontPadding="true"
+        android:padding="0dp"
+        android:text="@string/player2"
+        android:textAlignment="textEnd"
+        android:textSize="24sp"
+        app:layout_constraintEnd_toStartOf="@+id/cricketTable2"
+        app:layout_constraintStart_toEndOf="@+id/text_name_cricket_player_1"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:ignore="TouchTargetSizeCheck" />
 
-    <FrameLayout
-        android:id="@+id/frameNamesScores"
-        android:layout_width="241dp"
-        android:layout_height="117dp"
-        android:layout_marginStart="-20dp"
-        android:layout_marginEnd="-20dp"
-        app:layout_constraintEnd_toStartOf="@+id/frameTablePlayer2"
-        app:layout_constraintStart_toEndOf="@+id/frameTablePlayer1"
-        app:layout_constraintTop_toTopOf="parent">
+    <TextView
+        android:id="@+id/textCricketScore"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:text="@string/_00"
+        android:textSize="40sp"
+        app:layout_constraintBottom_toTopOf="@id/listThrows"
+        app:layout_constraintEnd_toStartOf="@+id/cricketTable2"
+        app:layout_constraintStart_toEndOf="@+id/cricketTable1"
+        app:layout_constraintTop_toBottomOf="@+id/text_name_cricket_player_2" />
 
-        <TextView
-            android:id="@+id/player2Text"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="top|end"
-            android:autoSizeTextType="none"
-            android:text="@string/player2"
-            android:textAlignment="textEnd"
-            android:textSize="30sp"
-            tools:ignore="TouchTargetSizeCheck" />
-
-        <TextView
-            android:id="@+id/player1Text"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/player1"
-            android:textAlignment="textStart"
-            android:textSize="30sp" />
-
-        <TextView
-            android:id="@+id/scoreTextView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="bottom|center"
-            android:text="@string/_00"
-            android:textSize="50sp" />
-
-    </FrameLayout>
+    <TextView
+        android:id="@+id/text_name_cricket_player_1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="-80dp"
+        android:layout_marginEnd="5dp"
+        android:drawablePadding="0dp"
+        android:includeFontPadding="true"
+        android:padding="0dp"
+        android:text="@string/player1"
+        android:textAlignment="textStart"
+        android:textSize="24sp"
+        app:layout_constraintEnd_toStartOf="@+id/text_name_cricket_player_2"
+        app:layout_constraintStart_toEndOf="@+id/cricketTable1"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/listThrows"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="0dp"
+        android:layout_marginStart="-10dp"
         android:layout_marginTop="20dp"
+        android:layout_marginEnd="-10dp"
         android:layout_marginBottom="20dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/frameTablePlayer2"
-        app:layout_constraintStart_toEndOf="@+id/frameTablePlayer1"
-        app:layout_constraintTop_toBottomOf="@+id/frameNamesScores" />
+        app:layout_constraintEnd_toStartOf="@id/cricketTable2"
+        app:layout_constraintStart_toEndOf="@id/cricketTable1"
+        app:layout_constraintTop_toBottomOf="@id/textCricketScore" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

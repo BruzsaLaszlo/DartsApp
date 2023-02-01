@@ -6,8 +6,10 @@ import android.os.Bundle;
 import android.speech.RecognitionListener;
 import android.speech.RecognizerIntent;
 import android.speech.SpeechRecognizer;
+import android.speech.tts.TextToSpeech;
 import android.util.Log;
 
+import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
@@ -19,22 +21,31 @@ import java.util.stream.Collectors;
 
 public class Speech {
 
+    private TextToSpeech textToSpeech = null;
+
     private final SpeechRecognizer speechRecognizer;
-    private final Intent speechRecognizerIntent;
-    private static final int REQUEST_RECORD_PERMISSION = 100;
+    private Language language = Language.HUNGARIAN;
     private static final String TAG = "Speech";
 
     private final MutableLiveData<List<String>> resultLiveData = new MutableLiveData<>();
+    private final MutableLiveData<String> errorLiveData = new MutableLiveData<>();
 
     public Speech(Context context) {
+        textToSpeech = new TextToSpeech(context, status -> {
+            Log.d(TAG, "Speech: " + textToSpeech.getAvailableLanguages());
+            if (status != TextToSpeech.ERROR) {
+                textToSpeech.setLanguage(new Locale(language.getCountryCode()));
+            }
+        });
+
         Log.i(TAG, "isRecognitionAvailable: " + SpeechRecognizer.isRecognitionAvailable(context));
         speechRecognizer = SpeechRecognizer.createSpeechRecognizer(context);
-        speechRecognizerIntent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
-//        speechRecognizerIntent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
-        speechRecognizerIntent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_WEB_SEARCH);
-        speechRecognizerIntent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, new Locale("hu", "HU"));
+        speechRecognizer.setRecognitionListener(getRecognitionListener());
+    }
 
-        speechRecognizer.setRecognitionListener(new RecognitionListener() {
+    @NonNull
+    private RecognitionListener getRecognitionListener() {
+        return new RecognitionListener() {
 
             @Override
             public void onReadyForSpeech(Bundle params) {
@@ -64,6 +75,7 @@ public class Speech {
             @Override
             public void onError(int error) {
                 Log.d(TAG, "onError: " + getErrorText(error));
+                errorLiveData.setValue(getErrorText(error));
             }
 
             @Override
@@ -72,14 +84,13 @@ public class Speech {
                 Log.d(TAG, "onResults: " + data);
                 List<String> numbers = data.stream()
                         .flatMap(s -> Arrays.stream(s.split("\\s")))
-                        .filter(s -> {
-                            try {
-                                Integer.parseInt(s);
-                                return true;
-                            } catch (Exception e) {
-                                return false;
-                            }
+                        .map(s -> switch (s.toLowerCase()) {
+                            case "egy", "one" -> "1";
+                            case "kettő", "two" -> "2";
+                            case "hatvan" -> "60";
+                            default -> s;
                         })
+                        .filter(s -> s.chars().anyMatch(Character::isDigit))
                         .collect(Collectors.toList());
                 resultLiveData.setValue(numbers);
             }
@@ -94,15 +105,34 @@ public class Speech {
                 Log.d(TAG, "onEvent: " + eventType);
 
             }
-        });
+        };
     }
 
     public LiveData<List<String>> getResultLiveData() {
         return resultLiveData;
     }
 
+    public LiveData<String> getErrorLiveData() {
+        return errorLiveData;
+    }
+
     public void startListening() {
-        speechRecognizer.startListening(speechRecognizerIntent);
+        speechRecognizer.startListening(getSpeechRecognizerIntent());
+    }
+
+    public void setLanguage(Language language) {
+        this.language = language;
+        textToSpeech.setLanguage(new Locale(language.getCountryCode()));
+    }
+
+    public Intent getSpeechRecognizerIntent() {
+        Intent speechRecognizerIntent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
+        speechRecognizerIntent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
+        if (language == null)
+            speechRecognizerIntent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, Locale.getDefault());
+        else
+            speechRecognizerIntent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, language.getCountryCode());
+        return speechRecognizerIntent;
     }
 
     public void stopListening() {
@@ -122,6 +152,10 @@ public class Speech {
             case SpeechRecognizer.ERROR_SPEECH_TIMEOUT -> "No speech input";
             default -> "Didn't understand, please try again.";
         };
+    }
+
+    public void textToSpeech(CharSequence text) {
+        textToSpeech.speak(text, TextToSpeech.QUEUE_FLUSH, null, "valami");
     }
 
 }

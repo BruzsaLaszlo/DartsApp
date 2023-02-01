@@ -1,140 +1,118 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".ui.singlex01.SingleX01Fragment">
+    xmlns:tools="http://schemas.android.com/tools">
 
-    <TextView
-        android:id="@+id/textNamePlayer"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_gravity="start|top|center_horizontal"
-        android:text="@string/player2"
-        android:textAlignment="center"
-        android:textSize="40sp"
-        app:layout_constraintBottom_toTopOf="@+id/textScorePlayer"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+    <data>
 
-    <TextView
-        android:id="@+id/textScorePlayer"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom|start"
-        android:layout_marginStart="70dp"
-        android:layout_marginEnd="70dp"
-        android:text="@string/_X01"
-        android:textAlignment="center"
-        android:textSize="60sp"
-        android:textStyle="bold"
-        app:layout_constraintBottom_toTopOf="@+id/listThrowsSingleX01"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textNamePlayer" />
+        <variable
+            name="viewModel"
+            type="bruzsa.laszlo.dartsapp.model.singlex01.SingleX01ViewModel" />
 
-    <ImageView
-        android:id="@+id/imageMicrophone"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:layout_marginTop="70dp"
-        app:layout_constraintBottom_toTopOf="@id/inputText"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHeight="match_constraint"
-        app:layout_constraintStart_toEndOf="@id/textStatPlayer"
-        app:layout_constraintTop_toTopOf="@id/textScorePlayer"
-        app:srcCompat="@drawable/mute" />
+        <variable
+            name="sharedViewModel"
+            type="bruzsa.laszlo.dartsapp.model.SharedViewModel" />
+    </data>
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/listThrowsSingleX01"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:layout_gravity="start|fill_vertical"
-        android:layout_marginStart="40dp"
-        android:scrollbars="vertical"
-        app:layout_constraintBottom_toTopOf="@+id/inputText"
-        app:layout_constraintEnd_toStartOf="@+id/textViewStat"
-        app:layout_constraintHorizontal_bias="0.512"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textScorePlayer" />
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context=".ui.singlex01.SingleX01Fragment">
 
-    <TextView
-        android:id="@+id/textViewStat"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="start"
-        android:layout_marginStart="20dp"
-        android:layout_marginEnd="10dp"
-        android:fontFamily="monospace"
-        android:text="100+\n60+\nAvg\nMax\nMin\nHC"
-        android:textAlignment="center"
-        android:textSize="24sp"
-        app:layout_constraintBottom_toTopOf="@+id/inputText"
-        app:layout_constraintEnd_toStartOf="@id/textStatPlayer"
-        app:layout_constraintStart_toEndOf="@+id/listThrowsSingleX01"
-        app:layout_constraintTop_toBottomOf="@+id/textScorePlayer" />
+        <TextView
+            android:id="@+id/textNamePlayer"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="start|top|center_horizontal"
+            android:text="@string/player2"
+            android:textAlignment="center"
+            android:textSize="40sp"
+            app:layout_constraintBottom_toTopOf="@+id/textScorePlayer"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
-    <TextView
-        android:id="@+id/textStatPlayer"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_gravity="end"
-        android:layout_marginEnd="40dp"
-        android:fontFamily="monospace"
-        android:text="2\n5\n55\n122\n26\n40"
-        android:textAlignment="textStart"
-        android:textSize="24sp"
-        app:layout_constraintBottom_toTopOf="@+id/inputText"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/textViewStat"
-        app:layout_constraintTop_toBottomOf="@+id/textScorePlayer" />
+        <TextView
+            android:id="@+id/textScorePlayer"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|start"
+            android:layout_marginStart="100dp"
+            android:layout_marginEnd="100dp"
+            android:text="@{viewModel.score.toString(), default=`501`}"
+            android:textAlignment="center"
+            android:textSize="60sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toTopOf="@+id/listThrowsSingleX01"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textNamePlayer" />
 
-    <com.google.android.material.chip.Chip
-        android:id="@+id/button_single_x_01_ok"
-        style="@style/Widget.Material3.Chip.Assist"
-        android:layout_width="0dp"
-        android:layout_height="86dp"
-        android:layout_marginStart="100dp"
-        android:layout_marginEnd="100dp"
-        android:elegantTextHeight="false"
-        android:text="@string/ok"
-        android:textAlignment="center"
-        android:textSize="60sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/inputText" />
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/listThrowsSingleX01"
+            android:adapter="@{viewModel.throwsAdapter}"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_gravity="start|fill_vertical"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="20dp"
+            android:minWidth="2000dp"
+            android:scrollbars="vertical"
+            app:layout_constrainedWidth="false"
+            app:layout_constraintBottom_toTopOf="@+id/includedInputs"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/textStatPlayer"
+            app:layout_constraintTop_toBottomOf="@+id/textScorePlayer" />
 
-    <bruzsa.laszlo.dartsapp.ui.x01.NumberPad
-        android:id="@+id/numberPadSingle"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:layout_marginStart="1dp"
-        android:layout_marginEnd="1dp"
-        android:layout_marginBottom="1dp"
-        android:padding="0dp"
-        android:paddingHorizontal="0dp"
-        android:paddingVertical="0dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/inputText" />
+        <TextView
+            android:id="@+id/textViewStat"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="start"
+            android:layout_marginStart="16dp"
+            android:fontFamily="monospace"
+            android:paddingEnd="10dp"
+            android:text="@string/_100_n60_navg_nmax_nmin_nhc"
+            android:textAlignment="center"
+            android:textSize="24sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/textScorePlayer" />
 
-    <bruzsa.laszlo.dartsapp.ui.x01.input.InputText
-        android:id="@+id/inputText"
-        android:layout_width="0dp"
-        android:layout_height="122dp"
-        android:layout_marginStart="10dp"
-        android:layout_marginEnd="10dp"
-        android:text="26+88"
-        android:textAlignment="center"
-        android:textSize="80sp"
-        app:layout_constraintBottom_toTopOf="@+id/button_single_x_01_ok"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/listThrowsSingleX01" />
+        <TextView
+            android:id="@+id/textStatPlayer"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end"
+            android:layout_marginEnd="16dp"
+            android:fontFamily="monospace"
+            android:minWidth="45dp"
+            android:text="@string/_2_n5_n55_n122_n26_n40"
+            android:textAlignment="textStart"
+            android:textSize="24sp"
+            app:layout_constraintEnd_toStartOf="@+id/listThrowsSingleX01"
+            app:layout_constraintStart_toEndOf="@+id/textViewStat"
+            app:layout_constraintTop_toBottomOf="@+id/textScorePlayer" />
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:layout_marginEnd="20dp"
+            android:text="@{viewModel.legs.toString()}"
+            android:textAppearance="@style/TextAppearance.AppCompat.Display1"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textNamePlayer" />
+
+        <include
+            android:id="@+id/includedInputs"
+            layout="@layout/input_views"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textViewStat" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

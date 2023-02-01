@@ -1,251 +1,262 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <FrameLayout
-        android:id="@+id/frameLayout"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+    <data>
 
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="top|fill_vertical|end"
-            android:layout_marginEnd="10dp"
-            android:orientation="vertical">
+        <import type="bruzsa.laszlo.dartsapp.model.Team" />
 
-            <Button
-                android:id="@+id/textNamePlayer21"
-                style="@style/Widget.Material3.MaterialTimePicker.Button"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:checkable="false"
-                android:padding="10dp"
-                android:text="@string/player22"
-                android:textAlignment="textEnd"
-                android:textColor="@color/black"
-                android:textSize="30sp" />
+        <variable
+            name="viewModel"
+            type="bruzsa.laszlo.dartsapp.model.x01.X01ViewModel" />
+    </data>
 
-            <Button
-                android:id="@+id/textNamePlayer22"
-                style="@style/Widget.Material3.MaterialTimePicker.Button"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:checkable="false"
-                android:padding="10dp"
-                android:text="@string/player22"
-                android:textAlignment="textEnd"
-                android:textColor="@color/black"
-                android:textSize="30sp" />
-        </LinearLayout>
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
         <LinearLayout
-            android:id="@+id/linearLayout"
-            android:layout_width="wrap_content"
+            android:id="@+id/layoutTeam1"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_gravity="start|top|fill_vertical"
-            android:layout_marginStart="10dp"
-            android:orientation="vertical">
+            android:layout_marginStart="4dp"
+            android:layout_marginEnd="5dp"
+            android:orientation="vertical"
+            app:layout_constraintBottom_toTopOf="@+id/frameNameScore"
+            app:layout_constraintEnd_toStartOf="@+id/layoutTeam2"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
 
             <Button
                 android:id="@+id/textNamePlayer11"
                 style="@style/Widget.Material3.MaterialTimePicker.Button"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
                 android:checkable="false"
-                android:padding="10dp"
-                android:text="@string/player2"
+                android:maxLines="1"
+                android:paddingStart="5dp"
+                android:paddingEnd="10dp"
+                android:text="@string/player_1_1"
                 android:textColor="@color/black"
                 android:textSize="30sp" />
 
             <Button
                 android:id="@+id/textNamePlayer12"
                 style="@style/Widget.Material3.MaterialTimePicker.Button"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
                 android:checkable="false"
-                android:padding="10dp"
-                android:text="@string/player2"
+                android:maxLines="1"
+                android:paddingStart="5dp"
+                android:paddingEnd="10dp"
+                android:text="@string/player_1_2"
                 android:textColor="@color/black"
                 android:textSize="30sp" />
         </LinearLayout>
-    </FrameLayout>
 
-    <FrameLayout
-        android:id="@+id/frameNameScore"
-        android:layout_width="0dp"
-        android:layout_height="90dp"
-        android:layout_gravity="center|top"
-        android:layout_marginStart="10dp"
-        android:layout_marginEnd="10dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/frameLayout">
-
-        <Button
-            android:id="@+id/textScorePlayer2"
-            style="@style/Widget.Material3.Button.TextButton"
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:id="@+id/layoutTeam2"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_gravity="fill_vertical|end"
-            android:padding="0dp"
-            android:text="@string/_X01"
-            android:textAlignment="textEnd"
-            android:textSize="60sp"
-            android:textStyle="bold" />
+            android:layout_gravity="top|fill_vertical|end"
+            android:layout_marginStart="4dp"
+            android:layout_marginEnd="10dp"
+            android:orientation="vertical"
+            app:layout_constraintBottom_toTopOf="@+id/frameNameScore"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/layoutTeam1"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <Button
+                android:id="@+id/textNamePlayer21"
+                style="@style/Widget.Material3.MaterialTimePicker.Button"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="end"
+                android:layout_marginTop="5dp"
+                android:checkable="false"
+                android:maxLines="1"
+                android:paddingStart="5dp"
+                android:paddingEnd="10dp"
+                android:text="@string/player_2_1"
+                android:textAlignment="center"
+                android:textColor="@color/black"
+                android:textSize="30sp" />
+
+            <Button
+                android:id="@+id/textNamePlayer22"
+                style="@style/Widget.Material3.MaterialTimePicker.Button"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="end"
+                android:layout_marginTop="5dp"
+                android:checkable="false"
+                android:maxLines="1"
+                android:paddingStart="5dp"
+                android:paddingEnd="10dp"
+                android:text="@string/player_2_2"
+                android:textAlignment="center"
+                android:textColor="@color/black"
+                android:textSize="30sp" />
+        </LinearLayout>
 
         <FrameLayout
-            android:layout_width="72dp"
+            android:id="@+id/frameNameScore"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_gravity="bottom|center"
-            android:layout_marginBottom="8sp">
+            android:layout_gravity="center|top"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"
+            app:layout_constraintBottom_toTopOf="@id/textViewStat"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/layoutTeam1">
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center|fill_vertical"
-                android:text="@string/SetLeg"
-                android:textSize="24sp" />
-
-            <TextView
-                android:id="@+id/textSetLegPlayer2"
+            <Button
+                android:id="@+id/textScorePlayer2"
+                style="@style/Widget.Material3.Button.TextButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="fill_vertical|end"
-                android:text="@string/_0_n0"
-                android:textSize="24sp" />
+                android:padding="0dp"
+                android:text="@{viewModel.getLiveScore(Team.TEAM2).toString(), default=501}"
+                android:textAlignment="textEnd"
+                android:textSize="60sp"
+                android:textStyle="bold" />
 
-            <TextView
-                android:id="@+id/textSetLegPlayer1"
+            <FrameLayout
+                android:id="@+id/frameSetsLegs"
+                android:layout_width="72dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom|center"
+                android:layout_marginBottom="8sp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center|fill_vertical"
+                    android:text="@string/SetLeg"
+                    android:textSize="24sp" />
+
+                <TextView
+                    android:id="@+id/textSetLegPlayer2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="fill_vertical|end"
+                    android:text="@string/_0_n0"
+                    android:textSize="24sp" />
+
+                <TextView
+                    android:id="@+id/textSetLegPlayer1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="start|fill_vertical"
+                    android:text="@string/_0_n0"
+                    android:textSize="24sp" />
+            </FrameLayout>
+
+            <Button
+                android:id="@+id/textScorePlayer1"
+                style="@style/Widget.Material3.Button.TextButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="start|fill_vertical"
-                android:text="@string/_0_n0"
-                android:textSize="24sp" />
+                android:padding="0dp"
+                android:text="@{viewModel.getLiveScore(Team.TEAM1).toString(), default=501}"
+                android:textSize="60sp"
+                android:textStyle="bold" />
+
         </FrameLayout>
 
-        <Button
-            android:id="@+id/textScorePlayer1"
-            style="@style/Widget.Material3.Button.TextButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="start|fill_vertical"
-            android:padding="0dp"
-            android:text="@string/_X01"
-            android:textSize="60sp"
-            android:textStyle="bold" />
+        <FrameLayout
+            android:id="@+id/framePlayer1StatThrows"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:orientation="horizontal"
+            app:layout_constraintBottom_toBottomOf="@+id/textViewStat"
+            app:layout_constraintEnd_toStartOf="@+id/textViewStat"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/frameNameScore">
 
-    </FrameLayout>
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/listThrowsPlayer1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="start"
+                android:layout_marginStart="20dp"
+                android:layout_marginEnd="20dp"
+                android:adapter="@{viewModel.getThrowsAdapterTeam(Team.TEAM1)}" />
 
-    <FrameLayout
-        android:id="@+id/frameStat"
-        android:layout_width="214dp"
-        android:layout_height="151dp"
-        android:layout_marginStart="137dp"
-        android:layout_marginEnd="138dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/frameNameScore">
+            <TextView
+                android:id="@+id/textStatPlayer1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="end"
+                android:layout_marginEnd="10dp"
+                android:fontFamily="monospace"
+                android:text="@string/_10_n100_n180_n26"
+                android:textAlignment="textEnd"
+                android:textSize="20sp" />
+
+        </FrameLayout>
 
         <TextView
             android:id="@+id/textViewStat"
             android:layout_width="wrap_content"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:fontFamily="monospace"
             android:text="@string/stat"
             android:textAlignment="center"
-            android:textSize="24sp" />
+            android:textSize="20sp"
+            app:layout_constraintBottom_toTopOf="@+id/includedInputs"
+            app:layout_constraintEnd_toStartOf="@+id/framePlayer2StatThrows"
+            app:layout_constraintStart_toEndOf="@+id/framePlayer1StatThrows"
+            app:layout_constraintTop_toBottomOf="@+id/frameNameScore" />
 
-        <TextView
-            android:id="@+id/textStatPlayer1"
-            android:layout_width="60sp"
-            android:layout_height="match_parent"
-            android:layout_gravity="start"
-            android:fontFamily="monospace"
-            android:text="@string/_10_n100_n180_n26"
-            android:textAlignment="textEnd"
-            android:textSize="24sp" />
+        <FrameLayout
+            android:id="@+id/framePlayer2StatThrows"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:orientation="horizontal"
+            app:layout_constraintBottom_toBottomOf="@+id/textViewStat"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/textViewStat"
+            app:layout_constraintTop_toBottomOf="@+id/frameNameScore">
 
-        <TextView
-            android:id="@+id/textStatPlayer2"
-            android:layout_width="60sp"
-            android:layout_height="match_parent"
-            android:layout_gravity="end"
-            android:fontFamily="monospace"
-            android:text="@string/_10_n100_n180_n26"
-            android:textAlignment="textStart"
-            android:textSize="24sp" />
-    </FrameLayout>
+            <TextView
+                android:id="@+id/textStatPlayer2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="start"
+                android:layout_marginStart="10dp"
+                android:fontFamily="monospace"
+                android:text="@string/_10_n100_n180_n26"
+                android:textAlignment="textStart"
+                android:textSize="20sp" />
 
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/buttonOk"
-        style="@style/Widget.Material3.ExtendedFloatingActionButton.Tertiary"
-        android:layout_width="206dp"
-        android:layout_height="84dp"
-        android:layout_marginStart="62dp"
-        android:layout_marginTop="-15dp"
-        android:layout_marginEnd="62dp"
-        android:padding="0dp"
-        android:text="@string/ok"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textInput" />
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/listThrowsPlayer2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="end"
+                android:layout_marginStart="20dp"
+                android:layout_marginEnd="20dp"
+                android:adapter="@{viewModel.getThrowsAdapterTeam(Team.TEAM2)}" />
+        </FrameLayout>
 
-    <bruzsa.laszlo.dartsapp.ui.x01.input.X01EditText
-        android:id="@+id/textInput"
-        style="@style/Widget.Material3.TextInputEditText.FilledBox"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:contentDescription="@string/score"
-        android:ems="10"
-        android:importantForAutofill="no"
-        android:inputType="phone"
-        android:padding="0dp"
-        android:singleLine="true"
-        android:textAlignment="center"
-        android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-        android:textSize="60sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/frameStat"
-        tools:ignore="EditableContentDescCheck,LabelFor,SpeakableTextPresentCheck,VisualLintTextFieldSize" />
+        <include
+            android:id="@+id/includedInputs"
+            layout="@layout/input_views"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textViewStat" />
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/listThrowsPlayer2"
-        android:layout_width="0dp"
-        android:layout_height="145dp"
-        app:layout_constraintBottom_toTopOf="@+id/textInput"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/frameStat"
-        app:layout_constraintTop_toBottomOf="@+id/frameNameScore" />
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/listThrowsPlayer1"
-        android:layout_width="0dp"
-        android:layout_height="150dp"
-        app:layout_constraintBottom_toTopOf="@+id/textInput"
-        app:layout_constraintEnd_toStartOf="@+id/frameStat"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/frameNameScore" />
-
-    <ToggleButton
-        android:id="@+id/buttonSpeach"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="159dp"
-        android:layout_marginTop="30dp"
-        android:layout_marginEnd="164dp"
-        android:text="ToggleButton"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/buttonOk" />
-
-</androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

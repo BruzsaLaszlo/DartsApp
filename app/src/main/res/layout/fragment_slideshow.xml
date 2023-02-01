@@ -7,8 +7,11 @@
     tools:context=".ui.slideshow.SlideshowFragment">
 
     <com.google.android.material.chip.ChipGroup
+        android:id="@+id/chipGroup"
         android:layout_width="300dp"
         android:layout_height="133dp"
+        android:layout_marginEnd="111dp"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
@@ -26,29 +29,16 @@
             app:chipMinTouchTargetSize="48dp" />
     </com.google.android.material.chip.ChipGroup>
 
-    <TextView
-        android:id="@+id/textSlideshow"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
-        android:textAlignment="center"
-        android:textSize="20sp"
+    <include
+        layout="@layout/input_views"
+        android:layout_width="410dp"
+        android:layout_height="749dp"
+        android:layout_marginTop="7dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <Button
-        android:id="@+id/button2"
-        style="@style/Widget.Material3.ExtendedFloatingActionButton.Tertiary"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="29dp"
-        android:layout_marginEnd="259dp"
-        android:text="Button"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textSlideshow" />
+        app:layout_constraintTop_toBottomOf="@+id/chipGroup"
+        app:layout_constraintVertical_bias="1.0" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

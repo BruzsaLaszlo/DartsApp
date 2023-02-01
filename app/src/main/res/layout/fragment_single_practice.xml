@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ui.practice.SinglePracticeFragment">
+
+    <TextView
+        android:id="@+id/textViewStatSinglePracticeText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="10dp"
+        android:text="140+\n100+\n60+\nMAX\nMIN"
+        android:textAppearance="@style/TextAppearance.AppCompat.Display2"
+        app:layout_constraintEnd_toStartOf="@+id/listThrowsSinglePractice"
+        app:layout_constraintStart_toEndOf="@+id/textStatSinglePractice"
+        app:layout_constraintTop_toBottomOf="@+id/textSinglePracticeAvg" />
+
+    <TextView
+        android:id="@+id/textStatSinglePractice"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="30dp"
+        android:layout_marginTop="10dp"
+        android:text="1\n1\n4\n155\n\26"
+        android:textAlignment="textEnd"
+        android:textAppearance="@style/TextAppearance.AppCompat.Display2"
+        app:layout_constraintEnd_toStartOf="@+id/textViewStatSinglePracticeText"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textSinglePracticeAvg" />
+
+    <TextView
+        android:id="@+id/textSinglePracticeAvg"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:text="AVG"
+        android:textAlignment="center"
+        android:textAppearance="@style/TextAppearance.AppCompat.Display3"
+        app:layout_constraintBottom_toTopOf="@+id/textViewStatSinglePracticeText"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/listThrowsSinglePractice"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="3dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="1dp"
+        android:clipChildren="false"
+        android:clipToPadding="false"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/textSinglePracticeAvg"
+        app:layout_constraintTop_toBottomOf="@+id/textSinglePracticeAvg"
+        tools:itemCount="6" />
+
+    <include
+        layout="@layout/input_views"
+        android:layout_width="411dp"
+        android:layout_height="533dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textViewStatSinglePracticeText" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

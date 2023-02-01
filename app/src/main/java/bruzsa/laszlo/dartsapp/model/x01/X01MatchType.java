@@ -1,4 +1,4 @@
-package bruzsa.laszlo.dartsapp.model.dartsX01;
+package bruzsa.laszlo.dartsapp.model.x01;
 
 public enum X01MatchType {
 

@@ -1,4 +1,4 @@
-package bruzsa.laszlo.dartsapp.model.singleX01;
+package bruzsa.laszlo.dartsapp.model.singlex01;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -29,13 +29,13 @@ class SingleX01ViewModelTest {
 
     @Test
     void newThrow() {
-        assertEquals(90, viewModel.newThrow(44));
-        assertEquals(501, viewModel.newThrow(90));
+        assertEquals(90, viewModel.newThrow(44).getValue());
+        assertEquals(501, viewModel.newThrow(90).getValue());
     }
 
     @Test
     void getScore() {
-        assertEquals(134, viewModel.getScore());
+        assertEquals(134, viewModel.getScore().getValue());
     }
 
     @Test

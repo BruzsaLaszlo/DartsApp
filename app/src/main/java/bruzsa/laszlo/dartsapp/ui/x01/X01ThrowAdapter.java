@@ -1,52 +1,40 @@
 package bruzsa.laszlo.dartsapp.ui.x01;
 
-import android.annotation.SuppressLint;
 import android.graphics.Color;
+import android.graphics.Paint;
+import android.graphics.Typeface;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.lifecycle.MutableLiveData;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.List;
+import java.util.function.Predicate;
 
 import bruzsa.laszlo.dartsapp.R;
-import bruzsa.laszlo.dartsapp.model.dartsX01.X01Throw;
+import bruzsa.laszlo.dartsapp.model.x01.X01Throw;
 
 public class X01ThrowAdapter extends RecyclerView.Adapter<X01ThrowAdapter.ViewHolder> {
 
-    private List<X01Throw> mDataSet;
-    private final MutableLiveData<X01Throw> selectedForRemove = new MutableLiveData<>();
+    private final List<X01Throw> mDataSet;
+    private final Predicate<X01Throw> removeCallback;
 
-    @SuppressLint("NotifyDataSetChanged")
-    public void refreshAll(List<X01Throw> throwList) {
-        mDataSet = throwList;
-        notifyDataSetChanged();
-    }
-
-    public class ViewHolder extends RecyclerView.ViewHolder {
-        private final TextView shootTextView;
-        private X01Throw x01Throw;
+    public static class ViewHolder extends RecyclerView.ViewHolder {
+        private final TextView throwTextView;
 
         public ViewHolder(View v) {
             super(v);
-            v.setOnLongClickListener(v1 -> {
-                selectedForRemove.setValue(x01Throw);
-                return true;
-            });
-            shootTextView = v.findViewById(R.id.dartsX01ThrowItem);
+            throwTextView = v.findViewById(R.id.dartsX01ThrowItem);
         }
 
-        public void setThrow(X01Throw shoot) {
-            this.x01Throw = shoot;
-        }
     }
 
-    public X01ThrowAdapter(List<X01Throw> dartsThrows) {
-        mDataSet = dartsThrows;
+    public X01ThrowAdapter(List<X01Throw> mDataSet, Predicate<X01Throw> removeCallback) {
+        this.mDataSet = mDataSet;
+        this.removeCallback = removeCallback;
     }
 
     public void inserted() {
@@ -65,24 +53,28 @@ public class X01ThrowAdapter extends RecyclerView.Adapter<X01ThrowAdapter.ViewHo
     @Override
     public void onBindViewHolder(ViewHolder viewHolder, final int position) {
         X01Throw x01Throw = mDataSet.get(position);
-        viewHolder.shootTextView.setText(x01Throw.toString());
-        if (!x01Throw.isNotHandicap())
-            viewHolder.shootTextView.setTextColor(Color.rgb(100, 100, 0));
-        else if (!x01Throw.isValid())
-            viewHolder.shootTextView.setTextColor(Color.RED);
-        viewHolder.setThrow(x01Throw);
+        viewHolder.throwTextView.setText(x01Throw.toString());
+        if (!x01Throw.isNotHandicap()) {
+            viewHolder.throwTextView.setTextColor(Color.rgb(100, 100, 0));
+        } else if (!x01Throw.isValid()) {
+            viewHolder.throwTextView.setTextColor(Color.RED);
+        }
+        if (x01Throw.isRemoved()) {
+            viewHolder.throwTextView.setTypeface(null, Typeface.ITALIC);
+            viewHolder.throwTextView.setPaintFlags(Paint.STRIKE_THRU_TEXT_FLAG);
+        }
+        viewHolder.throwTextView.setOnLongClickListener(v1 -> {
+            if (removeCallback.test(x01Throw)) {
+                notifyItemChanged(position);
+            }
+            return true;
+        });
     }
 
     @Override
     public int getItemCount() {
+        if (mDataSet == null) return 0;
         return mDataSet.size();
     }
 
-    public MutableLiveData<X01Throw> getSelectedForRemove() {
-        return selectedForRemove;
-    }
-
-    public void remove(int position) {
-        notifyItemRemoved(position);
-    }
 }

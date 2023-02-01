@@ -4,6 +4,10 @@ import static android.content.pm.ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE;
 import static android.content.pm.ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED;
 import static android.view.View.GONE;
 import static androidx.recyclerview.widget.LinearLayoutManager.VERTICAL;
+import static bruzsa.laszlo.dartsapp.model.TeamPlayer.PLAYER_1_1;
+import static bruzsa.laszlo.dartsapp.model.TeamPlayer.PLAYER_1_2;
+import static bruzsa.laszlo.dartsapp.model.TeamPlayer.PLAYER_2_1;
+import static bruzsa.laszlo.dartsapp.model.TeamPlayer.PLAYER_2_2;
 
 import android.annotation.SuppressLint;
 import android.graphics.Color;
@@ -15,6 +19,7 @@ import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -53,7 +58,7 @@ public class CricketFragment extends Fragment {
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         cViewModel.isGameOver().observe(getViewLifecycleOwner(), isGameOver ->
-                binding.scoreTextView.setTextColor(Boolean.TRUE.equals(isGameOver) ? Color.RED : Color.BLACK));
+                binding.textCricketScore.setTextColor(Boolean.TRUE.equals(isGameOver) ? Color.RED : Color.BLACK));
 
         ScreenSize screenSize = new ScreenSize(requireActivity());
         binding.cricketTable1.setSize(screenSize.getSize());
@@ -66,8 +71,15 @@ public class CricketFragment extends Fragment {
         cricketThrowsAdapter = new CricketThrowsAdapter(
                 cViewModel.getThrows(),
                 cricketThrow -> {
-                    cViewModel.shootRemove(cricketThrow);
-                    refreshGUI();
+                    AlertDialog.Builder builder = new AlertDialog.Builder(requireActivity());
+                    builder.setTitle("Do you want to delete?   " + cricketThrow.toString());
+                    builder.setPositiveButton("Yes", (dialog, which) -> {
+                        if (cViewModel.shootRemove(cricketThrow)) {
+                            refreshGUI();
+                        }
+                    });
+                    builder.setNegativeButton("No", null);
+                    builder.create().show();
                 });
         binding.listThrows.setAdapter(cricketThrowsAdapter);
         binding.listThrows.setPadding(0, 0, 0, 0);
@@ -77,27 +89,32 @@ public class CricketFragment extends Fragment {
         } else {
             refreshGUI();
         }
+
+
+        String player1 = sharedViewModel.getPlayer(PLAYER_1_1).getNickName();
+        String player2 = sharedViewModel.getPlayer(PLAYER_2_1).getNickName();
+        if (sharedViewModel.getSelectedPlayersMap().size() == 4) {
+            player1 += "\n" + sharedViewModel.getPlayer(PLAYER_1_2).getNickName();
+            player2 += "\n" + sharedViewModel.getPlayer(PLAYER_2_2).getNickName();
+        }
+        binding.textNameCricketPlayer1.setText(player1);
+        binding.textNameCricketPlayer2.setText(player2);
     }
 
     @SuppressLint("NotifyDataSetChanged")
     private void refreshGUI() {
         binding.cricketTable1.refreshState(cViewModel.getPlayerScore(1), cViewModel.getPlayerScore(2));
         binding.cricketTable2.refreshState(cViewModel.getPlayerScore(2), cViewModel.getPlayerScore(1));
-        binding.scoreTextView.setText(cViewModel.updatePoints());
+        binding.textCricketScore.setText(cViewModel.updatePoints());
         cricketThrowsAdapter.notifyDataSetChanged();
-        binding.listThrows.smoothScrollToPosition(100);
+        binding.listThrows.smoothScrollToPosition(cricketThrowsAdapter.getItemCount());
     }
 
-    private void setOnClickListenersForTable(CricketTable table, int i) {
-        table.setOnClickListener(v -> {
-            cViewModel.newThrow(1, ((CricketTable) v).getTouchedValue(), i);
+    private void setOnClickListenersForTable(CricketTable table, int player) {
+        table.getTouchedValue().observe(getViewLifecycleOwner(), value -> {
+            cViewModel.newThrow(1, value, player);
+            cricketThrowsAdapter.notifyItemInserted(cricketThrowsAdapter.getItemCount());
             refreshGUI();
-        });
-        table.setOnLongClickListener(v -> {
-            int value = ((CricketTable) v).getTouchedValue();
-            cViewModel.newThrow(value == 25 ? 2 : 3, value, i);
-            refreshGUI();
-            return true;
         });
     }
 

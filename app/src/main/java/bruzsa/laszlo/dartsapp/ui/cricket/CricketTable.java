@@ -5,7 +5,6 @@ import static android.graphics.Color.BLUE;
 import static android.graphics.Color.GRAY;
 import static android.graphics.Color.GREEN;
 import static android.graphics.Color.RED;
-import static android.graphics.Color.WHITE;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -19,6 +18,8 @@ import android.view.MotionEvent;
 import android.view.View;
 
 import androidx.annotation.Nullable;
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MutableLiveData;
 
 import java.util.HashMap;
 import java.util.List;
@@ -37,15 +38,13 @@ public class CricketTable extends View {
     private final RectF oval = new RectF();
     private float radius;
     private float radiusOfBull;
-    private static final int CIRCLE_MARGIN = 50;
+    private static final int CIRCLE_MARGIN = 10;
     private float circleCentreX;
     private float circleCentreY;
 
     private Size size;
-    private boolean left = true;
-
-
-    private int touchedValue;
+    private boolean left;
+    private MutableLiveData<Integer> touchedValue = new MutableLiveData<>();
     private static final float DEGREE = 18;
 
 
@@ -69,11 +68,13 @@ public class CricketTable extends View {
 
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-        if (size.getWidth() == 0 || size.getHeight() == 0)
-            //noinspection SuspiciousNameCombination
-            setMeasuredDimension(heightMeasureSpec, heightMeasureSpec);
-        else
-            setMeasuredDimension((int) Math.min(size.getWidth() / 2.2f, size.getHeight()), heightMeasureSpec);
+        if (size == null || size.getWidth() == 0 || size.getHeight() == 0) {
+            int newSize = heightMeasureSpec - 20;
+            setMeasuredDimension(newSize, newSize);
+        } else {
+            int newSize = (int) Math.min(size.getWidth() / 2.2f, size.getHeight());
+            setMeasuredDimension(newSize, newSize);
+        }
     }
 
     @Override
@@ -89,16 +90,21 @@ public class CricketTable extends View {
 
 
         if (left) {
-            circleCentreX = circleCentreY;
-            oval.set(CIRCLE_MARGIN, CIRCLE_MARGIN, radius * 2 + CIRCLE_MARGIN, radius * 2 + CIRCLE_MARGIN);
+            circleCentreX = radius + CIRCLE_MARGIN;
+            oval.set(CIRCLE_MARGIN,
+                    CIRCLE_MARGIN,
+                    radius * 2 + CIRCLE_MARGIN,
+                    radius * 2 + CIRCLE_MARGIN);
         } else {
-            circleCentreX = getWidth() - circleCentreY;
-            oval.set(circleCentreX + CIRCLE_MARGIN, CIRCLE_MARGIN, circleCentreX + radius * 2 + CIRCLE_MARGIN, radius * 2 + CIRCLE_MARGIN);
+            circleCentreX = getWidth() - radius - CIRCLE_MARGIN;
+            float leftX = getWidth() / 2f - circleCentreY + CIRCLE_MARGIN;
+            oval.set(leftX,
+                    CIRCLE_MARGIN,
+                    leftX + radius * 2,
+                    radius * 2 + CIRCLE_MARGIN);
         }
 
         paint.setStyle(Paint.Style.FILL);
-        paint.setColor(WHITE);
-        canvas.drawPaint(paint);
 
         paint.setColor(GRAY);
         canvas.drawCircle(circleCentreX, circleCentreY, radius, paint);
@@ -114,12 +120,19 @@ public class CricketTable extends View {
 
         }
 
+
         // BULL
         paint.setStyle(Paint.Style.FILL);
         paint.setColor(getColorByValue(25));
         canvas.drawCircle(circleCentreX, circleCentreY, radiusOfBull, paint);
 
-        drawStyleCircles(canvas);
+
+        paint.setStyle(Paint.Style.STROKE);
+        paint.setStrokeWidth(10);
+        paint.setStrokeCap(Paint.Cap.ROUND);
+        paint.setColor(BLACK);
+        canvas.drawCircle(circleCentreX, circleCentreY, radius / 4, paint);
+        canvas.drawCircle(circleCentreX, circleCentreY, radius, paint);
 
     }
 
@@ -138,15 +151,6 @@ public class CricketTable extends View {
         }
     }
 
-    private void drawStyleCircles(Canvas canvas) {
-        paint.setStyle(Paint.Style.STROKE);
-        paint.setStrokeWidth(10);
-        paint.setStrokeCap(Paint.Cap.ROUND);
-        paint.setColor(BLACK);
-        canvas.drawCircle(circleCentreX, circleCentreY, radius / 4, paint);
-        canvas.drawCircle(circleCentreX, circleCentreY, radius, paint);
-    }
-
     @SuppressLint("ClickableViewAccessibility")
     @Override
     public boolean onTouchEvent(MotionEvent event) {
@@ -155,9 +159,8 @@ public class CricketTable extends View {
 
         double distance = Math.sqrt(Math.pow(event.getX() - circleCentreX, 2) + Math.pow(event.getY() - circleCentreY, 2));
         if (distance <= radiusOfBull) {
-            touchedValue = 25;
-            performClick();
-            return true;
+            touchedValue.setValue(25);
+            return super.onTouchEvent(event);
         }
         if (distance <= radius * 0.65) {
             return false;
@@ -168,15 +171,13 @@ public class CricketTable extends View {
             int min = -99 + i * 18;
             int max = -99 + i * 18 + 18;
             if (min <= theta && theta < max && activeNumbers.contains(allNumbers.get(i))) {
-                touchedValue = allNumbers.get(i);
-                performClick();
-                return true;
+                touchedValue.setValue(allNumbers.get(i));
             }
         }
-        return false;
+        return super.onTouchEvent(event);
     }
 
-    public int getTouchedValue() {
+    public LiveData<Integer> getTouchedValue() {
         return touchedValue;
     }
 

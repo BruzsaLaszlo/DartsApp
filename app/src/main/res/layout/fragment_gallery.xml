@@ -6,140 +6,14 @@
     android:layout_height="match_parent"
     tools:context=".ui.gallery.GalleryFragment">
 
-    <TableLayout
-        android:adjustViewBounds="true"
-        android:verticalSpacing="-10dp"
-        android:layout_width="412dp"
-        android:layout_height="159dp"
-        android:layout_margin="0dp"
-        android:layout_marginStart="2dp"
-        android:padding="0dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
-
-        <TableRow
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
-
-            <com.google.android.material.chip.Chip
-                android:id="@+id/chip20"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
-        </TableRow>
-
-        <TableRow
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_margin="0dp"
-            android:layout_weight="1"
-            android:padding="0dp">
-
-            <com.google.android.material.chip.Chip
-                android:id="@+id/chip13"
-                style="@style/Widget.Material3.MaterialTimePicker.Display"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_margin="00dp"
-                android:layout_weight="0.5"
-                android:padding="10dp"
-                android:text="text"
-                android:textSize="16sp" />
-
-            <com.google.android.material.chip.Chip
-                android:id="@+id/chip14"
-                style="@style/Widget.Material3.MaterialTimePicker.Display"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_margin="00dp"
-                android:layout_weight="0.5"
-                android:padding="10dp"
-                android:text="text"
-                android:textSize="16sp" />
-
-            <com.google.android.material.chip.Chip
-                android:id="@+id/chip15"
-                style="@style/Widget.Material3.MaterialTimePicker.Display"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_margin="00dp"
-                android:layout_weight="0.5"
-                android:padding="10dp"
-                android:text="text"
-                android:textSize="16sp" />
-
-            <com.google.android.material.chip.Chip
-                android:id="@+id/chip16"
-                style="@style/Widget.Material3.MaterialTimePicker.Display"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_margin="00dp"
-                android:layout_weight="0.5"
-                android:padding="10dp"
-                android:text="text"
-                android:textSize="16sp" />
-
-            <com.google.android.material.chip.Chip
-                android:id="@+id/chip17"
-                style="@style/Widget.Material3.MaterialTimePicker.Display"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_margin="00dp"
-                android:layout_weight="0.5"
-                android:padding="10dp"
-                android:text="text"
-                android:textSize="16sp" />
-
-            <com.google.android.material.chip.Chip
-                android:id="@+id/chip18"
-                style="@style/Widget.Material3.MaterialTimePicker.Display"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_margin="00dp"
-                android:layout_weight="0.5"
-                android:padding="10dp"
-                android:text="text"
-                android:textSize="16sp" />
-
-            <com.google.android.material.chip.Chip
-                android:id="@+id/chip19"
-                style="@style/Widget.Material3.MaterialTimePicker.Display"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_margin="00dp"
-                android:layout_weight="0.5"
-                android:padding="10dp"
-                android:text="text"
-                android:textSize="16sp" />
-        </TableRow>
-    </TableLayout>
-
-    <TableRow
-        android:id="@+id/tableRow"
+    <androidx.fragment.app.FragmentContainerView
+        android:id="@+id/fragmentContainerView2"
+        android:name="bruzsa.laszlo.dartsapp.ui.x01.X01Fragment"
         android:layout_width="0dp"
-        android:layout_height="294dp"
-        android:layout_marginStart="1dp"
-        android:layout_marginTop="1dp"
-        android:layout_marginEnd="1dp"
-        android:layout_marginBottom="50dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_weight="1"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.005">
-
-    </TableRow>
-
-    <bruzsa.laszlo.dartsapp.ui.x01.NumberPad
-        android:layout_width="409dp"
-        android:layout_height="591dp"
-        android:layout_marginStart="1dp"
-        android:layout_marginTop="1dp"
-        android:layout_marginEnd="1dp"
-        android:layout_marginBottom="1dp"
+        android:layout_height="0dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tableRow" />
+        app:layout_constraintTop_toTopOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

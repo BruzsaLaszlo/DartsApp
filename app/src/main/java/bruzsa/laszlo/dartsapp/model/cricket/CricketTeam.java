@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import bruzsa.laszlo.dartsapp.dao.Player;
+import lombok.Getter;
 
 public class CricketTeam {
 
@@ -14,6 +15,7 @@ public class CricketTeam {
     private Player player2;
 
     private final boolean teamPlay;
+    @Getter
     private int points;
     private final Map<Integer, Integer> scores = new HashMap<>();
 
@@ -24,11 +26,11 @@ public class CricketTeam {
             player2 = players[1];
     }
 
-    public void addThrow(CricketThrow shoot, Integer opponentMultiplier) {
-        if (shoot.isRemoved()) return;
+    public void addThrow(CricketThrow cricketThrow, Integer opponentMultiplier) {
+        if (cricketThrow.isRemoved()) return;
 
-        int number = shoot.getValue();
-        int multiplier = shoot.getMultiply();
+        int number = cricketThrow.getValue();
+        int multiplier = cricketThrow.getMultiply();
 
         scores.computeIfPresent(number, (n, m) -> {
             int sum = m + multiplier;
@@ -57,25 +59,4 @@ public class CricketTeam {
         return player1.getNickName() + (teamPlay ? player2.getNickName() : "");
     }
 
-    public int getPoints() {
-        return points;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof CricketTeam that)) return false;
-        if (!super.equals(o)) return false;
-
-        if (getPoints() != that.getPoints()) return false;
-        return getScores() != null ? getScores().equals(that.getScores()) : that.getScores() == null;
-    }
-
-    @Override
-    public int hashCode() {
-        int result = super.hashCode();
-        result = 31 * result + getPoints();
-        result = 31 * result + (getScores() != null ? getScores().hashCode() : 0);
-        return result;
-    }
 }

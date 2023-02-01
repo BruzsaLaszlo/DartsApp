@@ -3,7 +3,6 @@ package bruzsa.laszlo.dartsapp.ui.x01;
 import static android.graphics.Color.BLACK;
 import static android.graphics.Color.BLUE;
 import static android.graphics.Color.RED;
-import static android.text.InputType.TYPE_NULL;
 import static androidx.recyclerview.widget.LinearLayoutManager.VERTICAL;
 import static bruzsa.laszlo.dartsapp.model.Team.TEAM1;
 import static bruzsa.laszlo.dartsapp.model.Team.TEAM2;
@@ -25,45 +24,37 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.EnumMap;
+import java.util.Locale;
 import java.util.Map;
-import java.util.Objects;
-import java.util.Set;
 
-import bruzsa.laszlo.dartsapp.Helper;
+import bruzsa.laszlo.dartsapp.InputViews;
 import bruzsa.laszlo.dartsapp.R;
 import bruzsa.laszlo.dartsapp.dao.Player;
 import bruzsa.laszlo.dartsapp.databinding.FragmentX01Binding;
 import bruzsa.laszlo.dartsapp.model.SharedViewModel;
 import bruzsa.laszlo.dartsapp.model.Team;
 import bruzsa.laszlo.dartsapp.model.TeamPlayer;
-import bruzsa.laszlo.dartsapp.model.dartsX01.X01ChangeType;
-import bruzsa.laszlo.dartsapp.model.dartsX01.X01ViewModel;
 import bruzsa.laszlo.dartsapp.model.home.GameMode;
-import bruzsa.laszlo.dartsapp.ui.Speech;
+import bruzsa.laszlo.dartsapp.model.x01.X01ChangeType;
+import bruzsa.laszlo.dartsapp.model.x01.X01SummaryStatistics;
+import bruzsa.laszlo.dartsapp.model.x01.X01ViewModel;
 import bruzsa.laszlo.dartsapp.ui.x01.input.InputType;
 
 public class X01Fragment extends Fragment {
 
     private X01ViewModel dViewModel;
-    private FragmentX01Binding binding;
     private SharedViewModel sharedViewModel;
-
-    private X01ThrowAdapter player1ThrowAdapter;
-    private X01ThrowAdapter player2ThrowAdapter;
-
-    private TextView lastOnLongClicked;
+    private FragmentX01Binding binding;
 
     private Map<TeamPlayer, Button> playerTextNameBindings;
-    private final MutableLiveData<InputType> inputType = new MutableLiveData<>(InputType.NUMPAD);
 
-    private Speech speech;
 
     @SuppressLint("SourceLockedOrientationActivity")
     @Override
@@ -72,10 +63,6 @@ public class X01Fragment extends Fragment {
         requireActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         sharedViewModel = new ViewModelProvider(requireActivity()).get(SharedViewModel.class);
         dViewModel = new ViewModelProvider(this).get(X01ViewModel.class);
-
-        if (Helper.requestRecordPermission(this)) {
-            speech = new Speech(requireContext());
-        }
     }
 
     @SuppressLint({"SetTextI18n", "SourceLockedOrientationActivity"})
@@ -85,7 +72,8 @@ public class X01Fragment extends Fragment {
                              @Nullable Bundle savedInstanceState) {
         requireActivity().findViewById(R.id.toolbar).setVisibility(View.GONE);
 
-        binding = FragmentX01Binding.inflate(inflater, container, false);
+        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_x01, container, false);
+        binding.setViewModel(dViewModel);
 
         if (dViewModel.onPlayerChange().getValue() == X01ChangeType.NO_GAME) {
             dViewModel.setSettings(sharedViewModel.getSettings());
@@ -94,7 +82,8 @@ public class X01Fragment extends Fragment {
 
         setPlayerTextNameBindings();
 
-        setObservers();
+
+        dViewModel.onPlayerChange().observe(getViewLifecycleOwner(), this::onChanged);
 
         return binding.getRoot();
     }
@@ -103,27 +92,21 @@ public class X01Fragment extends Fragment {
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        InputViews inputs = new InputViews(this, InputType.NUMPAD, binding.includedInputs);
+
+        inputs.setOnReadyAction(value -> dViewModel.newThrow(value));
+
         if (sharedViewModel.getGameMode() == GameMode.PLAYER) {
             binding.textNamePlayer12.setVisibility(View.GONE);
             binding.textNamePlayer22.setVisibility(View.GONE);
         }
 
+
         refreshNamesStyle(sharedViewModel.getSelectedPlayersMap());
 
-        inicThrowList(binding.listThrowsPlayer1, TEAM1);
-        inicThrowList(binding.listThrowsPlayer2, TEAM2);
+        binding.listThrowsPlayer1.setLayoutManager(new LinearLayoutManager(getActivity(), VERTICAL, true));
+        binding.listThrowsPlayer2.setLayoutManager(new LinearLayoutManager(getActivity(), VERTICAL, true));
 
-        binding.textInput.setInputType(inputType);
-
-        binding.buttonOk.setOnClickListener(this::onClickButtonOk);
-
-        binding.buttonSpeach.setVisibility(Helper.isRecordPermissionGranted(this) ? View.VISIBLE : View.INVISIBLE);
-
-        binding.textViewStat.setOnLongClickListener(v -> {
-            inputType.setValue(InputType.RESTART_GAME);
-            binding.buttonOk.setText(R.string.ok);
-            return true;
-        });
     }
 
     private void startNewGame() {
@@ -140,14 +123,6 @@ public class X01Fragment extends Fragment {
         }
     }
 
-    private void inicThrowList(RecyclerView listPlayerThrows, Team team) {
-        listPlayerThrows.setLayoutManager(new LinearLayoutManager(getActivity(), VERTICAL, true));
-        X01ThrowAdapter throwAdapter = new X01ThrowAdapter(dViewModel.getThrows(team));
-        if (team.isTeam1()) player1ThrowAdapter = throwAdapter;
-        else player2ThrowAdapter = throwAdapter;
-        throwAdapter.getSelectedForRemove().observe(getViewLifecycleOwner(), shoot -> dViewModel.removeThrow(shoot, team));
-        listPlayerThrows.setAdapter(throwAdapter);
-    }
 
     private void refreshNamesStyle(Map<TeamPlayer, Player> players) {
         playerTextNameBindings.forEach((player, button) -> {
@@ -161,74 +136,7 @@ public class X01Fragment extends Fragment {
 
             button.setText(players.get(player).getName());
 
-            button.setOnLongClickListener(v -> {
-                lastOnLongClicked = button;
-                inputType.setValue(InputType.NAME);
-                return true;
-            });
-
             button.setOnClickListener(v -> dViewModel.setActivePlayer(player));
-        });
-    }
-
-    private void onClickButtonOk(View button) {
-        switch (Objects.requireNonNull(inputType.getValue())) {
-            case NUMPAD ->
-                    binding.textInput.getThrow().ifPresent(dartsTrhow -> dViewModel.newThrow(dartsTrhow));
-            case RESTART_GAME -> dViewModel.newGame(sharedViewModel.getSelectedPlayersMap());
-            case NAME -> lastOnLongClicked.setText(binding.textInput.getName().orElse("Player"));
-        }
-        inputType.setValue(InputType.NUMPAD);
-    }
-
-    @SuppressLint("SetTextI18n")
-    private void setObservers() {
-        if (Helper.isRecordPermissionGranted(this)) {
-            binding.buttonSpeach.setOnCheckedChangeListener((buttonView, isChecked) -> {
-                if (isChecked) {
-                    speech.startListening();
-                } else {
-                    speech.stopListening();
-                }
-            });
-            speech.getResultLiveData().observe(getViewLifecycleOwner(), numbers ->
-                    binding.textInput.setText(String.join("+", numbers)));
-        }
-
-        binding.textScorePlayer1.setOnClickListener(v -> inputType.setValue(InputType.NUMPAD));
-        binding.textScorePlayer2.setOnClickListener(v -> inputType.setValue(InputType.NUMPAD));
-
-        dViewModel.onPlayerChange().observe(getViewLifecycleOwner(), changeType -> {
-            switch (changeType) {
-                case GAME_OVER -> {
-                    binding.buttonOk.setText("Winner: " + sharedViewModel.getPlayer(dViewModel.getActivePlayer()).getName());
-                    binding.textInput.setInputType(TYPE_NULL);
-                    binding.textInput.clearFocus();
-                }
-                case NEW_GAME -> {
-                    player1ThrowAdapter.refreshAll(dViewModel.getThrows(TEAM1));
-                    player2ThrowAdapter.refreshAll(dViewModel.getThrows(TEAM2));
-                    binding.textInput.requestFocus();
-                }
-                case CHANGE_ACTIVE_PLAYER -> { // nothing only refresh
-                }
-                case NO_GAME -> { // never happens here
-                }
-                case ADD_SHOOT -> {
-                    if (Set.of(PLAYER_2_1, PLAYER_2_2).contains(dViewModel.getActivePlayer()))
-                        player1ThrowAdapter.inserted();
-                    else player2ThrowAdapter.inserted();
-                }
-                case ADD_SHOOTS -> {
-                    player1ThrowAdapter.inserted();
-                    player2ThrowAdapter.inserted();
-                }
-                case REMOVE_SHOOT -> {
-                    player1ThrowAdapter.remove(dViewModel.getLastRemovedIndex());
-                    player2ThrowAdapter.remove(dViewModel.getLastRemovedIndex());
-                }
-            }
-            refreshGUI();
         });
     }
 
@@ -240,20 +148,47 @@ public class X01Fragment extends Fragment {
         refreshNamesStyle(sharedViewModel.getSelectedPlayersMap());
     }
 
+    @SuppressLint("SetTextI18n")
     private void refreshGUI(Team team, TextView playerScoreText,
                             TextView playerStatText, RecyclerView listPlayerThrows) {
-        playerScoreText.setText(String.valueOf(dViewModel.getScore(team)));
         if (dViewModel.isOut(team))
             playerScoreText.setTextColor(Color.GREEN);
         else
             playerScoreText.setTextColor(BLUE);
-        playerStatText.setText(dViewModel.getStat(team));
+        playerStatText.setText(getStatAsString(team));
         listPlayerThrows.smoothScrollToPosition(100);
+        binding.textSetLegPlayer1.setText(dViewModel.getSet(team) + "\n" + dViewModel.getLeg(team));
+    }
+
+    private String getStatAsString(Team team) {
+        X01SummaryStatistics stat = dViewModel.getStat(team);
+        if (stat.getDartCount() == 0) return "";
+        return String.format(Locale.ENGLISH, """
+                        %d
+                        %d
+                        %d
+                        %d
+                        %d
+                        %s""",
+                stat.getHundredPlus(),
+                stat.getSixtyPlus(),
+                (int) stat.getAverage(),
+                stat.getMax(),
+                stat.getMin(),
+                stat.getHighestCheckout().map(Object::toString).orElse("-"));
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
         requireActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
+    }
+
+    @SuppressLint("SetTextI18n")
+    private void onChanged(X01ChangeType changeType) {
+        refreshGUI();
+        if (changeType == X01ChangeType.GAME_OVER) {
+            // Todo
+        }
     }
 }

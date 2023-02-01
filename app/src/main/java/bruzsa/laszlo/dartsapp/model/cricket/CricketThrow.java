@@ -1,12 +1,20 @@
 package bruzsa.laszlo.dartsapp.model.cricket;
 
+import static java.time.LocalDateTime.now;
+
 import androidx.annotation.NonNull;
 
+import java.time.LocalDateTime;
+
+import lombok.Getter;
+
+@Getter
 public class CricketThrow {
     private final int multiply;
     private final int value;
     private final CricketTeam player;
     private boolean removed;
+    private final LocalDateTime dateTime = now();
 
     public CricketThrow(int multiply, int value, CricketTeam player) {
         this.multiply = multiply;
@@ -14,16 +22,10 @@ public class CricketThrow {
         this.player = player;
     }
 
-    public int getMultiply() {
-        return multiply;
-    }
-
-    public int getValue() {
-        return value;
-    }
-
-    public CricketTeam getPlayer() {
-        return player;
+    public boolean setRemoved() {
+        if (removed) return false;
+        removed = true;
+        return true;
     }
 
     @NonNull
@@ -36,11 +38,4 @@ public class CricketThrow {
         } + " " + player.toString();
     }
 
-    public boolean isRemoved() {
-        return removed;
-    }
-
-    public void setRemoved() {
-        removed = true;
-    }
 }

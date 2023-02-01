@@ -16,13 +16,12 @@
     <string name="score">score</string>
     <string name="ok">OK</string>
     <string name="_10_n100_n180_n26">10\n100\n180\n26</string>
-    <string name="stat">60+\nAvg\nMax\nMin</string>
+    <string name="stat">100+\n60+\nAvg\nMax\nMin\nHC</string>
     <string name="player22">Player2</string>
     <string name="cricket">Cricket</string>
     <string name="dartsapp">DartsApp</string>
     <string name="lacika007_gmail_com">lacika007@gmail.com</string>
     <string name="p_nl_na_ny_ne_nr">p\nl\na\ny\ne\nr</string>
-    <string name="valvmi">valami</string>
     <string name="_X01Single">X01 Single Player</string>
     <string name="new_game">NEW GAME</string>
     <string name="start_game">Start Game!</string>
@@ -41,4 +40,14 @@
     <string name="player">Player</string>
     <string name="single">Single</string>
     <string name="cancel">Cancel</string>
+    <string name="player_2_1">Player_2_1</string>
+    <string name="player_2_2">Player_2_2</string>
+    <string name="player_1_1">Player_1_1</string>
+    <string name="player_1_2">Player_1_2</string>
+    <string name="voice">voice</string>
+    <string name="_26_88">26+88</string>
+    <string name="_2_n5_n55_n122_n26_n40">2\n5\n55\n122\n26\n40</string>
+    <string name="_100_n60_navg_nmax_nmin_nhc">100+\n60+\nAvg\nMax\nMin\nHC</string>
+    <string name="stats">1\n2\n65\n122\n26\n-</string>
+    <string name="microphone">microphone</string>
 </resources>

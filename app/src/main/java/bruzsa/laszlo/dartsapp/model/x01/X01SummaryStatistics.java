@@ -1,6 +1,9 @@
-package bruzsa.laszlo.dartsapp.model.dartsX01;
+package bruzsa.laszlo.dartsapp.model.x01;
+
+import android.os.Build;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 
 import java.util.IntSummaryStatistics;
 import java.util.List;
@@ -17,21 +20,24 @@ public class X01SummaryStatistics {
     }
 
     @NonNull
-    private Stream<X01Throw> validAndNotHandicapThrows() {
-        return throwList.stream()
-                .filter(X01Throw::isValid)
-                .filter(X01Throw::isNotHandicap);
+    private Stream<X01Throw> validThrows() {
+        return noHandicapThrows().filter(X01Throw::isValid);
     }
 
     @NonNull
     private Stream<X01Throw> noHandicapThrows() {
-        return throwList.stream().filter(X01Throw::isNotHandicap);
+        return notRemovedThrows().filter(X01Throw::isNotHandicap);
+    }
+
+    private Stream<X01Throw> notRemovedThrows() {
+        return throwList.stream().filter(x01Throw -> !x01Throw.isRemoved());
     }
 
     @NonNull
     @Override
+    @RequiresApi(api = Build.VERSION_CODES.TIRAMISU)
     public String toString() {
-        if (validAndNotHandicapThrows().count() == 0) return "";
+        if (validThrows().findAny().isEmpty()) return "";
         var allStat = getAllStat();
         return String.format(Locale.ENGLISH, """
                         %d
@@ -53,42 +59,49 @@ public class X01SummaryStatistics {
     }
 
     public int getSum() {
-        return validAndNotHandicapThrows()
-                .mapToInt(X01Throw::getThrow)
+        return validThrows()
+                .mapToInt(X01Throw::getValue)
                 .sum();
     }
 
     public int getSum(int leg) {
-        return throwList.stream()
-                .filter(X01Throw::isValid)
+        return validThrows()
                 .filter(x01Throw -> x01Throw.getLeg() == leg)
-                .mapToInt(X01Throw::getThrow)
+                .mapToInt(X01Throw::getValue)
                 .sum();
     }
 
     public int getSixtyPlus() {
-        return (int) validAndNotHandicapThrows()
-                .filter(value -> value.getThrow() >= 60)
+        return (int) validThrows()
+                .filter(value -> value.getValue() >= 60)
                 .count();
     }
 
     public int getHundredPlus() {
-        return (int) validAndNotHandicapThrows()
-                .filter(value -> value.getThrow() >= 100)
+        return (int) validThrows()
+                .filter(value -> value.getValue() >= 100)
                 .count();
     }
 
-    public IntSummaryStatistics getAllStat() {
-        return validAndNotHandicapThrows()
-                .mapToInt(X01Throw::getThrow)
+    private IntSummaryStatistics getAllStat() {
+        return validThrows()
+                .mapToInt(X01Throw::getValue)
                 .summaryStatistics();
     }
 
     public Optional<Integer> getHighestCheckout() {
-        return validAndNotHandicapThrows()
+        return validThrows()
                 .filter(X01Throw::isCheckout)
-                .map(X01Throw::getThrow)
+                .map(X01Throw::getValue)
                 .max(Integer::compareTo);
+    }
+
+    public int getMax() {
+        return getAllStat().getMax();
+    }
+
+    public int getMin() {
+        return getAllStat().getMin();
     }
 
     public int getThrowCountExceptHandicap() {
