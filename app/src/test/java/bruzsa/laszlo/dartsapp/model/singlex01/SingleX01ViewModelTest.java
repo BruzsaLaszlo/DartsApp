@@ -1,6 +1,5 @@
 package bruzsa.laszlo.dartsapp.model.singlex01;
 
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static java.time.LocalDate.now;
 
@@ -8,6 +7,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import bruzsa.laszlo.dartsapp.dao.Player;
+import bruzsa.laszlo.dartsapp.ui.singlex01.SingleX01ViewModel;
 
 class SingleX01ViewModelTest {
 
@@ -17,20 +17,23 @@ class SingleX01ViewModelTest {
 
     @BeforeEach
     void setUp() {
-        viewModel.start(player, startScore);
-        viewModel.newThrow(180);
-        viewModel.newThrow(180);
-        viewModel.newThrow(180);
-        viewModel.newThrow(141);
+        viewModel.startOrCountinue(player, startScore);
+        viewModel.newThrow(180, 3);
+        viewModel.newThrow(180, 3);
+        viewModel.newThrow(180, 3);
+        viewModel.newThrow(141, 3);
 
-        viewModel.newThrow(200);
-        viewModel.newThrow(167);
+        viewModel.newThrow(200, 3);
+        viewModel.newThrow(167, 3);
     }
 
     @Test
     void newThrow() {
-        assertEquals(90, viewModel.newThrow(44).getValue());
-        assertEquals(501, viewModel.newThrow(90).getValue());
+        viewModel.newThrow(44, 3);
+        assertEquals(90, viewModel.getScore().getValue());
+
+        viewModel.newThrow(90, 3);
+        assertEquals(501, viewModel.getScore().getValue());
     }
 
     @Test
@@ -38,9 +41,4 @@ class SingleX01ViewModelTest {
         assertEquals(134, viewModel.getScore().getValue());
     }
 
-    @Test
-    void getThrowsList() {
-        assertThat(viewModel.getThrowsList())
-                .hasSize(6);
-    }
 }

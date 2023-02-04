@@ -6,9 +6,17 @@
 
         <import type="bruzsa.laszlo.dartsapp.model.Team" />
 
+        <import type="bruzsa.laszlo.dartsapp.model.TeamPlayer" />
+
+        <import type="android.view.View" />
+
         <variable
             name="viewModel"
             type="bruzsa.laszlo.dartsapp.model.x01.X01ViewModel" />
+
+        <variable
+            name="sharedViewModel"
+            type="bruzsa.laszlo.dartsapp.model.SharedViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -36,11 +44,13 @@
                 android:layout_marginTop="5dp"
                 android:checkable="false"
                 android:maxLines="1"
+                android:onClick="@{() -> viewModel.setActive(TeamPlayer.PLAYER_1_1)}"
                 android:paddingStart="5dp"
                 android:paddingEnd="10dp"
-                android:text="@string/player_1_1"
-                android:textColor="@color/black"
-                android:textSize="30sp" />
+                android:tag="@{TeamPlayer.PLAYER_1_1}"
+                android:text="@{sharedViewModel.getPlayer(TeamPlayer.PLAYER_1_1).name, default = @string/player_1_1"
+                android:textSize="30sp"
+                app:active="@{viewModel.activePlayer}" />
 
             <Button
                 android:id="@+id/textNamePlayer12"
@@ -50,11 +60,14 @@
                 android:layout_marginTop="5dp"
                 android:checkable="false"
                 android:maxLines="1"
+                android:onClick="@{() -> viewModel.setActive(TeamPlayer.PLAYER_1_2)}"
                 android:paddingStart="5dp"
                 android:paddingEnd="10dp"
-                android:text="@string/player_1_2"
-                android:textColor="@color/black"
-                android:textSize="30sp" />
+                android:tag="@{TeamPlayer.PLAYER_1_2}"
+                android:text="@{sharedViewModel.getPlayer(TeamPlayer.PLAYER_1_2).name, default = @string/player_1_2"
+                android:textSize="30sp"
+                android:visibility="@{viewModel.teamPlay ? View.VISIBLE : View.GONE}"
+                app:active="@{viewModel.activePlayer}" />
         </LinearLayout>
 
         <LinearLayout
@@ -79,12 +92,14 @@
                 android:layout_marginTop="5dp"
                 android:checkable="false"
                 android:maxLines="1"
+                android:onClick="@{() -> viewModel.setActive(TeamPlayer.PLAYER_2_1)}"
                 android:paddingStart="5dp"
                 android:paddingEnd="10dp"
-                android:text="@string/player_2_1"
+                android:tag="@{TeamPlayer.PLAYER_2_1}"
+                android:text="@{sharedViewModel.getPlayer(TeamPlayer.PLAYER_2_1).name, default = @string/player_2_1"
                 android:textAlignment="center"
-                android:textColor="@color/black"
-                android:textSize="30sp" />
+                android:textSize="30sp"
+                app:active="@{viewModel.activePlayer}" />
 
             <Button
                 android:id="@+id/textNamePlayer22"
@@ -95,12 +110,15 @@
                 android:layout_marginTop="5dp"
                 android:checkable="false"
                 android:maxLines="1"
+                android:onClick="@{() -> viewModel.setActive(TeamPlayer.PLAYER_2_2)}"
                 android:paddingStart="5dp"
                 android:paddingEnd="10dp"
-                android:text="@string/player_2_2"
+                android:tag="@{TeamPlayer.PLAYER_2_2}"
+                android:text="@{sharedViewModel.getPlayer(TeamPlayer.PLAYER_2_2).name, default = @string/player_2_2"
                 android:textAlignment="center"
-                android:textColor="@color/black"
-                android:textSize="30sp" />
+                android:textSize="30sp"
+                android:visibility="@{viewModel.teamPlay ? View.VISIBLE : View.GONE}"
+                app:active="@{viewModel.activePlayer}" />
         </LinearLayout>
 
         <FrameLayout
@@ -122,7 +140,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="fill_vertical|end"
                 android:padding="0dp"
-                android:text="@{viewModel.getLiveScore(Team.TEAM2).toString(), default=501}"
+                android:text="@{viewModel.liveDatasMap.get(Team.TEAM2).score, default=701}"
                 android:textAlignment="textEnd"
                 android:textSize="60sp"
                 android:textStyle="bold" />
@@ -135,26 +153,45 @@
                 android:layout_marginBottom="8sp">
 
                 <TextView
+                    android:id="@+id/textSL"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center|fill_vertical"
-                    android:text="@string/SetLeg"
+                    android:text="@{viewModel.set ? @string/SetLeg: `L`,default = @string/SetLeg}"
                     android:textSize="24sp" />
 
                 <TextView
-                    android:id="@+id/textSetLegPlayer2"
+                    android:id="@+id/textSetPlayer2"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="fill_vertical|end"
-                    android:text="@string/_0_n0"
+                    android:layout_gravity="top|end"
+                    android:text="@{viewModel.liveDatasMap.get(Team.TEAM2).set, default = @string/_0}"
+                    android:textSize="24sp"
+                    android:visibility="@{viewModel.set ? View.VISIBLE : View.GONE}" />
+
+                <TextView
+                    android:id="@+id/textSetPlayer1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="start|top"
+                    android:text="@{viewModel.liveDatasMap.get(Team.TEAM1).set,default = @string/_0}"
+                    android:textSize="24sp"
+                    android:visibility="@{viewModel.set ? View.VISIBLE : View.GONE}" />
+
+                <TextView
+                    android:id="@+id/textLegPlayer1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="bottom|start"
+                    android:text="@{viewModel.liveDatasMap.get(Team.TEAM1).leg,default = @string/_0}"
                     android:textSize="24sp" />
 
                 <TextView
-                    android:id="@+id/textSetLegPlayer1"
+                    android:id="@+id/textLegPlayer2"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="start|fill_vertical"
-                    android:text="@string/_0_n0"
+                    android:layout_gravity="bottom|end"
+                    android:text="@{viewModel.liveDatasMap.get(Team.TEAM2).set,default = @string/_0}"
                     android:textSize="24sp" />
             </FrameLayout>
 
@@ -165,7 +202,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="start|fill_vertical"
                 android:padding="0dp"
-                android:text="@{viewModel.getLiveScore(Team.TEAM1).toString(), default=501}"
+                android:text="@{viewModel.liveDatasMap.get(Team.TEAM1).score, default=701}"
                 android:textSize="60sp"
                 android:textStyle="bold" />
 
@@ -197,7 +234,7 @@
                 android:layout_gravity="end"
                 android:layout_marginEnd="10dp"
                 android:fontFamily="monospace"
-                android:text="@string/_10_n100_n180_n26"
+                android:text="@{viewModel.liveDatasMap.get(Team.TEAM1).stat,default = @string/_10_n100_n180_n26}"
                 android:textAlignment="textEnd"
                 android:textSize="20sp" />
 
@@ -234,7 +271,7 @@
                 android:layout_gravity="start"
                 android:layout_marginStart="10dp"
                 android:fontFamily="monospace"
-                android:text="@string/_10_n100_n180_n26"
+                android:text="@{viewModel.liveDatasMap.get(Team.TEAM2).stat, default = @string/_10_n100_n180_n26}"
                 android:textAlignment="textStart"
                 android:textSize="20sp" />
 

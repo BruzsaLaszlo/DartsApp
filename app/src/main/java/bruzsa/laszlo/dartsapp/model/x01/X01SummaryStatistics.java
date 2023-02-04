@@ -14,9 +14,11 @@ import java.util.stream.Stream;
 public class X01SummaryStatistics {
 
     private final List<X01Throw> throwList;
+    private final int startScore;
 
-    public X01SummaryStatistics(List<X01Throw> throwList) {
+    public X01SummaryStatistics(List<X01Throw> throwList, int startScore) {
         this.throwList = throwList;
+        this.startScore = startScore;
     }
 
     @NonNull
@@ -51,7 +53,7 @@ public class X01SummaryStatistics {
                 (int) getAverage(),
                 allStat.getMax(),
                 allStat.getMin(),
-                getHighestCheckout().map(Object::toString).orElse(""));
+                getHighestCheckout().map(Object::toString).orElse("-"));
     }
 
     public double getAverage() {
@@ -112,5 +114,15 @@ public class X01SummaryStatistics {
         return noHandicapThrows()
                 .mapToInt(X01Throw::getDart)
                 .sum();
+    }
+
+    public int getScore(int leg) {
+        return startScore - getSum(leg);
+    }
+
+    public int getScoreLastLeg() {
+        Optional<Integer> lastLeg = validThrows().map(X01Throw::getLeg).max(Integer::compareTo);
+        if (lastLeg.isEmpty()) return startScore;
+        else return startScore - getSum(lastLeg.get());
     }
 }

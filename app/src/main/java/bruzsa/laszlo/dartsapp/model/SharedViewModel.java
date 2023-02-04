@@ -5,6 +5,11 @@ import static bruzsa.laszlo.dartsapp.model.TeamPlayer.PLAYER_1_2;
 import static bruzsa.laszlo.dartsapp.model.TeamPlayer.PLAYER_2_1;
 import static bruzsa.laszlo.dartsapp.model.TeamPlayer.PLAYER_2_2;
 
+import android.util.Log;
+
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MutableLiveData;
+import androidx.lifecycle.SavedStateHandle;
 import androidx.lifecycle.ViewModel;
 
 import java.io.IOException;
@@ -21,27 +26,47 @@ import bruzsa.laszlo.dartsapp.model.home.GameType;
 import bruzsa.laszlo.dartsapp.model.x01.X01GameSettings;
 import bruzsa.laszlo.dartsapp.repository.home.PlayersRepository;
 import bruzsa.laszlo.dartsapp.ui.Nano;
+import lombok.Getter;
+import lombok.Setter;
 
 public class SharedViewModel extends ViewModel {
+
+    private SavedStateHandle state;
+    private static final String VOICE_INPUT_ENABLED = "isVoiceInputEnabled";
+    private MutableLiveData<Boolean> voiceInputEnabled = new MutableLiveData<>();
 
     PlayersRepository playersRepository = new PlayersRepository() {
     };
 
+
     private final Map<TeamPlayer, Player> selectedPlayers = new EnumMap<>(TeamPlayer.class);
+    @Setter
     private TeamPlayer selectedPlayer;
 
+    @Getter
     private final X01GameSettings settings = X01GameSettings.getDefault();
 
+    @Getter
+    @Setter
     private GameType gameType = GameType.NO_GAME;
+    @Getter
+    @Setter
     private GameMode gameMode = GameMode.PLAYER;
     private static Nano nano = new Nano(9000);
 
-    public SharedViewModel() {
+    public SharedViewModel(SavedStateHandle state) {
         selectedPlayers.put(PLAYER_1_1, getAllPlayers().get(0));
         selectedPlayers.put(PLAYER_2_1, getAllPlayers().get(1));
         selectedPlayers.put(PLAYER_1_2, getAllPlayers().get(2));
         selectedPlayers.put(PLAYER_2_2, getAllPlayers().get(3));
-        //TODO delete this
+
+        this.state = state;
+        Log.d("SharedViewModel", "SharedViewModel: " + state.get(VOICE_INPUT_ENABLED));
+        voiceInputEnabled = state.getLiveData(VOICE_INPUT_ENABLED);
+        if (voiceInputEnabled.getValue() == null) {
+            voiceInputEnabled = new MutableLiveData<>(false);
+            state.set(VOICE_INPUT_ENABLED, voiceInputEnabled.getValue());
+        }
 
         try {
             if (!nano.wasStarted())
@@ -51,25 +76,6 @@ public class SharedViewModel extends ViewModel {
         }
     }
 
-    public GameType getGameType() {
-        return gameType;
-    }
-
-    public void setGameType(GameType gameType) {
-        this.gameType = gameType;
-    }
-
-    public GameMode getGameMode() {
-        return gameMode;
-    }
-
-    public void setGameMode(GameMode gameMode) {
-        this.gameMode = gameMode;
-    }
-
-    public X01GameSettings getSettings() {
-        return settings;
-    }
 
     public Collection<Player> getSelectedPlayersCollection() {
         return getSelectedPlayersMap().values();
@@ -94,9 +100,6 @@ public class SharedViewModel extends ViewModel {
         this.selectedPlayers.remove(teamPlayer);
     }
 
-    public void setSelectedPlayer(TeamPlayer selectedPlayer) {
-        this.selectedPlayer = selectedPlayer;
-    }
 
     public List<Player> getAllPlayers() {
         return new ArrayList<>(playersRepository.getAllPlayers());
@@ -110,5 +113,9 @@ public class SharedViewModel extends ViewModel {
 
     public void setWebServerContent(String content) {
         nano.setResponse(content);
+    }
+
+    public LiveData<Boolean> getVoiceInputEnabled() {
+        return voiceInputEnabled;
     }
 }

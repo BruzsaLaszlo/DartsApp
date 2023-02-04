@@ -1,4 +1,4 @@
-package bruzsa.laszlo.dartsapp;
+package bruzsa.laszlo.dartsapp.ui.x01.input;
 
 import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
@@ -14,12 +14,11 @@ import androidx.fragment.app.Fragment;
 import java.util.Arrays;
 import java.util.function.IntConsumer;
 
+import bruzsa.laszlo.dartsapp.Helper;
+import bruzsa.laszlo.dartsapp.R;
 import bruzsa.laszlo.dartsapp.databinding.InputViewsBinding;
 import bruzsa.laszlo.dartsapp.ui.Language;
 import bruzsa.laszlo.dartsapp.ui.Speech;
-import bruzsa.laszlo.dartsapp.ui.x01.input.InputText;
-import bruzsa.laszlo.dartsapp.ui.x01.input.InputType;
-import bruzsa.laszlo.dartsapp.ui.x01.input.NumberPad;
 
 public class InputViews {
 

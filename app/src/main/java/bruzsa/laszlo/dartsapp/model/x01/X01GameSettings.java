@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @Getter
 public class X01GameSettings {
 
-    private int legSetOf = 1;
+    private int firstTo = 1;
     private int startScore = 501;
     private X01MatchType x01MatchType = X01MatchType.SINGLE_LEG;
 

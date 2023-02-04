@@ -50,4 +50,7 @@
     <string name="_100_n60_navg_nmax_nmin_nhc">100+\n60+\nAvg\nMax\nMin\nHC</string>
     <string name="stats">1\n2\n65\n122\n26\n-</string>
     <string name="microphone">microphone</string>
+    <string name="_0">0</string>
+    <string name="s">S</string>
+    <string name="l">L</string>
 </resources>

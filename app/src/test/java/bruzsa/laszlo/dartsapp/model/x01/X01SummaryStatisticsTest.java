@@ -12,27 +12,29 @@ import java.util.stream.Collectors;
 
 class X01SummaryStatisticsTest {
 
+    static final int START_SCORE = 501;
+
     List<X01SummaryStatistics> stats = List.of(
             new X01SummaryStatistics(List.of(
                     new X01Throw(180, true, 0, 3, false, null),
                     new X01Throw(180, true, 0, 3, false, null),
                     new X01Throw(180, false, 0, 3, false, null),
-                    new X01Throw(141, true, 0, 3, true, null))),
+                    new X01Throw(141, true, 0, 3, true, null)), START_SCORE),
             new X01SummaryStatistics(List.of(
                     new X01Throw(180, true, 0, 3, false, null),
                     new X01Throw(180, true, 0, 3, false, null),
                     new X01Throw(101, true, 0, 3, false, null),
-                    new X01Throw(40, true, 0, 1, true, null))),
+                    new X01Throw(40, true, 0, 1, true, null)), START_SCORE),
             new X01SummaryStatistics(List.of(
                     new X01Throw(170, true, 0, 3, false, null),
                     new X01Throw(170, true, 0, 3, false, null),
                     new X01Throw(161, true, 0, 3, true, null),
-                    new X01Throw(100, true, 1, 3, false, null))),
+                    new X01Throw(100, true, 1, 3, false, null)), START_SCORE),
             new X01SummaryStatistics(List.of(
                     new X01Throw(60, true, 0, 3, false, null),
                     new X01Throw(60, true, 0, 3, false, null),
                     new X01Throw(200, true, 0, 1000, false, null),
-                    new X01Throw(26, true, 0, 3, false, null)))
+                    new X01Throw(26, true, 0, 3, false, null)), START_SCORE)
     );
 
     @BeforeEach

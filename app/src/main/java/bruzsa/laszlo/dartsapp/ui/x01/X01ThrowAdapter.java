@@ -12,15 +12,17 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.List;
-import java.util.function.Predicate;
+import java.util.function.BiPredicate;
 
 import bruzsa.laszlo.dartsapp.R;
+import bruzsa.laszlo.dartsapp.model.Team;
 import bruzsa.laszlo.dartsapp.model.x01.X01Throw;
 
 public class X01ThrowAdapter extends RecyclerView.Adapter<X01ThrowAdapter.ViewHolder> {
 
     private final List<X01Throw> mDataSet;
-    private final Predicate<X01Throw> removeCallback;
+    private final BiPredicate<X01Throw, Team> removeCallback;
+    private final Team team;
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
         private final TextView throwTextView;
@@ -32,9 +34,10 @@ public class X01ThrowAdapter extends RecyclerView.Adapter<X01ThrowAdapter.ViewHo
 
     }
 
-    public X01ThrowAdapter(List<X01Throw> mDataSet, Predicate<X01Throw> removeCallback) {
+    public X01ThrowAdapter(List<X01Throw> mDataSet, BiPredicate<X01Throw, Team> removeCallback, Team team) {
         this.mDataSet = mDataSet;
         this.removeCallback = removeCallback;
+        this.team = team;
     }
 
     public void inserted() {
@@ -64,7 +67,7 @@ public class X01ThrowAdapter extends RecyclerView.Adapter<X01ThrowAdapter.ViewHo
             viewHolder.throwTextView.setPaintFlags(Paint.STRIKE_THRU_TEXT_FLAG);
         }
         viewHolder.throwTextView.setOnLongClickListener(v1 -> {
-            if (removeCallback.test(x01Throw)) {
+            if (removeCallback.test(x01Throw, team)) {
                 notifyItemChanged(position);
             }
             return true;
