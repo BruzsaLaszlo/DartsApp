@@ -34,7 +34,7 @@ public class InputValidator {
     public boolean isValidScore(String s) {
         if (s == null || s.isBlank()) return false;
 
-        if (!s.matches("^[1-9]*\\+?\\d+\\+?\\d*$")) return false;
+        if (s.matches("^0{2}") || !s.matches("^\\d*\\+?\\d+\\+?\\d*$")) return false;
 
         int sum = Arrays.stream(s.split("[+]"))
                 .mapToInt(Integer::parseInt)

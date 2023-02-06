@@ -5,13 +5,13 @@ import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 
-import androidx.constraintlayout.widget.ConstraintLayout;
-
-import com.google.android.material.chip.Chip;
-import com.google.android.material.chip.ChipDrawable;
+import bruzsa.laszlo.dartsapp.R;
+import bruzsa.laszlo.dartsapp.databinding.NumberPadChipBinding;
 
 public class NumberPad extends TableLayout {
 
@@ -28,10 +28,7 @@ public class NumberPad extends TableLayout {
     public NumberPad(Context context, AttributeSet attrs) {
         super(context, attrs);
         this.context = context;
-        setLayoutParams(new ConstraintLayout.LayoutParams(MATCH_PARENT, MATCH_PARENT));
-        setPadding(0, 0, 0, 0);
-        ((ConstraintLayout.LayoutParams) getLayoutParams()).setMargins(0, 0, 0, 0);
-        createChips09();
+        createChips();
     }
 
     public void setInputTextNumber(InputTextNumber inputTextNumber) {
@@ -39,36 +36,31 @@ public class NumberPad extends TableLayout {
         this.inputTextNumber = inputTextNumber;
     }
 
-    private void createChips09() {
-        for (int i = 0; i < 3; i++) {
+    private void createChips() {
+        for (int i = 0; i <= 2; i++) {
             TableRow row = createTableRow();
             for (int j = 1; j <= 3; j++) {
                 int number = i * 3 + j;
-                row.addView(getChip("  " + number + "  ", number), getTableRowLayoutParams());
+                addChip("  " + number + "  ", number, row);
             }
-            addView(row, getTableLayoutParams());
+            addView(row);
         }
         TableRow row = createTableRow();
-        row.addView(getChip("OK", OK));
-        row.addView(getChip("  0  ", 0));
-        row.addView(getChip("<-", BACK));
-        addView(row, getTableLayoutParams());
+        addChip("OK", OK, row);
+        addChip("  0  ", 0, row);
+        addChip(" <- ", BACK, row);
+        addView(row);
     }
 
-    private Chip getChip(String text, int id) {
-        Chip chip = new Chip(context);
-        chip.setOnClickListener(v -> getChipOnClickListener(id));
-        chip.setOnLongClickListener(v -> getChipOnLongClickListener(id));
-        ChipDrawable chipDrawable = ChipDrawable.createFromAttributes(context,
-                null,
-                0,
-                com.google.android.material.R.style.Widget_Material3_Chip_Assist);
-        chip.setChipDrawable(chipDrawable);
-        chip.setLayoutParams(getTableRowLayoutParams());
-        chip.setText(text);
-        chip.setTextAlignment(TEXT_ALIGNMENT_CENTER);
-        chip.setTextSize(50);
-        return chip;
+    private void addChip(String text, int key, TableRow parent) {
+        View inflate = LayoutInflater.from(context)
+                .inflate(R.layout.number_pad_chip, parent, true);
+        NumberPadChipBinding binding = NumberPadChipBinding.bind(inflate);
+        binding.numpadChip.setLayoutParams(getTableRowLayoutParams());
+        binding.numpadChip.setText(text);
+        binding.numpadChip.setId(key);
+        binding.numpadChip.setOnClickListener(v -> getChipOnClickListener(key));
+        binding.numpadChip.setOnLongClickListener(v -> getChipOnLongClickListener(key));
     }
 
     private boolean getChipOnLongClickListener(int key) {
@@ -77,11 +69,10 @@ public class NumberPad extends TableLayout {
             case BACK -> inputTextNumber.clear();
             default -> inputTextNumber.plusAdd(key);
         }
-        return false;
+        return true;
     }
 
     private void getChipOnClickListener(int key) {
-        Log.d("NumberPad", "getChipOnClickListener: " + inputTextNumber);
         switch (key) {
             case OK -> inputTextNumber.setReady();
             case BACK -> inputTextNumber.removeLast();
@@ -104,7 +95,6 @@ public class NumberPad extends TableLayout {
 
     private TableRow.LayoutParams getTableRowLayoutParams() {
         TableRow.LayoutParams lp = new TableRow.LayoutParams(MATCH_PARENT, MATCH_PARENT);
-        lp.weight = 0.5f;
         lp.setMargins(5, 0, 5, 0);
         return lp;
     }

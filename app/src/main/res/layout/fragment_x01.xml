@@ -36,38 +36,34 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
 
-            <Button
+            <com.google.android.material.button.MaterialButton
                 android:id="@+id/textNamePlayer11"
-                style="@style/Widget.Material3.MaterialTimePicker.Button"
+                style="@style/Widget.Material3.Button.OutlinedButton"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="5dp"
                 android:checkable="false"
                 android:maxLines="1"
                 android:onClick="@{() -> viewModel.setActive(TeamPlayer.PLAYER_1_1)}"
-                android:paddingStart="5dp"
-                android:paddingEnd="10dp"
-                android:tag="@{TeamPlayer.PLAYER_1_1}"
-                android:text="@{sharedViewModel.getPlayer(TeamPlayer.PLAYER_1_1).name, default = @string/player_1_1"
+                android:padding="0dp"
+                android:text="@{sharedViewModel.getPlayer(TeamPlayer.PLAYER_1_1).name, default = @string/player_1_1}"
                 android:textSize="30sp"
-                app:active="@{viewModel.activePlayer}" />
+                app:active="@{viewModel.activePlayer}"
+                app:player="@{TeamPlayer.PLAYER_1_1}" />
 
-            <Button
+            <com.google.android.material.button.MaterialButton
                 android:id="@+id/textNamePlayer12"
-                style="@style/Widget.Material3.MaterialTimePicker.Button"
+                style="@style/Widget.Material3.Button.OutlinedButton"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="5dp"
                 android:checkable="false"
                 android:maxLines="1"
                 android:onClick="@{() -> viewModel.setActive(TeamPlayer.PLAYER_1_2)}"
-                android:paddingStart="5dp"
-                android:paddingEnd="10dp"
-                android:tag="@{TeamPlayer.PLAYER_1_2}"
-                android:text="@{sharedViewModel.getPlayer(TeamPlayer.PLAYER_1_2).name, default = @string/player_1_2"
+                android:padding="0dp"
+                android:text="@{sharedViewModel.getPlayer(TeamPlayer.PLAYER_1_2).name, default = @string/player_1_2}"
                 android:textSize="30sp"
                 android:visibility="@{viewModel.teamPlay ? View.VISIBLE : View.GONE}"
-                app:active="@{viewModel.activePlayer}" />
+                app:active="@{viewModel.activePlayer}"
+                app:player="@{TeamPlayer.PLAYER_1_2}" />
         </LinearLayout>
 
         <LinearLayout
@@ -83,42 +79,34 @@
             app:layout_constraintStart_toEndOf="@+id/layoutTeam1"
             app:layout_constraintTop_toTopOf="parent">
 
-            <Button
+            <com.google.android.material.button.MaterialButton
                 android:id="@+id/textNamePlayer21"
-                style="@style/Widget.Material3.MaterialTimePicker.Button"
+                style="@style/Widget.Material3.Button.OutlinedButton"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_gravity="end"
-                android:layout_marginTop="5dp"
                 android:checkable="false"
                 android:maxLines="1"
                 android:onClick="@{() -> viewModel.setActive(TeamPlayer.PLAYER_2_1)}"
-                android:paddingStart="5dp"
-                android:paddingEnd="10dp"
-                android:tag="@{TeamPlayer.PLAYER_2_1}"
-                android:text="@{sharedViewModel.getPlayer(TeamPlayer.PLAYER_2_1).name, default = @string/player_2_1"
-                android:textAlignment="center"
+                android:padding="0dp"
+                android:text="@{sharedViewModel.getPlayer(TeamPlayer.PLAYER_2_1).name, default = @string/player_2_1}"
                 android:textSize="30sp"
-                app:active="@{viewModel.activePlayer}" />
+                app:active="@{viewModel.activePlayer}"
+                app:player="@{TeamPlayer.PLAYER_2_1}" />
 
-            <Button
+            <com.google.android.material.button.MaterialButton
                 android:id="@+id/textNamePlayer22"
-                style="@style/Widget.Material3.MaterialTimePicker.Button"
+                style="@style/Widget.Material3.Button.OutlinedButton"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_gravity="end"
-                android:layout_marginTop="5dp"
                 android:checkable="false"
                 android:maxLines="1"
                 android:onClick="@{() -> viewModel.setActive(TeamPlayer.PLAYER_2_2)}"
-                android:paddingStart="5dp"
-                android:paddingEnd="10dp"
-                android:tag="@{TeamPlayer.PLAYER_2_2}"
-                android:text="@{sharedViewModel.getPlayer(TeamPlayer.PLAYER_2_2).name, default = @string/player_2_2"
-                android:textAlignment="center"
+                android:padding="0dp"
+                android:text="@{sharedViewModel.getPlayer(TeamPlayer.PLAYER_2_2).name, default = @string/player_2_2}"
                 android:textSize="30sp"
                 android:visibility="@{viewModel.teamPlay ? View.VISIBLE : View.GONE}"
-                app:active="@{viewModel.activePlayer}" />
+                app:active="@{viewModel.activePlayer}"
+                app:player="@{TeamPlayer.PLAYER_2_2}" />
         </LinearLayout>
 
         <FrameLayout
@@ -133,7 +121,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/layoutTeam1">
 
-            <Button
+            <com.google.android.material.button.MaterialButton
                 android:id="@+id/textScorePlayer2"
                 style="@style/Widget.Material3.Button.TextButton"
                 android:layout_width="wrap_content"
@@ -195,7 +183,7 @@
                     android:textSize="24sp" />
             </FrameLayout>
 
-            <Button
+            <com.google.android.material.button.MaterialButton
                 android:id="@+id/textScorePlayer1"
                 style="@style/Widget.Material3.Button.TextButton"
                 android:layout_width="wrap_content"
