@@ -7,7 +7,6 @@ import static bruzsa.laszlo.dartsapp.model.TeamPlayer.PLAYER_2_2;
 
 import android.util.Log;
 
-import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.SavedStateHandle;
 import androidx.lifecycle.ViewModel;
@@ -24,6 +23,7 @@ import bruzsa.laszlo.dartsapp.dao.Player;
 import bruzsa.laszlo.dartsapp.model.home.GameMode;
 import bruzsa.laszlo.dartsapp.model.home.GameType;
 import bruzsa.laszlo.dartsapp.model.x01.X01GameSettings;
+import bruzsa.laszlo.dartsapp.model.x01.X01SummaryStatistics;
 import bruzsa.laszlo.dartsapp.repository.home.PlayersRepository;
 import bruzsa.laszlo.dartsapp.ui.Nano;
 import lombok.Getter;
@@ -31,8 +31,10 @@ import lombok.Setter;
 
 public class SharedViewModel extends ViewModel {
 
+
     private SavedStateHandle state;
     private static final String VOICE_INPUT_ENABLED = "isVoiceInputEnabled";
+    @Getter
     private MutableLiveData<Boolean> voiceInputEnabled = new MutableLiveData<>();
 
     PlayersRepository playersRepository = new PlayersRepository() {
@@ -54,12 +56,12 @@ public class SharedViewModel extends ViewModel {
     private GameMode gameMode = GameMode.PLAYER;
     private static Nano nano = new Nano(9000);
 
-    public SharedViewModel(SavedStateHandle state) {
-        selectedPlayers.put(PLAYER_1_1, getAllPlayers().get(0));
-        selectedPlayers.put(PLAYER_2_1, getAllPlayers().get(1));
-        selectedPlayers.put(PLAYER_1_2, getAllPlayers().get(2));
-        selectedPlayers.put(PLAYER_2_2, getAllPlayers().get(3));
+    @Getter
+    @Setter
+    private WebGui webGui;
 
+    public SharedViewModel(SavedStateHandle state) {
+        this();
         this.state = state;
         Log.d("SharedViewModel", "SharedViewModel: " + state.get(VOICE_INPUT_ENABLED));
         voiceInputEnabled = state.getLiveData(VOICE_INPUT_ENABLED);
@@ -67,6 +69,15 @@ public class SharedViewModel extends ViewModel {
             voiceInputEnabled = new MutableLiveData<>(false);
             state.set(VOICE_INPUT_ENABLED, voiceInputEnabled.getValue());
         }
+    }
+
+
+    public SharedViewModel() {
+        selectedPlayers.put(PLAYER_1_1, getAllPlayers().get(0));
+        selectedPlayers.put(PLAYER_2_1, getAllPlayers().get(1));
+        selectedPlayers.put(PLAYER_1_2, getAllPlayers().get(2));
+        selectedPlayers.put(PLAYER_2_2, getAllPlayers().get(3));
+
 
         try {
             if (!nano.wasStarted())
@@ -111,11 +122,8 @@ public class SharedViewModel extends ViewModel {
         }
     }
 
-    public void setWebServerContent(String content) {
-        nano.setResponse(content);
+    public void setWebServerContent(Map<Team, X01SummaryStatistics> statMap) {
+        nano.setResponse(webGui.getHTML(selectedPlayers, statMap));
     }
 
-    public LiveData<Boolean> getVoiceInputEnabled() {
-        return voiceInputEnabled;
-    }
 }

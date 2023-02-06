@@ -15,6 +15,10 @@ import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -72,5 +76,17 @@ public class Helper {
                     .map(LinkAddress::toString);
         }
         return Optional.empty();
+    }
+
+    public static final String X01_WEB_GUI = "webgui/webgui.html";
+
+    public static String getHtmlTemplate(Context context, String assetFile) {
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(context.getAssets().open(assetFile), StandardCharsets.UTF_8))) {
+            return reader.lines()
+                    .collect(StringBuilder::new, StringBuilder::append, StringBuilder::append)
+                    .toString();
+        } catch (IOException ioException) {
+            throw new IllegalArgumentException("File can not read", ioException);
+        }
     }
 }

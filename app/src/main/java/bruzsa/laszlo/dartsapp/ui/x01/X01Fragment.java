@@ -36,9 +36,15 @@ public class X01Fragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        requireActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+
+        requireActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
+
         sharedViewModel = new ViewModelProvider(requireActivity()).get(SharedViewModel.class);
+        sharedViewModel.setWebGui(new X01WebGUI(requireContext()));
+
         viewModel = new ViewModelProvider(this).get(X01ViewModel.class);
+        viewModel.setOnGuiChangeEvent(teamX01SummaryStatisticsMap ->
+                sharedViewModel.setWebServerContent(teamX01SummaryStatisticsMap));
     }
 
     @SuppressLint({"SetTextI18n", "SourceLockedOrientationActivity"})
@@ -46,6 +52,7 @@ public class X01Fragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater,
                              @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
+
         requireActivity().findViewById(R.id.toolbar).setVisibility(View.GONE);
 
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_x01, container, false);
@@ -65,16 +72,18 @@ public class X01Fragment extends Fragment {
 
         InputViews inputs = new InputViews(this, InputType.NUMPAD, binding.includedInputs);
 
-        inputs.setOnReadyAction(value -> {
-            viewModel.newThrow(value, () -> {
-            }/* todo GAME OVER EVENT*/);
-            binding.listThrowsPlayer1.smoothScrollToPosition(viewModel.getThrowsAdapterCount(TEAM1));
-            binding.listThrowsPlayer1.smoothScrollToPosition(viewModel.getThrowsAdapterCount(TEAM2));
-        });
+        inputs.setOnReadyAction(this::newThrow);
 
         binding.listThrowsPlayer1.setLayoutManager(new LinearLayoutManager(getActivity(), VERTICAL, true));
         binding.listThrowsPlayer2.setLayoutManager(new LinearLayoutManager(getActivity(), VERTICAL, true));
 
+    }
+
+    private void newThrow(int value) {
+        viewModel.newThrow(value, () -> {
+        }/* todo GAME OVER EVENT*/);
+        binding.listThrowsPlayer1.smoothScrollToPosition(viewModel.getThrowsAdapterCount(TEAM1));
+        binding.listThrowsPlayer2.smoothScrollToPosition(viewModel.getThrowsAdapterCount(TEAM2));
     }
 
     @Override

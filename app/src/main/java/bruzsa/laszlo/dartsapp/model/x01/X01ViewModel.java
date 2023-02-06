@@ -7,7 +7,6 @@ import static bruzsa.laszlo.dartsapp.model.Team.TEAM1;
 import static bruzsa.laszlo.dartsapp.model.Team.TEAM2;
 
 import android.graphics.Typeface;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 
@@ -19,12 +18,14 @@ import java.util.EnumMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.function.Consumer;
 
 import bruzsa.laszlo.dartsapp.dao.Player;
 import bruzsa.laszlo.dartsapp.model.Team;
 import bruzsa.laszlo.dartsapp.model.TeamPlayer;
 import bruzsa.laszlo.dartsapp.ui.x01.X01ThrowAdapter;
 import lombok.Getter;
+import lombok.Setter;
 
 @SuppressWarnings("ConstantConditions")
 public class X01ViewModel extends ViewModel {
@@ -44,6 +45,9 @@ public class X01ViewModel extends ViewModel {
     private final MutableLiveData<TeamPlayer> activePlayer = new MutableLiveData<>();
     @Getter
     private final MutableLiveData<Boolean> teamPlay = new MutableLiveData<>();
+
+    @Setter
+    private Consumer<Map<Team, X01SummaryStatistics>> onGuiChangeEvent;
 
     private X01Service service;
 
@@ -71,6 +75,8 @@ public class X01ViewModel extends ViewModel {
         ));
         liveDatasMap.get(TEAM1).getScore().setValue(valueOf(settings.getStartScore()));
         liveDatasMap.get(TEAM2).getScore().setValue(valueOf(settings.getStartScore()));
+
+        onGuiChangeEvent.accept(Map.of(TEAM1, service.getStat(TEAM1), TEAM2, service.getStat(TEAM2)));
     }
 
     public void newThrow(int throwValue, Runnable onGameOverEvent) {
@@ -79,16 +85,6 @@ public class X01ViewModel extends ViewModel {
             updateGUI(player);
             if (Boolean.TRUE.equals(gameOver)) onGameOverEvent.run();
         });
-        Log.d("X01ViewModel", "newThrow: " + liveDatasMap.get(TEAM1).getScore().getValue() + " " + liveDatasMap.get(TEAM2).getScore().getValue());
-    }
-
-    public boolean kiir(View view) {
-        Log.d("X01ViewModel", "kiir: " + ((Button) view).getText());
-        return true;
-    }
-
-    public String fasom() {
-        return "sdfsd";
     }
 
     private void updateGUI(TeamPlayer player) {
@@ -101,6 +97,7 @@ public class X01ViewModel extends ViewModel {
         liveDatasMap.get(team).leg.setValue(service.getLeg(team));
         liveDatasMap.get(team).stat.setValue(getStatAsString(team));
         liveDatasMap.get(team).score.setValue(valueOf(service.getScore(team)));
+        onGuiChangeEvent.accept(Map.of(TEAM1, service.getStat(TEAM1), TEAM2, service.getStat(TEAM2)));
     }
 
     public void setActive(TeamPlayer player) {
@@ -140,38 +137,13 @@ public class X01ViewModel extends ViewModel {
         return throwAdapterMap.get(team);
     }
 
-//    @BindingAdapter(value = {"active", "player"}, requireAll = false)
-//    public static void setColorAndFaceTypeForNameButtons(View view, MutableLiveData<TeamPlayer> active, TeamPlayer player) {
-//        if (player == null) {
-//            Log.d("X01ViewModel", "setColorAndFaceTypeForNameButtons: player null");
-//        }
-//        if (active == null)
-//            Log.d("X01ViewModel", "setColorAndFaceTypeForNameButtons: active null");
-//        if (player != null && active != null)
-//            Log.d("X01ViewModel", "setColorAndFaceTypeForNameButtons: " + player.name() + " " + active.getValue().name());
-//
-//        Button button;
-//        if (view instanceof Button b) button = b;
-//        else return;
-//
-//        if (active.getValue() == player) {
-//            button.setTextColor(RED);
-//            button.setTypeface(Typeface.DEFAULT_BOLD);
-//        } else {
-//            button.setTextColor(BLACK);
-//            button.setTypeface(Typeface.DEFAULT);
-//        }
-//    }
-
-    @BindingAdapter("active")
-    public static void setColorAndFaceTypeForNameButtons(View view, MutableLiveData<TeamPlayer> active) {
+    @BindingAdapter(value = {"active", "player"}, requireAll = false)
+    public static void setColorAndFaceTypeForNameButtons(View view, MutableLiveData<TeamPlayer> active, TeamPlayer player) {
         Button button;
         if (view instanceof Button b) button = b;
         else return;
-        TeamPlayer actual = (TeamPlayer) view.getTag();
-        Log.d("X01ViewModel", "setColorAndFaceTypeForNameButtons: " + actual + " " + active.getValue());
 
-        if (active.getValue() == actual) {
+        if (active.getValue() == player) {
             button.setTextColor(RED);
             button.setTypeface(Typeface.DEFAULT_BOLD);
         } else {

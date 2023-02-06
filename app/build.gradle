@@ -51,6 +51,13 @@ android {
     kotlinOptions {
         jvmTarget = '1.8'
     }
+    sourceSets {
+        main {
+            assets {
+                srcDirs 'src\\main\\assets'
+            }
+        }
+    }
 
 }
 
@@ -84,8 +91,8 @@ dependencies {
     // Aggregator dependency on JUnit api, engine, and params
     // (Optional) If you also have JUnit 4-based tests
     testImplementation("junit:junit:4.13.2")
-    testImplementation("org.junit.jupiter:junit-jupiter:5.9.1")
-    androidTestImplementation 'org.junit.jupiter:junit-jupiter'
+//    testImplementation("org.junit.jupiter:junit-jupiter:5.9.1")
+//    androidTestImplementation 'org.junit.jupiter:junit-jupiter'
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.9.1'
     testImplementation("org.junit.jupiter:junit-jupiter-params:5.9.1")
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.9.1'
