@@ -56,6 +56,7 @@ public class InputText extends Chip implements InputTextNumber {
 
     public void clear() {
         setText("");
+        setHint("");
     }
 
     public Optional<Integer> getThrow() {

@@ -9,16 +9,19 @@ import androidx.lifecycle.ViewModel;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
 
 import bruzsa.laszlo.dartsapp.dao.Player;
+import bruzsa.laszlo.dartsapp.model.Team;
 import bruzsa.laszlo.dartsapp.model.TeamPlayer;
 
 public class CricketViewModel extends ViewModel {
 
     private CricketTeam team1;
     private CricketTeam team2;
+    private Map<Team, CricketTeam> cricketTeamMap = new EnumMap<>(Team.class);
     private final List<CricketThrow> shoots = new ArrayList<>();
     private final MutableLiveData<Boolean> isGameOver = new MutableLiveData<>(false);
 
@@ -27,9 +30,9 @@ public class CricketViewModel extends ViewModel {
         this.team2 = new CricketTeam(players.get(TEAM2.player1()), players.get(TEAM2.player2()));
     }
 
-    public void newThrow(int multiplier, int value, int player) {
+    public void newThrow(int multiplier, int value, Team team) {
         if (Boolean.TRUE.equals(isGameOver.getValue())) return;
-        shoots.add(new CricketThrow(multiplier, value, player == 1 ? team1 : team2));
+        shoots.add(new CricketThrow(multiplier, value, team == TEAM1 ? team1 : team2));
         updatePoints();
     }
 
@@ -76,5 +79,9 @@ public class CricketViewModel extends ViewModel {
 
     public LiveData<Boolean> isGameOver() {
         return isGameOver;
+    }
+
+    public List<CricketTeam> getCricketTeams() {
+        return List.of(team1, team2);
     }
 }

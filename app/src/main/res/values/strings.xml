@@ -53,4 +53,6 @@
     <string name="_0">0</string>
     <string name="s">S</string>
     <string name="l">L</string>
+    <string name="add">Add</string>
+    <string name="name">Name</string>
 </resources>

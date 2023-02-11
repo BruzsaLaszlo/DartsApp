@@ -3,7 +3,6 @@ package bruzsa.laszlo.dartsapp;
 import static android.speech.tts.TextToSpeech.Engine.EXTRA_AVAILABLE_VOICES;
 
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.speech.tts.TextToSpeech;
 import android.util.Log;
@@ -27,7 +26,6 @@ import bruzsa.laszlo.dartsapp.model.SharedViewModel;
 
 public class MainActivity extends AppCompatActivity {
 
-    private static final String SHARED_PREFERENCES = "MySharedPref";
     private AppBarConfiguration mAppBarConfiguration;
     private SharedViewModel sharedViewModel;
     private ActivityMainBinding binding;
@@ -95,42 +93,17 @@ public class MainActivity extends AppCompatActivity {
                 || super.onSupportNavigateUp();
     }
 
-    // Fetch the stored data in onResume()
-    // Because this is what will be called
-    // when the app opens again
+
     @Override
     protected void onResume() {
         super.onResume();
 
-        // Fetching the stored data
-        // from the SharedPreference
-        SharedPreferences sh = getSharedPreferences(SHARED_PREFERENCES, MODE_PRIVATE);
 
-        String s1 = sh.getString("name", "");
-        int a = sh.getInt("age", 0);
-
-        // Setting the fetched data
-        // in the EditTexts
     }
 
-    // Store the data in the SharedPreference
-    // in the onPause() method
-    // When the user closes the application
-    // onPause() will be called
-    // and data will be stored
     @Override
     protected void onPause() {
         super.onPause();
-
-        // Creating a shared pref object
-        // with a file name "MySharedPref"
-        // in private mode
-        SharedPreferences sharedPreferences = getSharedPreferences(SHARED_PREFERENCES, MODE_PRIVATE);
-        SharedPreferences.Editor myEdit = sharedPreferences.edit();
-
-        // write all the data entered by the user in SharedPreference and apply
-//        myEdit.putString("name", name.getText().toString());
-//        myEdit.putInt("age", Integer.parseInt(age.getText().toString()));
-//        myEdit.apply();
     }
+
 }

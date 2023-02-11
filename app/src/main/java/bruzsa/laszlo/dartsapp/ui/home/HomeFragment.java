@@ -1,6 +1,6 @@
 package bruzsa.laszlo.dartsapp.ui.home;
 
-import static android.view.View.INVISIBLE;
+import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
 import static bruzsa.laszlo.dartsapp.model.TeamPlayer.PLAYER_1_1;
 import static bruzsa.laszlo.dartsapp.model.TeamPlayer.PLAYER_1_2;
@@ -8,7 +8,6 @@ import static bruzsa.laszlo.dartsapp.model.TeamPlayer.PLAYER_2_1;
 import static bruzsa.laszlo.dartsapp.model.TeamPlayer.PLAYER_2_2;
 
 import android.annotation.SuppressLint;
-import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -48,7 +47,7 @@ public class HomeFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        requireActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+//        requireActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
         homeViewModel = new ViewModelProvider(requireActivity()).get(HomeViewModel.class);
         sharedViewModel = new ViewModelProvider(requireActivity()).get(SharedViewModel.class);
@@ -223,11 +222,11 @@ public class HomeFragment extends Fragment {
     private void setVisibilityOfPlayers() {
         switch (sharedViewModel.getGameMode()) {
             case PLAYER -> setChipPlayerVisibilityAndInfoText(
-                    INVISIBLE, VISIBLE, INVISIBLE, "Player 1", "Player 2");
+                    GONE, VISIBLE, GONE, "Player 1", "Player 2");
             case TEAM -> setChipPlayerVisibilityAndInfoText(
                     VISIBLE, VISIBLE, VISIBLE, "Team 1", "Team 2");
             case SINGLE -> setChipPlayerVisibilityAndInfoText(
-                    INVISIBLE, INVISIBLE, INVISIBLE, "Player", null);
+                    GONE, GONE, GONE, "Player", null);
         }
     }
 
@@ -238,7 +237,7 @@ public class HomeFragment extends Fragment {
         binding.chipTeam2Player2.setVisibility(visibilityOfPlayer22);
         binding.textInfoPlayerTeam1.setText(textInfo1);
         binding.textInfoPlayerTeam2.setText(textInfo2);
-        binding.divider.setVisibility(sharedViewModel.getGameMode() == GameMode.SINGLE ? INVISIBLE : VISIBLE);
+        binding.divider.setVisibility(sharedViewModel.getGameMode() == GameMode.SINGLE ? View.GONE : VISIBLE);
     }
 
     @Override

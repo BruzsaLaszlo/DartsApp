@@ -7,16 +7,18 @@ import java.util.Objects;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 
 @AllArgsConstructor
+@RequiredArgsConstructor
 @Getter
 public class Player {
 
     private final Long id;
     private final String name;
-    private final String nickName;
-    private final LocalDate dateOfBirth;
-    private final byte[] image;
+    private String nickName;
+    private LocalDate dateOfBirth;
+    private byte[] image;
 
 
     @NonNull
