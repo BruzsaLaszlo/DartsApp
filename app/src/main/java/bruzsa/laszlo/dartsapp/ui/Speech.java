@@ -10,14 +10,15 @@ import android.speech.tts.TextToSpeech;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
-import androidx.lifecycle.LiveData;
-import androidx.lifecycle.MutableLiveData;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
+import java.util.function.Consumer;
 import java.util.stream.Collectors;
+
+import lombok.Setter;
 
 public class Speech {
 
@@ -27,10 +28,20 @@ public class Speech {
     private Language language = Language.HUNGARIAN;
     private static final String TAG = "Speech";
 
-    private final MutableLiveData<List<String>> resultLiveData = new MutableLiveData<>();
-    private final MutableLiveData<String> errorLiveData = new MutableLiveData<>();
+    @Setter
+    private Consumer<List<String>> onResultEventListener;
+    @Setter
+    private Consumer<String> onErrorEventListener;
 
-    public Speech(Context context) {
+    private static Speech speech;
+
+    public static Speech getInstance(@NonNull Context context) {
+        if (speech == null)
+            speech = new Speech(context);
+        return speech;
+    }
+
+    private Speech(Context context) {
         textToSpeech = new TextToSpeech(context, status -> {
             Log.d(TAG, "Speech: " + textToSpeech.getAvailableLanguages());
             if (status != TextToSpeech.ERROR) {
@@ -59,7 +70,7 @@ public class Speech {
 
             @Override
             public void onRmsChanged(float rmsdB) {
-                Log.d(TAG, "onRmsChanged: " + rmsdB);
+                //Log.d(TAG, "onRmsChanged: " + rmsdB);
             }
 
             @Override
@@ -75,7 +86,7 @@ public class Speech {
             @Override
             public void onError(int error) {
                 Log.d(TAG, "onError: " + getErrorText(error));
-                errorLiveData.setValue(getErrorText(error));
+                onErrorEventListener.accept(getErrorText(error));
             }
 
             @Override
@@ -85,14 +96,17 @@ public class Speech {
                 List<String> numbers = data.stream()
                         .flatMap(s -> Arrays.stream(s.split("\\s")))
                         .map(s -> switch (s.toLowerCase()) {
+                            case "zero", "zérus", "semmi" -> "0";
                             case "egy", "one" -> "1";
                             case "kettő", "two" -> "2";
+                            case "öt" -> "5";
+                            case "hat" -> "6";
                             case "hatvan" -> "60";
                             default -> s;
                         })
                         .filter(s -> s.chars().anyMatch(Character::isDigit))
                         .collect(Collectors.toList());
-                resultLiveData.setValue(numbers);
+                onResultEventListener.accept(numbers);
             }
 
             @Override
@@ -108,13 +122,6 @@ public class Speech {
         };
     }
 
-    public LiveData<List<String>> getResultLiveData() {
-        return resultLiveData;
-    }
-
-    public LiveData<String> getErrorLiveData() {
-        return errorLiveData;
-    }
 
     public void startListening() {
         speechRecognizer.startListening(getSpeechRecognizerIntent());
