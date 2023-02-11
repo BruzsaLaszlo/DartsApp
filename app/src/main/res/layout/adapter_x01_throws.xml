@@ -1,15 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:layout_marginLeft="10sp"
-    android:layout_marginRight="10sp">
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <TextView
-        android:id="@+id/dartsX01ThrowItem"
+    <data>
+
+        <variable
+            name="x01Throw"
+            type="bruzsa.laszlo.dartsapp.model.x01.X01Throw" />
+    </data>
+
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:fontFamily="monospace"
-        android:textAlignment="center"
-        android:textSize="25sp" />
-</FrameLayout>
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10sp"
+        android:layout_marginRight="10sp">
+
+        <TextView
+            android:id="@+id/throwTextView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:fontFamily="monospace"
+            android:textAlignment="center"
+            android:textSize="25sp" />
+    </FrameLayout>
+</layout>

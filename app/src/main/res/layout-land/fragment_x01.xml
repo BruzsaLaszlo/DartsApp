@@ -1,0 +1,311 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+
+        <import type="bruzsa.laszlo.dartsapp.model.Team" />
+
+        <import type="bruzsa.laszlo.dartsapp.model.TeamPlayer" />
+
+        <import type="android.view.View" />
+
+        <variable
+            name="viewModel"
+            type="bruzsa.laszlo.dartsapp.model.x01.X01ViewModel" />
+
+        <variable
+            name="sharedViewModel"
+            type="bruzsa.laszlo.dartsapp.model.SharedViewModel" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/constraintLayoutData"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginEnd="1dp"
+            android:minWidth="400dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/constraintLayoutInputs"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <LinearLayout
+                android:id="@+id/layoutTeam1"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="start|top|fill_vertical"
+                android:layout_marginStart="4dp"
+                android:layout_marginEnd="5dp"
+                android:orientation="vertical"
+                app:layout_constraintBottom_toTopOf="@+id/frameNameScore"
+                app:layout_constraintEnd_toStartOf="@+id/layoutTeam2"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/textNamePlayer11"
+                    style="@style/Widget.Material3.Button.OutlinedButton"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:checkable="false"
+                    android:maxLines="1"
+                    android:onClick="@{() -> viewModel.setActive(TeamPlayer.PLAYER_1_1)}"
+                    android:padding="0dp"
+                    android:text="@{sharedViewModel.getPlayer(TeamPlayer.PLAYER_1_1).name, default = @string/player_1_1}"
+                    android:textSize="30sp"
+                    app:active="@{viewModel.activePlayer}"
+                    app:player="@{TeamPlayer.PLAYER_1_1}" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/textNamePlayer12"
+                    style="@style/Widget.Material3.Button.OutlinedButton"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:checkable="false"
+                    android:maxLines="1"
+                    android:onClick="@{() -> viewModel.setActive(TeamPlayer.PLAYER_1_2)}"
+                    android:padding="0dp"
+                    android:text="@{sharedViewModel.getPlayer(TeamPlayer.PLAYER_1_2).name, default = @string/player_1_2}"
+                    android:textSize="30sp"
+                    android:visibility="@{viewModel.teamPlay ? View.VISIBLE : View.GONE}"
+                    app:active="@{viewModel.activePlayer}"
+                    app:player="@{TeamPlayer.PLAYER_1_2}" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/layoutTeam2"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="top|fill_vertical|end"
+                android:layout_marginStart="4dp"
+                android:layout_marginEnd="10dp"
+                android:orientation="vertical"
+                app:layout_constraintBottom_toTopOf="@+id/frameNameScore"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/layoutTeam1"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/textNamePlayer21"
+                    style="@style/Widget.Material3.Button.OutlinedButton"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:checkable="false"
+                    android:maxLines="1"
+                    android:onClick="@{() -> viewModel.setActive(TeamPlayer.PLAYER_2_1)}"
+                    android:padding="0dp"
+                    android:text="@{sharedViewModel.getPlayer(TeamPlayer.PLAYER_2_1).name, default = @string/player_2_1}"
+                    android:textSize="30sp"
+                    app:active="@{viewModel.activePlayer}"
+                    app:player="@{TeamPlayer.PLAYER_2_1}" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/textNamePlayer22"
+                    style="@style/Widget.Material3.Button.OutlinedButton"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:checkable="false"
+                    android:maxLines="1"
+                    android:onClick="@{() -> viewModel.setActive(TeamPlayer.PLAYER_2_2)}"
+                    android:padding="0dp"
+                    android:text="@{sharedViewModel.getPlayer(TeamPlayer.PLAYER_2_2).name, default = @string/player_2_2}"
+                    android:textSize="30sp"
+                    android:visibility="@{viewModel.teamPlay ? View.VISIBLE : View.GONE}"
+                    app:active="@{viewModel.activePlayer}"
+                    app:player="@{TeamPlayer.PLAYER_2_2}" />
+            </LinearLayout>
+
+            <FrameLayout
+                android:id="@+id/frameNameScore"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center|top"
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="10dp"
+                app:layout_constraintBottom_toTopOf="@id/textViewStat"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/layoutTeam1">
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/textScorePlayer2"
+                    style="@style/Widget.Material3.Button.TextButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="fill_vertical|end"
+                    android:padding="0dp"
+                    android:text="@{viewModel.liveDatasMap.get(Team.TEAM2).score, default=701}"
+                    android:textAlignment="textEnd"
+                    android:textSize="60sp"
+                    android:textStyle="bold" />
+
+                <FrameLayout
+                    android:id="@+id/frameSetsLegs"
+                    android:layout_width="72dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="bottom|center"
+                    android:layout_marginBottom="8sp">
+
+                    <TextView
+                        android:id="@+id/textSL"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center|fill_vertical"
+                        android:text="@{viewModel.set ? @string/SetLeg: `L`,default = @string/SetLeg}"
+                        android:textSize="24sp" />
+
+                    <TextView
+                        android:id="@+id/textSetPlayer2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="top|end"
+                        android:text="@{viewModel.liveDatasMap.get(Team.TEAM2).set, default = @string/_0}"
+                        android:textSize="24sp"
+                        android:visibility="@{viewModel.set ? View.VISIBLE : View.GONE}" />
+
+                    <TextView
+                        android:id="@+id/textSetPlayer1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="start|top"
+                        android:text="@{viewModel.liveDatasMap.get(Team.TEAM1).set,default = @string/_0}"
+                        android:textSize="24sp"
+                        android:visibility="@{viewModel.set ? View.VISIBLE : View.GONE}" />
+
+                    <TextView
+                        android:id="@+id/textLegPlayer1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="bottom|start"
+                        android:text="@{viewModel.liveDatasMap.get(Team.TEAM1).leg,default = @string/_0}"
+                        android:textSize="24sp" />
+
+                    <TextView
+                        android:id="@+id/textLegPlayer2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="bottom|end"
+                        android:text="@{viewModel.liveDatasMap.get(Team.TEAM2).set,default = @string/_0}"
+                        android:textSize="24sp" />
+                </FrameLayout>
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/textScorePlayer1"
+                    style="@style/Widget.Material3.Button.TextButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="start|fill_vertical"
+                    android:padding="0dp"
+                    android:text="@{viewModel.liveDatasMap.get(Team.TEAM1).score, default=701}"
+                    android:textSize="60sp"
+                    android:textStyle="bold" />
+
+            </FrameLayout>
+
+            <FrameLayout
+                android:id="@+id/framePlayer1StatThrows"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:orientation="horizontal"
+                app:layout_constraintBottom_toBottomOf="@+id/textViewStat"
+                app:layout_constraintEnd_toStartOf="@+id/textViewStat"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/frameNameScore">
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/listThrowsPlayer1"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="start"
+                    android:layout_marginStart="20dp"
+                    android:layout_marginEnd="60dp"
+                    android:adapter="@{viewModel.getThrowsAdapterTeam(Team.TEAM1)}" />
+
+                <TextView
+                    android:id="@+id/textStatPlayer1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="end"
+                    android:layout_marginEnd="10dp"
+                    android:fontFamily="monospace"
+                    android:text="@{viewModel.liveDatasMap.get(Team.TEAM1).stat,default = @string/_10_n100_n180_n26}"
+                    android:textAlignment="textEnd"
+                    android:textSize="20sp" />
+
+            </FrameLayout>
+
+            <TextView
+                android:id="@+id/textViewStat"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:fontFamily="monospace"
+                android:text="@string/stat"
+                android:textAlignment="center"
+                android:textSize="20sp"
+                app:layout_constraintEnd_toStartOf="@+id/framePlayer2StatThrows"
+                app:layout_constraintStart_toEndOf="@+id/framePlayer1StatThrows"
+                app:layout_constraintTop_toBottomOf="@+id/frameNameScore" />
+
+            <FrameLayout
+                android:id="@+id/framePlayer2StatThrows"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:orientation="horizontal"
+                app:layout_constraintBottom_toBottomOf="@+id/textViewStat"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/textViewStat"
+                app:layout_constraintTop_toBottomOf="@+id/frameNameScore">
+
+                <TextView
+                    android:id="@+id/textStatPlayer2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="start"
+                    android:layout_marginStart="10dp"
+                    android:fontFamily="monospace"
+                    android:text="@{viewModel.liveDatasMap.get(Team.TEAM2).stat, default = @string/_10_n100_n180_n26}"
+                    android:textAlignment="textStart"
+                    android:textSize="20sp" />
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/listThrowsPlayer2"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="end"
+                    android:layout_marginStart="60dp"
+                    android:layout_marginEnd="20dp"
+                    android:adapter="@{viewModel.getThrowsAdapterTeam(Team.TEAM2)}" />
+            </FrameLayout>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/constraintLayoutInputs"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:minWidth="350dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/constraintLayoutData"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <include
+                android:id="@+id/includedInputs"
+                layout="@layout/input_views"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</layout>

@@ -4,9 +4,13 @@
 
     <data>
 
+        <import type="bruzsa.laszlo.dartsapp.ui.x01.input.InputType" />
+
+        <import type="android.view.View" />
+
         <variable
-            name="sharedViewModel"
-            type="bruzsa.laszlo.dartsapp.model.SharedViewModel" />
+            name="inputViews"
+            type="bruzsa.laszlo.dartsapp.ui.x01.input.InputViews" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -20,6 +24,8 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:textAlignment="center"
+            app:txt="@{inputViews.inputType}"
+            android:onLongClick="@{(view) -> inputViews.createAlertDialogChangeInputType(view)}"
             android:textSize="60sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -30,8 +36,9 @@
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:contentDescription="@string/microphone"
-            app:hideIfVoiceDisabled="@{sharedViewModel.voiceInputEnabled}"
+            android:visibility="@{inputViews.inputType == InputType.VOICE ? View.VISIBLE : View.GONE}"
             app:layout_constraintBottom_toBottomOf="parent"
+            app:src="@{inputViews.inputType}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/inputText"
@@ -41,7 +48,8 @@
             android:id="@+id/numPad"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            app:hideIfNumPadDisabled="@{sharedViewModel.voiceInputEnabled}"
+            android:minWidth="350dp"
+            android:visibility="@{inputViews.inputType == InputType.NUMPAD ? View.VISIBLE : View.GONE}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
