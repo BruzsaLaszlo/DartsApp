@@ -23,14 +23,10 @@ public class X01SummaryStatistics {
 
     @NonNull
     private Stream<X01Throw> validThrows() {
-        return noHandicapThrows().filter(X01Throw::isValid);
+        return notRemovedThrows().filter(X01Throw::isValid);
     }
 
     @NonNull
-    private Stream<X01Throw> noHandicapThrows() {
-        return notRemovedThrows().filter(X01Throw::isNotHandicap);
-    }
-
     private Stream<X01Throw> notRemovedThrows() {
         return throwList.stream().filter(x01Throw -> !x01Throw.isRemoved());
     }
@@ -107,11 +103,11 @@ public class X01SummaryStatistics {
     }
 
     public int getThrowCountExceptHandicap() {
-        return (int) noHandicapThrows().count();
+        return (int) notRemovedThrows().count();
     }
 
     public int getDartCount() {
-        return noHandicapThrows()
+        return notRemovedThrows()
                 .mapToInt(X01Throw::getDart)
                 .sum();
     }
