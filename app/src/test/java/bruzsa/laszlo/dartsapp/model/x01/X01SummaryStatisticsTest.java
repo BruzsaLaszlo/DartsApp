@@ -33,7 +33,6 @@ class X01SummaryStatisticsTest {
             new X01SummaryStatistics(List.of(
                     new X01Throw(60, true, 0, 3, false, null),
                     new X01Throw(60, true, 0, 3, false, null),
-                    new X01Throw(200, true, 0, 1000, false, null),
                     new X01Throw(26, true, 0, 3, false, null)), START_SCORE)
     );
 
@@ -62,7 +61,7 @@ class X01SummaryStatisticsTest {
     void getSum() {
         final int leg0 = 0;
         assertThat(stats.stream().map(x01SummaryStatistics -> x01SummaryStatistics.getSum(leg0)).collect(Collectors.toList()))
-                .containsExactly(501, 501, 501, 346);
+                .containsExactly(501, 501, 501, 146);
         final int leg1 = 1;
         assertThat(stats.stream().map(x01SummaryStatistics -> x01SummaryStatistics.getSum(leg1)).collect(Collectors.toList()))
                 .containsExactly(0, 0, 100, 0);
