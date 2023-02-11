@@ -1,8 +1,6 @@
 package bruzsa.laszlo.dartsapp.ui.x01;
 
 import static java.lang.String.valueOf;
-import static bruzsa.laszlo.dartsapp.Helper.X01_WEB_GUI;
-import static bruzsa.laszlo.dartsapp.Helper.getHtmlTemplate;
 import static bruzsa.laszlo.dartsapp.model.Team.TEAM1;
 import static bruzsa.laszlo.dartsapp.model.Team.TEAM2;
 import static bruzsa.laszlo.dartsapp.model.TeamPlayer.PLAYER_1_1;
@@ -10,23 +8,20 @@ import static bruzsa.laszlo.dartsapp.model.TeamPlayer.PLAYER_1_2;
 import static bruzsa.laszlo.dartsapp.model.TeamPlayer.PLAYER_2_1;
 import static bruzsa.laszlo.dartsapp.model.TeamPlayer.PLAYER_2_2;
 
-import android.content.Context;
-
 import java.util.Map;
 
 import bruzsa.laszlo.dartsapp.dao.Player;
 import bruzsa.laszlo.dartsapp.model.Team;
 import bruzsa.laszlo.dartsapp.model.TeamPlayer;
-import bruzsa.laszlo.dartsapp.model.WebGui;
 import bruzsa.laszlo.dartsapp.model.x01.X01SummaryStatistics;
 
 @SuppressWarnings("ConstantConditions")
-public class X01WebGUI implements WebGui {
+public class X01WebGUI {
 
     private final String htmlTemplate;
 
-    public X01WebGUI(Context context) {
-        this.htmlTemplate = getHtmlTemplate(context, X01_WEB_GUI);
+    public X01WebGUI(String htmlTemplate) {
+        this.htmlTemplate = htmlTemplate;
     }
 
 

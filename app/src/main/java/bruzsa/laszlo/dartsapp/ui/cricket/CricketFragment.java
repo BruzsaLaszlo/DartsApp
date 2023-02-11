@@ -4,6 +4,8 @@ import static android.content.pm.ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE;
 import static android.content.pm.ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED;
 import static android.view.View.GONE;
 import static androidx.recyclerview.widget.LinearLayoutManager.VERTICAL;
+import static bruzsa.laszlo.dartsapp.Helper.CRICKET_WEB_GUI;
+import static bruzsa.laszlo.dartsapp.Helper.getHtmlTemplate;
 import static bruzsa.laszlo.dartsapp.model.TeamPlayer.PLAYER_1_1;
 import static bruzsa.laszlo.dartsapp.model.TeamPlayer.PLAYER_1_2;
 import static bruzsa.laszlo.dartsapp.model.TeamPlayer.PLAYER_2_1;
@@ -27,21 +29,32 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import bruzsa.laszlo.dartsapp.R;
 import bruzsa.laszlo.dartsapp.databinding.FragmentCricketBinding;
 import bruzsa.laszlo.dartsapp.model.SharedViewModel;
+import bruzsa.laszlo.dartsapp.model.Team;
+import bruzsa.laszlo.dartsapp.model.cricket.CricketThrow;
 import bruzsa.laszlo.dartsapp.model.cricket.CricketViewModel;
 
 public class CricketFragment extends Fragment {
 
     private static final String TAG = "CricketFragment";
-    private CricketViewModel cViewModel;
+    private CricketViewModel viewModel;
     private SharedViewModel sharedViewModel;
     private CricketThrowsAdapter cricketThrowsAdapter;
     private FragmentCricketBinding binding;
+    private CricketWebGui webGUI;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
+//        try {
+//            Class.forName("dalvik.system.CloseGuard")
+//                    .getMethod("setEnabled", boolean.class)
+//                    .invoke(null, true);
+//        } catch (ReflectiveOperationException e) {
+//            throw new RuntimeException(e);
+//        }
         super.onCreate(savedInstanceState);
-        cViewModel = new ViewModelProvider(this).get(CricketViewModel.class);
+        viewModel = new ViewModelProvider(this).get(CricketViewModel.class);
         sharedViewModel = new ViewModelProvider(requireActivity()).get(SharedViewModel.class);
+        webGUI = new CricketWebGui(getHtmlTemplate(requireContext(), CRICKET_WEB_GUI));
     }
 
     @Nullable
@@ -57,69 +70,66 @@ public class CricketFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        cViewModel.isGameOver().observe(getViewLifecycleOwner(), isGameOver ->
+
+        viewModel.isGameOver().observe(getViewLifecycleOwner(), isGameOver ->
                 binding.textCricketScore.setTextColor(Boolean.TRUE.equals(isGameOver) ? Color.RED : Color.BLACK));
 
         ScreenSize screenSize = new ScreenSize(requireActivity());
-        binding.cricketTable1.setSize(screenSize.getSize());
-        binding.cricketTable1.setLeft(true);
-        setOnClickListenersForTable(binding.cricketTable1, 1);
-        binding.cricketTable2.setSize(screenSize.getSize());
-        setOnClickListenersForTable(binding.cricketTable2, 2);
+        binding.cricketTable1.inic(screenSize.getSize(), Team.TEAM1);
+        binding.cricketTable1.setOnTouchEventListener(this::getOnTouchEventListener);
+        binding.cricketTable2.inic(screenSize.getSize(), Team.TEAM2);
+        binding.cricketTable2.setOnTouchEventListener(this::getOnTouchEventListener);
 
         binding.listThrows.setLayoutManager(new LinearLayoutManager(getActivity(), VERTICAL, true));
-        cricketThrowsAdapter = new CricketThrowsAdapter(
-                cViewModel.getThrows(),
-                cricketThrow -> {
-                    AlertDialog.Builder builder = new AlertDialog.Builder(requireActivity());
-                    builder.setTitle("Do you want to delete?   " + cricketThrow.toString());
-                    builder.setPositiveButton("Yes", (dialog, which) -> {
-                        if (cViewModel.shootRemove(cricketThrow)) {
-                            refreshGUI();
-                        }
-                    });
-                    builder.setNegativeButton("No", null);
-                    builder.create().show();
-                });
+        cricketThrowsAdapter = new CricketThrowsAdapter(viewModel.getThrows(), this::onRemoveListener);
         binding.listThrows.setAdapter(cricketThrowsAdapter);
         binding.listThrows.setPadding(0, 0, 0, 0);
 
-        if (cViewModel.isGameNotStarted()) {
+        if (viewModel.isGameNotStarted()) {
             startNewGame();
         } else {
             refreshGUI();
         }
 
 
-        String player1 = sharedViewModel.getPlayer(PLAYER_1_1).getNickName();
-        String player2 = sharedViewModel.getPlayer(PLAYER_2_1).getNickName();
+        String player1 = sharedViewModel.getPlayer(PLAYER_1_1).getName();
+        String player2 = sharedViewModel.getPlayer(PLAYER_2_1).getName();
         if (sharedViewModel.getSelectedPlayersMap().size() == 4) {
-            player1 += "\n" + sharedViewModel.getPlayer(PLAYER_1_2).getNickName();
-            player2 += "\n" + sharedViewModel.getPlayer(PLAYER_2_2).getNickName();
+            player1 += "\n" + sharedViewModel.getPlayer(PLAYER_1_2).getName();
+            player2 += "\n" + sharedViewModel.getPlayer(PLAYER_2_2).getName();
         }
         binding.textNameCricketPlayer1.setText(player1);
         binding.textNameCricketPlayer2.setText(player2);
     }
 
-    @SuppressLint("NotifyDataSetChanged")
-    private void refreshGUI() {
-        binding.cricketTable1.refreshState(cViewModel.getPlayerScore(1), cViewModel.getPlayerScore(2));
-        binding.cricketTable2.refreshState(cViewModel.getPlayerScore(2), cViewModel.getPlayerScore(1));
-        binding.textCricketScore.setText(cViewModel.updatePoints());
-        cricketThrowsAdapter.notifyDataSetChanged();
-        binding.listThrows.smoothScrollToPosition(cricketThrowsAdapter.getItemCount());
+    private void onRemoveListener(CricketThrow cricketThrow) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(requireActivity());
+        builder.setTitle("Do you want to delete?   " + cricketThrow.toString());
+        builder.setPositiveButton("Yes", (dialog, which) -> {
+            if (viewModel.shootRemove(cricketThrow)) {
+                refreshGUI();
+            }
+        });
+        builder.setNegativeButton("No", null);
+        builder.create().show();
     }
 
-    private void setOnClickListenersForTable(CricketTable table, int player) {
-        table.getTouchedValue().observe(getViewLifecycleOwner(), value -> {
-            cViewModel.newThrow(1, value, player);
-            cricketThrowsAdapter.notifyItemInserted(cricketThrowsAdapter.getItemCount());
-            refreshGUI();
-        });
+    @SuppressLint("NotifyDataSetChanged")
+    private void refreshGUI() {
+        binding.cricketTable1.refreshState(viewModel.getPlayerScore(1), viewModel.getPlayerScore(2));
+        binding.cricketTable2.refreshState(viewModel.getPlayerScore(2), viewModel.getPlayerScore(1));
+
+        binding.textCricketScore.setText(viewModel.updatePoints());
+
+        cricketThrowsAdapter.notifyDataSetChanged();
+        binding.listThrows.smoothScrollToPosition(cricketThrowsAdapter.getItemCount());
+
+        String html = webGUI.getHTML(viewModel.getCricketTeams());
+        sharedViewModel.setWebServerContent(html);
     }
 
     private void startNewGame() {
-        cViewModel.newGame(sharedViewModel.getSelectedPlayersMap());
+        viewModel.newGame(sharedViewModel.getSelectedPlayersMap());
         refreshGUI();
     }
 
@@ -134,4 +144,11 @@ public class CricketFragment extends Fragment {
         setScreenOrientation(SCREEN_ORIENTATION_UNSPECIFIED);
         binding = null;
     }
+
+    private void getOnTouchEventListener(Team team, Integer number) {
+        viewModel.newThrow(1, number, team);
+        cricketThrowsAdapter.notifyItemInserted(cricketThrowsAdapter.getItemCount());
+        refreshGUI();
+    }
+
 }

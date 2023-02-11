@@ -1,6 +1,8 @@
 package bruzsa.laszlo.dartsapp.ui.x01;
 
 import static androidx.recyclerview.widget.LinearLayoutManager.VERTICAL;
+import static bruzsa.laszlo.dartsapp.Helper.X01_WEB_GUI;
+import static bruzsa.laszlo.dartsapp.Helper.getHtmlTemplate;
 import static bruzsa.laszlo.dartsapp.model.Team.TEAM1;
 import static bruzsa.laszlo.dartsapp.model.Team.TEAM2;
 
@@ -22,7 +24,6 @@ import bruzsa.laszlo.dartsapp.R;
 import bruzsa.laszlo.dartsapp.databinding.FragmentX01Binding;
 import bruzsa.laszlo.dartsapp.model.SharedViewModel;
 import bruzsa.laszlo.dartsapp.model.x01.X01ViewModel;
-import bruzsa.laszlo.dartsapp.ui.x01.input.InputType;
 import bruzsa.laszlo.dartsapp.ui.x01.input.InputViews;
 
 public class X01Fragment extends Fragment {
@@ -40,11 +41,14 @@ public class X01Fragment extends Fragment {
         requireActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
 
         sharedViewModel = new ViewModelProvider(requireActivity()).get(SharedViewModel.class);
-        sharedViewModel.setWebGui(new X01WebGUI(requireContext()));
 
         viewModel = new ViewModelProvider(this).get(X01ViewModel.class);
-        viewModel.setOnGuiChangeEvent(teamX01SummaryStatisticsMap ->
-                sharedViewModel.setWebServerContent(teamX01SummaryStatisticsMap));
+        X01WebGUI webGUI = new X01WebGUI(getHtmlTemplate(requireContext(), X01_WEB_GUI));
+        viewModel.setOnGuiChangeEvent(teamX01SummaryStatisticsMap -> {
+
+            String html = webGUI.getHTML(sharedViewModel.getSelectedPlayersMap(), teamX01SummaryStatisticsMap);
+            sharedViewModel.setWebServerContent(html);
+        });
     }
 
     @SuppressLint({"SetTextI18n", "SourceLockedOrientationActivity"})
@@ -59,7 +63,6 @@ public class X01Fragment extends Fragment {
         binding.setLifecycleOwner(getViewLifecycleOwner());
         binding.setViewModel(viewModel);
         binding.setSharedViewModel(sharedViewModel);
-        binding.includedInputs.setSharedViewModel(sharedViewModel);
 
         viewModel.startGameOrContinue(sharedViewModel.getSelectedPlayersMap(), sharedViewModel.getSettings());
 
@@ -70,9 +73,10 @@ public class X01Fragment extends Fragment {
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        InputViews inputs = new InputViews(this, InputType.NUMPAD, binding.includedInputs);
-
-        inputs.setOnReadyAction(this::newThrow);
+        InputViews inputViews = new InputViews(this, binding.includedInputs);
+        binding.includedInputs.setInputViews(inputViews);
+        binding.includedInputs.setLifecycleOwner(getViewLifecycleOwner());
+        inputViews.setOnReadyAction(this::newThrow);
 
         binding.listThrowsPlayer1.setLayoutManager(new LinearLayoutManager(getActivity(), VERTICAL, true));
         binding.listThrowsPlayer2.setLayoutManager(new LinearLayoutManager(getActivity(), VERTICAL, true));

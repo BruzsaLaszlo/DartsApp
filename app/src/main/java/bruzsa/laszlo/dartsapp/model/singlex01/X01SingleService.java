@@ -12,6 +12,7 @@ import lombok.Getter;
 
 public class X01SingleService {
 
+    @Getter
     private final Player player;
     private final int startScore;
     @Getter

@@ -22,7 +22,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-public class Helper {
+public final class Helper {
 
     private Helper() {
     }
@@ -41,8 +41,10 @@ public class Helper {
         return result.get();
     }
 
-    public static boolean isRecordPermissionGranted(@NonNull Fragment fragment) {
-        return checkSelfPermission(fragment.requireContext(), android.Manifest.permission.RECORD_AUDIO) == PERMISSION_GRANTED;
+    public static boolean isRecordPermissionGranted(Context context) {
+        boolean granted = checkSelfPermission(context, Manifest.permission.RECORD_AUDIO) == PERMISSION_GRANTED;
+        Log.d("Helper", "isRecordPermissionGranted: " + granted);
+        return granted;
     }
 
     public static boolean requestInternetPermission(@NonNull Fragment fragment) {
@@ -67,7 +69,7 @@ public class Helper {
         var connectivityManager = context.getSystemService(Context.CONNECTIVITY_SERVICE);
         if (connectivityManager instanceof ConnectivityManager cm) {
             LinkProperties link = cm.getLinkProperties(cm.getActiveNetwork());
-            Log.e("IPAddress List", link.getLinkAddresses().toString());
+            Log.i("IPAddress List", link.getLinkAddresses().toString());
 
             // return only one IPv4Address
             return link.getLinkAddresses().stream()
@@ -78,7 +80,8 @@ public class Helper {
         return Optional.empty();
     }
 
-    public static final String X01_WEB_GUI = "webgui/webgui.html";
+    public static final String X01_WEB_GUI = "webgui/webgui_x01.html";
+    public static final String CRICKET_WEB_GUI = "webgui/webgui_cricket.html";
 
     public static String getHtmlTemplate(Context context, String assetFile) {
         try (BufferedReader reader = new BufferedReader(new InputStreamReader(context.getAssets().open(assetFile), StandardCharsets.UTF_8))) {
@@ -89,4 +92,6 @@ public class Helper {
             throw new IllegalArgumentException("File can not read", ioException);
         }
     }
+
+
 }

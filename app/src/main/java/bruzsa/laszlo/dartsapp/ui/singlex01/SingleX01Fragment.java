@@ -1,6 +1,8 @@
 package bruzsa.laszlo.dartsapp.ui.singlex01;
 
 import static android.view.View.GONE;
+import static bruzsa.laszlo.dartsapp.Helper.X01_WEB_GUI;
+import static bruzsa.laszlo.dartsapp.Helper.getHtmlTemplate;
 import static bruzsa.laszlo.dartsapp.model.Team.TEAM1;
 import static bruzsa.laszlo.dartsapp.model.TeamPlayer.PLAYER_1_1;
 
@@ -21,13 +23,13 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.GridLayoutManager;
 
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import bruzsa.laszlo.dartsapp.Helper;
 import bruzsa.laszlo.dartsapp.R;
 import bruzsa.laszlo.dartsapp.databinding.FragmentSinglex01Binding;
 import bruzsa.laszlo.dartsapp.model.SharedViewModel;
 import bruzsa.laszlo.dartsapp.ui.x01.X01WebGUI;
-import bruzsa.laszlo.dartsapp.ui.x01.input.InputType;
 import bruzsa.laszlo.dartsapp.ui.x01.input.InputViews;
 
 public class SingleX01Fragment extends Fragment {
@@ -35,6 +37,8 @@ public class SingleX01Fragment extends Fragment {
     private SingleX01ViewModel viewModel;
     private SharedViewModel sharedViewModel;
     private FragmentSinglex01Binding binding;
+
+    private X01WebGUI webGUI;
 
 
     @Override
@@ -49,10 +53,12 @@ public class SingleX01Fragment extends Fragment {
         }
 
         sharedViewModel = new ViewModelProvider(requireActivity()).get(SharedViewModel.class);
-        sharedViewModel.setWebGui(new X01WebGUI(requireContext()));
         viewModel = new ViewModelProvider(this).get(SingleX01ViewModel.class);
-        viewModel.setOnGuiChangeEvent((player, x01SummaryStatistics) ->
-                sharedViewModel.setWebServerContent(Map.of(TEAM1, viewModel.getSummaryStatistics())));
+        webGUI = new X01WebGUI(getHtmlTemplate(requireContext(), X01_WEB_GUI));
+        viewModel.setOnGuiChangeEventListener((player, x01SummaryStatistics) -> {
+            String html = webGUI.getHTML(sharedViewModel.getSelectedPlayersMap(), Map.of(TEAM1, viewModel.getSummaryStatistics()));
+            sharedViewModel.setWebServerContent(html);
+        });
     }
 
     @Override
@@ -66,7 +72,6 @@ public class SingleX01Fragment extends Fragment {
         binding.setLifecycleOwner(getViewLifecycleOwner());
         binding.setViewModel(viewModel);
         binding.setSharedViewModel(sharedViewModel);
-        binding.includedInputs.setSharedViewModel(sharedViewModel);
 
         viewModel.startOrCountinue(sharedViewModel.getPlayer(PLAYER_1_1), sharedViewModel.getSettings().getStartScore());
 
@@ -77,9 +82,10 @@ public class SingleX01Fragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
 
-        InputViews inputs = new InputViews(this, InputType.NUMPAD, binding.includedInputs);
-
-        inputs.setOnReadyAction(this::newThrow);
+        InputViews inputViews = new InputViews(this, binding.includedInputs);
+        binding.includedInputs.setInputViews(inputViews);
+        binding.includedInputs.setLifecycleOwner(getViewLifecycleOwner());
+        inputViews.setOnReadyAction(this::newThrow);
 
 //        binding.listThrows.setLayoutManager(new LinearLayoutManager(
 //                requireContext(), LinearLayoutManager.VERTICAL, true));
@@ -89,16 +95,18 @@ public class SingleX01Fragment extends Fragment {
     }
 
     private void newThrow(Integer dartsThrow) {
-        if (viewModel.getScore().getValue().equals(dartsThrow)) {
-            AlertDialog.Builder builder = new AlertDialog.Builder(requireActivity());
-            builder.setTitle("How many darts has been thrown?");
-            builder.setItems(new CharSequence[]{"1 dart", "2 darts", "3 darts"}, (dialog, which) ->
-                    viewModel.newThrow(dartsThrow, which + 1));
-            builder.create().show();
-        } else {
-            viewModel.newThrow(dartsThrow, 3);
-        }
+        viewModel.newThrow(dartsThrow, this::onCheckout);
         binding.listThrows.smoothScrollToPosition(viewModel.getThrowsAdapter().getItemCount());
+    }
+
+    private int onCheckout() {
+        AtomicInteger dartCount = new AtomicInteger();
+        AlertDialog.Builder builder = new AlertDialog.Builder(requireActivity());
+        builder.setTitle("How many darts has been thrown?");
+        builder.setItems(new CharSequence[]{"1 dart", "2 darts", "3 darts"},
+                (dialog, which) -> dartCount.set(which + 1));
+        builder.create().show();
+        return dartCount.get();
     }
 
     @Override
