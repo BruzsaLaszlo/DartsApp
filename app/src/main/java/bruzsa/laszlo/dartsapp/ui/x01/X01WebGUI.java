@@ -8,29 +8,37 @@ import static bruzsa.laszlo.dartsapp.model.TeamPlayer.PLAYER_1_2;
 import static bruzsa.laszlo.dartsapp.model.TeamPlayer.PLAYER_2_1;
 import static bruzsa.laszlo.dartsapp.model.TeamPlayer.PLAYER_2_2;
 
+import android.util.Log;
+
 import java.util.Map;
 
 import bruzsa.laszlo.dartsapp.dao.Player;
 import bruzsa.laszlo.dartsapp.model.Team;
 import bruzsa.laszlo.dartsapp.model.TeamPlayer;
-import bruzsa.laszlo.dartsapp.model.x01.X01SummaryStatistics;
+import bruzsa.laszlo.dartsapp.model.x01.Stat;
+import bruzsa.laszlo.dartsapp.model.x01.X01TeamScores;
 
 @SuppressWarnings("ConstantConditions")
 public class X01WebGUI {
 
+    private static final int MAX_THROW = 6;
     private final String htmlTemplate;
+    private final Map<TeamPlayer, Player> playerMap;
+    private final Map<Team, X01TeamScores> teamScoresMap;
 
-    public X01WebGUI(String htmlTemplate) {
+    public X01WebGUI(String htmlTemplate, Map<TeamPlayer, Player> playerMap, Map<Team, X01TeamScores> teamScoresMap) {
         this.htmlTemplate = htmlTemplate;
+        this.playerMap = playerMap;
+        this.teamScoresMap = teamScoresMap;
     }
 
 
-    public String getHTML(Map<TeamPlayer, Player> playerMap, Map<Team, X01SummaryStatistics> statMap) {
+    public String getHTML(Map<Team, Stat> statMap) {
         String html = htmlTemplate;
 
-        if (statMap.size() == 1) {
+        if (statMap.size() < 2) {
             html = html
-                    .replaceAll("<player2stat>.*</player2stat>", "")
+                    .replaceAll("<p2>.*</p2>", "")
                     .replaceAll("<player2score>.*</player2score>", "")
                     .replaceAll("<player2name>.*</player2name>", "");
         }
@@ -51,15 +59,20 @@ public class X01WebGUI {
         return html;
     }
 
-    private String getOne(String html, Team team, String player, X01SummaryStatistics stat) {
+    private String getOne(String html, Team team, String player, Stat stat) {
         String which = team == TEAM1 ? "1" : "2";
+
+        if (stat.isEmpty()) {
+            html = html.replaceAll("<p$>[\\s\\S]*?</p$>".replace("$", which), "");
+            Log.d("X01WebGUI", "getOne: " + html);
+        }
 
         Map<String, String> keyValue = Map.of(
                 "$PLAYER_NAME", player,
-                "$SCORE", valueOf(stat.getScoreLastLeg()),
+                "$SCORE", valueOf(stat.getScore()),
                 "$AVG", valueOf((int) stat.getAverage()),
-                "$100+", valueOf(stat.getHundredPlus()),
-                "$60+", valueOf(stat.getSixtyPlus()),
+                "$100+", valueOf(stat.getPlus100()),
+                "$60+", valueOf(stat.getPlus100()),
                 "$MAX", valueOf(stat.getMax()),
                 "$MIN", valueOf(stat.getMin()),
                 "$HC", stat.getHighestCheckout().map(String::valueOf).orElse("-")
@@ -69,9 +82,12 @@ public class X01WebGUI {
             html = html.replace(which + entry.getKey(), entry.getValue());
         }
 
-        if (stat.getThrowCountExceptHandicap() == 0) {
-            html = html
-                    .replaceAll("<player$stat>.*</player$stat>".replace("$", which), "");
+        int size = teamScoresMap.get(team).getThrowsList().size();
+        for (int i = 1; i <= MAX_THROW; i++) {
+            String s = "";
+            if (size - i >= 0)
+                s = teamScoresMap.get(team).getThrowsList().get(size - i).toString();
+            html = html.replace(which + "$L" + i, s);
         }
 
         return html;

@@ -4,7 +4,7 @@
     <meta http-equiv="refresh" content="1"/>
 
     <style>
-name {
+player1name, player2name {
   color: black;
   font-family: verdana, sans-serif;
   font-size: 500%;
@@ -14,101 +14,165 @@ avg {
   font-family: verdana, sans-serif;
   font-size: 400%;
 }
-score {
+player1score, player2score {
   color: blue;
   font-family: verdana, sans-serif;
-  font-size: 900%;
+  font-size: 600%;
 }
 
-h3 {
-  color: gray;
-  font-family: verdana, sans-serif;
-  font-size: 300%;
+table, th, td {
+<!--  border: 1px solid black;-->
 }
-p  {
-  color: red;
-  font-family: courier, sans-serif;
-  font-size: 230%;
-}
+
+
 table {
   margin-left: auto;
   margin-right: auto;
 }
 
+throw {
+  color: black;
+  font-family: verdana, sans-serif;
+  font-size: 300%;
+  text-align: center;
+}
 
+p1, p2, label {
+  color: gray;
+  font-family: verdana, sans-serif;
+  font-size: 300%;
+    text-align: right;
 
-
-
+}
     </style>
 </head>
 <body>
 
-
 <table>
     <thead>
-    <tr>
-        <th>
-            <name>
-                <player1name> 1$PLAYER_NAME</player1name>
-            </name>
-            <br>
-            <score>
-                <player1score> 1$SCORE</player1score>
-            </score>
 
-        </th>
-        <th>
-            <h1>
-            </h1>
-            <h1>
-            </h1>
-
-        </th>
-        <th>
-            <name>
-                <player2name>2$PLAYER_NAME</player2name>
-            </name>
-            <br>
-            <score>
-                <player2score> 2$SCORE</player2score>
-            </score>
-        </th>
-    </tr>
     </thead>
     <tbody>
-    <tr>
+    <tr align="center">
         <th>
-            <player1stat>
-                <avg>1$AVG</avg>
-                <h3>1$100+</h3>
-                <h3>1$60+</h3>
-                <h3>1$MAX</h3>
-                <h3>1$MIN</h3>
-                <h3>1$HC</h3>
-            </player1stat>
+            <player1name> 1$PLAYER_NAME</player1name>
+            <br>
+            <player1score> 1$SCORE</player1score>
         </th>
 
-        <th>
-            <avg>AVG</avg>
-            <h3>100+</h3>
-            <h3>60+</h3>
-            <h3>MAX</h3>
-            <h3>MIN</h3>
-            <h3>HC</h3>
-        </th>
+        <td>
+        </td>
 
         <th>
-            <player2stat>
-                <avg>2$AVG</avg>
-                <h3>2$100+</h3>
-                <h3>2$60+</h3>
-                <h3>2$MAX</h3>
-                <h3>2$MIN</h3>
-                <h3>2$HC</h3>
-            </player2stat>
+            <player2name>2$PLAYER_NAME</player2name>
+            <br>
+            <player2score> 2$SCORE</player2score>
         </th>
 
     </tr>
+    <tr>
+        <td>
+            <p1>
+                <div style="float:left;padding-left: 250px;">1$L1</div>
+                <div style="float:right;padding-right: 30px;">1$AVG</div>
+            </p1>
+        </td>
+        <td>
+            <label>AVG</label>
+        </td>
+        <td>
+            <p2>
+                <div style="float:left;width:0%;padding-left: 30px;">2$AVG</div>
+                <div style="float:right;padding-right: 250px;">2$L1</div>
+            </p2>
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <p1>
+                <div style="float:left;padding-left: 250px;">1$L2</div>
+                <div style="float:right;padding-right: 30px;">1$100+</div>
+            </p1>
+        </td>
+        <td>
+            <label>100+</label>
+        </td>
+        <td>
+            <p2>
+                <div style="float:left;width:0%;padding-left: 30px;">2$100+</div>
+                <div style="float:right;padding-right: 250px;">2$L2</div>
+            </p2>
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <p1>
+                <div style="float:left;padding-left: 250px;">1$L3</div>
+                <div style="float:right;padding-right: 30px;">1$60+</div>
+            </p1>
+        </td>
+        <td>
+            <label>60+</label>
+        </td>
+        <td>
+            <p2>
+                <div style="float:left;width:0%;padding-left: 30px;">2$60+</div>
+                <div style="float:right;padding-right: 250px;">2$L3</div>
+            </p2>
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <p1>
+                <div style="float:left;padding-left: 250px;">1$L4</div>
+                <div style="float:right;padding-right: 30px;">1$MAX</div>
+            </p1>
+        </td>
+        <td>
+            <label>MAX</label>
+        </td>
+        <td>
+            <p2>
+                <div style="float:left;width:0%;padding-left: 30px;">2$MAX</div>
+                <div style="float:right;padding-right: 250px;">2$L4</div>
+            </p2>
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <p1>
+                <div style="float:left;padding-left: 250px;">1$L5</div>
+                <div style="float:right;padding-right: 30px;">1$MIN</div>
+            </p1>
+        </td>
+        <td>
+            <label>MIN</label>
+        </td>
+        <td>
+            <p2>
+                <div style="float:left;width:0%;padding-left: 30px;">2$MIN</div>
+                <div style="float:right;padding-right: 250px;">2$L5</div>
+            </p2>
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <p1>
+                <div style="float:left;padding-left: 250px;">1$L6</div>
+                <div style="float:right;padding-right: 30px;">1$HC</div>
+            </p1>
+        </td>
+        <td>
+            <label>HC</label>
+        </td>
+        <td>
+            <p2>
+                <div style="float:left;width:0%;padding-left: 30px;">2$HC</div>
+                <div style="float:right;padding-right: 250px;">2$L6</div>
+            </p2>
+        </td>
+    </tr>
+
     </tbody>
 </table>
 </body>
