@@ -1,15 +1,19 @@
 package bruzsa.laszlo.dartsapp.ui.cricket;
 
 import static android.graphics.Color.BLACK;
-import static android.graphics.Color.BLUE;
 import static android.graphics.Color.GRAY;
-import static android.graphics.Color.GREEN;
-import static android.graphics.Color.RED;
+import static java.lang.Math.cos;
+import static java.lang.Math.sin;
+import static java.util.Collections.emptyList;
+import static bruzsa.laszlo.dartsapp.model.Team.TEAM1;
+import static bruzsa.laszlo.dartsapp.model.cricket.CricketSettings.BULL;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.Point;
 import android.graphics.RectF;
 import android.util.AttributeSet;
 import android.util.Log;
@@ -18,22 +22,27 @@ import android.view.MotionEvent;
 import android.view.View;
 
 import androidx.annotation.Nullable;
-import androidx.lifecycle.LiveData;
-import androidx.lifecycle.MutableLiveData;
+import androidx.databinding.BindingAdapter;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.BiConsumer;
 
+import bruzsa.laszlo.dartsapp.model.Team;
+import bruzsa.laszlo.dartsapp.model.cricket.CricketSettings;
+import bruzsa.laszlo.dartsapp.model.cricket.Stat;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+import lombok.Setter;
+
+@SuppressWarnings("ConstantConditions")
 @SuppressLint("ViewConstructor")
 public class CricketTable extends View {
 
     private static final String TAG = "CricketTable";
-    private Map<Integer, Integer> playerScores = new HashMap<>();
-    private Map<Integer, Integer> opponentScores = new HashMap<>();
-
-    public static final List<Integer> allNumbers = List.of(20, 1, 18, 4, 13, 6, 10, 15, 2, 17, 3, 19, 7, 16, 8, 11, 14, 9, 12, 5);
-    public static final List<Integer> activeNumbers = List.of(15, 16, 17, 18, 19, 20, 25);
+    private static final float CLICK_PERCENT = 0.5f;
+    public static final List<Integer> ALL_NUMBERS = List.of(20, 1, 18, 4, 13, 6, 10, 15, 2, 17, 3, 19, 7, 16, 8, 11, 14, 9, 12, 5);
+    private List<Integer> activeNumbers = CricketSettings.defaultNumbers;
     private final Paint paint = new Paint();
     private final RectF oval = new RectF();
     private float radius;
@@ -43,23 +52,46 @@ public class CricketTable extends View {
     private float circleCentreY;
 
     private Size size;
-    private boolean left;
-    private MutableLiveData<Integer> touchedValue = new MutableLiveData<>();
-    private static final float DEGREE = 18;
+    @Getter
+    @Setter
+    private Team team = TEAM1;
+    @Setter
+    private Stat stat = new Stat(emptyList(), activeNumbers);
 
+    @RequiredArgsConstructor
+    @Getter
+    public static class TouchValue {
+        private final int multiplier;
+        private final int value;
+    }
 
-    public void refreshState(Map<Integer, Integer> playerScores, Map<Integer, Integer> opponentScores) {
-        this.playerScores = playerScores;
-        this.opponentScores = opponentScores;
-        invalidate();
+    public static final int INVALID = -1;
+    private int lastTouchValue;
+
+    private static final int DEGREE = 18;
+    private static final int OFFSET_DEGREE = -99;
+
+    public void inic(CricketSettings settings, BiConsumer<Team, TouchValue> onTouchEventListener) {
+        this.size = settings.getSize();
+        activeNumbers = settings.getActiveNumbers();
+        setOnClickListener(v -> onTouch(onTouchEventListener, 1));
+        setOnLongClickListener(v -> {
+            onTouch(onTouchEventListener, lastTouchValue == BULL ? 2 : 3);
+            return true;
+        });
+    }
+
+    private void onTouch(BiConsumer<Team, TouchValue> onTouchEventListener, int multiplier) {
+        if (activeNumbers.contains(lastTouchValue))
+            onTouchEventListener.accept(team, new TouchValue(multiplier, lastTouchValue));
     }
 
     public CricketTable(Context context) {
-        super(context);
+        super(context, null, 0);
     }
 
     public CricketTable(Context context, @Nullable AttributeSet attrs) {
-        super(context, attrs);
+        super(context, attrs, 0);
     }
 
     public CricketTable(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
@@ -83,13 +115,12 @@ public class CricketTable extends View {
 
         paint.setAntiAlias(true);
 
-        Log.d(TAG, String.format("onDraw: %s, %s", getWidth(), getHeight()));
+        Log.d(TAG, String.format("onDraw: width:%s1, height:%s1", getWidth(), getHeight()));
         radius = Math.min(getWidth(), getHeight()) / 2f - CIRCLE_MARGIN;
         circleCentreY = radius + CIRCLE_MARGIN;
         radiusOfBull = radius / 4;
 
-
-        if (left) {
+        if (team == TEAM1) {
             circleCentreX = radius + CIRCLE_MARGIN;
             oval.set(CIRCLE_MARGIN,
                     CIRCLE_MARGIN,
@@ -105,25 +136,20 @@ public class CricketTable extends View {
         }
 
         paint.setStyle(Paint.Style.FILL);
-
         paint.setColor(GRAY);
         canvas.drawCircle(circleCentreX, circleCentreY, radius, paint);
 
-        for (int i = 0; i < 20; i++) {
-            int actual = allNumbers.get(i);
-            if (activeNumbers.contains(actual)) {
-                paint.setColor(getColorByValue(actual));
-            } else {
-                paint.setColor(GRAY);
-            }
-            canvas.drawArc(oval, -99 + i * DEGREE, DEGREE, true, paint);
-
-        }
+        activeNumbers.forEach(number -> {
+            if (number == BULL) return;
+            int position = ALL_NUMBERS.indexOf(number);
+            paint.setColor(stat.getStateMap(team).get(number).getColor());
+            canvas.drawArc(oval, OFFSET_DEGREE + position * DEGREE, DEGREE, true, paint);
+        });
 
 
         // BULL
         paint.setStyle(Paint.Style.FILL);
-        paint.setColor(getColorByValue(25));
+        paint.setColor(stat.getStateMap(team).get(BULL).getColor());
         canvas.drawCircle(circleCentreX, circleCentreY, radiusOfBull, paint);
 
 
@@ -134,58 +160,77 @@ public class CricketTable extends View {
         canvas.drawCircle(circleCentreX, circleCentreY, radius / 4, paint);
         canvas.drawCircle(circleCentreX, circleCentreY, radius, paint);
 
+
+        final int SIZE = (int) (radius / 10);
+        paint.setStyle(Paint.Style.FILL);
+        paint.setColor(Color.GREEN);
+        Map<Integer, Integer> statMap = stat.getStatMap().get(team);
+        activeNumbers.forEach(number -> {
+            Integer count = statMap.get(number);
+            if (count == null || count == 0 || count > 2) return;
+            if (number == BULL) {
+                if (count == 2) {
+                    canvas.drawCircle(circleCentreX + SIZE, circleCentreY, SIZE, paint);
+                }
+                canvas.drawCircle(circleCentreX - SIZE, circleCentreY, SIZE, paint);
+            } else {
+                int position = ALL_NUMBERS.indexOf(number);
+                if (count == 2) {
+                    Point point = getPoint(position * DEGREE, (int) (radius - 3 * SIZE));
+                    canvas.drawCircle(point.x, point.y, SIZE, paint);
+                }
+                Point point = getPoint(position * DEGREE, (int) (radius - SIZE));
+                canvas.drawCircle(point.x, point.y, SIZE, paint);
+            }
+        });
+
     }
 
-    @SuppressWarnings("ConstantConditions")
-    private int getColorByValue(int actual) {
-        if (!playerScores.containsKey(actual) || (playerScores.containsKey(actual) && playerScores.get(actual) < 3)) {
-            if (!opponentScores.containsKey(actual) || (opponentScores.containsKey(actual) && opponentScores.get(actual) < 3)) {
-                return BLUE;
-            } else {
-                return RED;
-            }
-        } else if (!opponentScores.containsKey(actual) || (opponentScores.containsKey(actual) && opponentScores.get(actual) < 3)) {
-            return GREEN;
-        } else {
-            return BLACK;
-        }
+    public Point getPoint(int degree, int margin) {
+        double radian = degree / (180 / Math.PI) - Math.PI / 2;
+        final float s = (float) (margin * sin(0));
+        final float t = (float) (margin * cos(0));
+        return new Point(
+                (int) ((-s * sin(radian) + t * cos(radian)) + circleCentreY),
+                (int) ((s * cos(radian) + t * sin(radian)) + circleCentreX)
+        );
     }
 
     @SuppressLint("ClickableViewAccessibility")
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-        Log.d(TAG, String.format("onTouchEvent(%d): x: %.2f, y:%.2f", event.getAction(), event.getX(), event.getY()));
-        if (event.getAction() != MotionEvent.ACTION_DOWN) return false;
+        if (event.getAction() != MotionEvent.ACTION_DOWN) return super.onTouchEvent(event);
+        Log.d(TAG, String.format("onTouchEvent(%d): x: %.0f, y:%.0f", event.getAction(), event.getX(), event.getY()));
 
         double distance = Math.sqrt(Math.pow(event.getX() - circleCentreX, 2) + Math.pow(event.getY() - circleCentreY, 2));
         if (distance <= radiusOfBull) {
-            touchedValue.setValue(25);
+            lastTouchValue = BULL;
             return super.onTouchEvent(event);
         }
-        if (distance <= radius * 0.65) {
-            return false;
+        if (distance <= radius * CLICK_PERCENT) {
+            lastTouchValue = INVALID;
+            return super.onTouchEvent(event);
         }
 
-        final double theta = Math.toDegrees(Math.atan2(event.getY() - circleCentreY, event.getX() - circleCentreX));
-        for (int i = 0; i < 20; i++) {
-            int min = -99 + i * 18;
-            int max = -99 + i * 18 + 18;
-            if (min <= theta && theta < max && activeNumbers.contains(allNumbers.get(i))) {
-                touchedValue.setValue(allNumbers.get(i));
-            }
+        // calculate degree of touch
+        double theta = Math.toDegrees(Math.atan2(event.getY() - circleCentreY, event.getX() - circleCentreX));
+        if (theta < 0) theta += 360;
+
+        int index = (int) (((theta + 99) % 360) / DEGREE);
+        if (activeNumbers.contains(ALL_NUMBERS.get(index))) {
+            lastTouchValue = ALL_NUMBERS.get(index);
+        } else {
+            lastTouchValue = INVALID;
         }
         return super.onTouchEvent(event);
     }
 
-    public LiveData<Integer> getTouchedValue() {
-        return touchedValue;
+    @BindingAdapter("state")
+    public static void setState(View view, Stat stat) {
+        if (view instanceof CricketTable table) {
+            table.setStat(stat);
+            table.invalidate();
+        }
     }
 
-    public void setSize(Size size) {
-        this.size = size;
-    }
-
-    public void setLeft(boolean left) {
-        this.left = left;
-    }
 }
