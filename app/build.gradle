@@ -3,20 +3,22 @@ plugins {
     id 'org.jetbrains.kotlin.android'
     id 'com.android.application'
 
-    id("io.freefair.lombok") version "5.3.0"
-    id("org.jetbrains.kotlin.plugin.lombok") version "1.8.0"
+    id("io.freefair.lombok") version "8.2.2"
+    id("org.jetbrains.kotlin.plugin.lombok") version "1.9.0"
 
     id("de.mannodermaus.android-junit5")
+
+    id 'androidx.navigation.safeargs'
 }
 
 android {
     namespace 'bruzsa.laszlo.dartsapp'
-    compileSdk 33
+    compileSdk 34
 
     defaultConfig {
         applicationId "bruzsa.laszlo.dartsapp"
         minSdk 29
-        targetSdk 33
+        targetSdk 34
         versionCode 3
         versionName "0.1"
         multiDexEnabled true
@@ -31,20 +33,26 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_19
-        targetCompatibility JavaVersion.VERSION_19
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
 
-        tasks.withType(JavaCompile) {
+        tasks.withType(JavaCompile).configureEach {
             options.compilerArgs += '--enable-preview'
         }
-        tasks.withType(Test) {
-            jvmArgs += "--enable-preview"
+        tasks.withType(Test).tap {
+            configureEach {
+                jvmArgs += "--enable-preview"
+            }
         }
     }
     buildFeatures {
         viewBinding true
+        compose true
     }
-    buildToolsVersion '33.0.1'
+
+    composeOptions {
+        kotlinCompilerExtensionVersion = "1.5.1"
+    }
 
     testOptions {
         unitTests.all {
@@ -79,38 +87,37 @@ kotlinLombok {
 }
 
 dependencies {
-    compileOnly("org.projectlombok:lombok:1.18.24")
-    annotationProcessor("org.projectlombok:lombok:1.18.24")
+    compileOnly('org.projectlombok:lombok:1.18.28')
+    annotationProcessor('org.projectlombok:lombok:1.18.28')
 
     implementation 'org.nanohttpd:nanohttpd:2.3.1'
 
-    implementation 'androidx.appcompat:appcompat:1.6.0'
-    implementation 'com.google.android.material:material:1.8.0'
+    implementation 'androidx.appcompat:appcompat:1.6.1'
+    implementation 'com.google.android.material:material:1.9.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
-    implementation "androidx.lifecycle:lifecycle-viewmodel-savedstate:2.5.1"
-    implementation 'androidx.lifecycle:lifecycle-livedata-ktx:2.5.1'
-//    implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.5.1'
-    implementation 'androidx.navigation:navigation-fragment:2.5.3'
-    implementation 'androidx.navigation:navigation-ui:2.5.3'
+    implementation 'androidx.lifecycle:lifecycle-viewmodel-savedstate:2.6.1'
+    implementation 'androidx.lifecycle:lifecycle-livedata-ktx:2.6.1'
+    implementation 'androidx.navigation:navigation-fragment:2.7.0'
+    implementation 'androidx.navigation:navigation-ui:2.7.0'
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
-    implementation 'androidx.recyclerview:recyclerview:1.2.1'
+    implementation 'androidx.recyclerview:recyclerview:1.3.1'
 
-    testImplementation("org.assertj:assertj-core:3.11.1")
+    testImplementation('org.assertj:assertj-core:3.24.2')
     // Aggregator dependency on JUnit api, engine, and params
     // (Optional) If you also have JUnit 4-based tests
     testImplementation("junit:junit:4.13.2")
 //    testImplementation("org.junit.jupiter:junit-jupiter:5.9.1")
 //    androidTestImplementation 'org.junit.jupiter:junit-jupiter'
-    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.9.1'
-    testImplementation("org.junit.jupiter:junit-jupiter-params:5.9.1")
-    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.9.1'
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.10.0'
+    testImplementation('org.junit.jupiter:junit-jupiter-params:5.10.0')
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.10.0'
     androidTestImplementation 'androidx.test.ext:junit:1.1.5'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
-    testImplementation "org.mockito:mockito-core:2.1.0"
+    testImplementation 'org.mockito:mockito-core:5.4.0'
 
 
     implementation 'androidx.lifecycle:lifecycle-extensions:2.2.0'
-    implementation 'androidx.lifecycle:lifecycle-viewmodel:2.5.1'
+    implementation 'androidx.lifecycle:lifecycle-viewmodel:2.6.1'
 
 
     androidTestImplementation 'androidx.test:runner:1.5.2'
@@ -120,5 +127,5 @@ dependencies {
     // Optional -- UI testing with UI Automator
     androidTestImplementation "androidx.test.uiautomator:uiautomator:2.2.0"
     // Optional -- UI testing with Compose
-    androidTestImplementation "androidx.compose.ui:ui-test-junit4:1.3.3"
+    androidTestImplementation 'androidx.compose.ui:ui-test-junit4:1.5.0'
 }
