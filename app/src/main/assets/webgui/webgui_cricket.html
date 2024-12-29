@@ -1,37 +1,34 @@
 <!DOCTYPE html>
-<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org" lang="hu">
 <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
     <meta http-equiv="refresh" content="1"/>
 
     <style>
-name {
-  color: black;
-  font-family: verdana, sans-serif;
-  font-size: 300%;
-}
+        name {
+          color: black;
+          font-family: verdana, sans-serif;
+          font-size: 300%;
+        }
 
-score {
-  color: blue;
-  font-family: verdana, sans-serif;
-  font-size: 300%;
-}
+        score {
+          color: blue;
+          font-family: verdana, sans-serif;
+          font-size: 300%;
+        }
 
-hh {
-    font-size: 80px;
-    font-family:sans-serif
+        hh {
+            font-size: 500%;
+            font-family:sans-serif
+        }
 
-}
-
-
-table {
-  margin-left: auto;
-  margin-right: auto;
-}
-
-
-
+        table {
+          margin-left: auto;
+          margin-right: auto;
+        }
 
     </style>
+    <title></title>
 </head>
 <body>
 
@@ -39,63 +36,84 @@ table {
 <table>
     <thead>
     <tr>
-        <th>
+        <th style="text-align:right;">
             <name>
-                <player1name> TEAM1_PLAYER_NAME</player1name>
+                <player1name th:utext="${PLAYER_1_1}"></player1name>
+                <br>
+                <player1name th:utext="${PLAYER_1_2}"></player1name>
             </name>
             <br>
             <score>
-                <player1score> TEAM1_SCORE</player1score>
+                <player1score th:text="${TEAM1_SCORE}" style="margin: 50px;"></player1score>
             </score>
+        </th>
 
-        </th>
         <th>
         </th>
-        <th>
+
+        <th style="text-align:left;">
             <name>
-                <player2name>TEAM2_PLAYER_NAME</player2name>
+                <player2name th:utext="${PLAYER_2_1}"></player2name>
+                <br>
+                <player2name th:utext="${PLAYER_2_2}"></player2name>
             </name>
             <br>
             <score>
-                <player2score> TEAM2_SCORE</player2score>
+                <player2score th:text="${TEAM2_SCORE}" style="margin: 50px;"></player2score>
             </score>
         </th>
+
     </tr>
+
     </thead>
     <tbody>
     <tr>
         <th>
-            <player1stat>
-                TEAM1_15
-                TEAM1_16
-                TEAM1_17
-                TEAM1_18
-                TEAM1_19
-                TEAM1_20
-                TEAM1_25
-            </player1stat>
+            <playerstat th:utext="
+                ${TEAM1_0}  + ' ' +
+                ${TEAM1_1}  + ' ' +
+                ${TEAM1_2}  + ' ' +
+                ${TEAM1_3}  + ' ' +
+                ${TEAM1_4}  + ' ' +
+                ${TEAM1_5}  + ' ' +
+                ${TEAM1_6} "/>
+            </playerstat>
         </th>
 
         <th>
-            <hh>15 <br></hh>
-            <hh>16 <br></hh>
-            <hh>17 <br></hh>
-            <hh>18 <br></hh>
-            <hh>19 <br></hh>
-            <hh>20 <br></hh>
-            <hh>25<br></hh>
+            <hh>
+                <c th:text="${N0}"/>
+                <br></hh>
+            <hh>
+                <c th:text="${N1}"/>
+                <br></hh>
+            <hh>
+                <c th:text="${N2}"/>
+                <br></hh>
+            <hh>
+                <c th:text="${N3}"/>
+                <br></hh>
+            <hh>
+                <c th:text="${N4}"/>
+                <br></hh>
+            <hh>
+                <c th:text="${N5}"/>
+                <br></hh>
+            <hh>
+                <c th:text="${N6}"/>
+                <br></hh>
         </th>
 
         <th>
-            <player2stat>
-                TEAM2_15
-                TEAM2_16
-                TEAM2_17
-                TEAM2_18
-                TEAM2_19
-                TEAM2_20
-                TEAM2_25
-            </player2stat>
+            <playerstat th:utext="
+                ${TEAM2_0} + ' ' +
+                ${TEAM2_1} + ' ' +
+                ${TEAM2_2} + ' ' +
+                ${TEAM2_3} + ' ' +
+                ${TEAM2_4} + ' ' +
+                ${TEAM2_5} + ' ' +
+                ${TEAM2_6}           "/>
+            </playerstat>
         </th>
 
     </tr>

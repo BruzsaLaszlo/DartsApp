@@ -1,44 +1,57 @@
 package bruzsa.laszlo.dartsapp.ui.cricket;
 
-import static java.lang.String.valueOf;
+import org.thymeleaf.TemplateEngine;
+import org.thymeleaf.context.Context;
+import org.thymeleaf.templateresolver.StringTemplateResolver;
 
-import android.annotation.SuppressLint;
-
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 
-import bruzsa.laszlo.dartsapp.model.Team;
-import bruzsa.laszlo.dartsapp.model.cricket.CricketTeam;
+import bruzsa.laszlo.dartsapp.dao.Player;
+import bruzsa.laszlo.dartsapp.model.TeamPlayer;
+import bruzsa.laszlo.dartsapp.model.cricket.Stat;
 
-@SuppressWarnings("ConstantConditions")
 public class CricketWebGui {
 
+    private final TemplateEngine templateEngine = new TemplateEngine();
     private final String htmlTemplate;
+    private final Map<TeamPlayer, Player> players;
+    private final List<Integer> activeNumbers;
 
-    public CricketWebGui(String htmlTemplate) {
+    public CricketWebGui(String htmlTemplate, Map<TeamPlayer, Player> players, List<Integer> activeNumbers) {
         this.htmlTemplate = htmlTemplate;
+        this.players = players;
+        this.activeNumbers = activeNumbers;
+        templateEngine.setTemplateResolver(new StringTemplateResolver());
     }
 
-    public String getHTML(List<CricketTeam> cricketTeams) {
-        String html = getStat(htmlTemplate, Team.TEAM1, cricketTeams.get(0));
-        if (cricketTeams.size() == 2)
-            html = getStat(html, Team.TEAM2, cricketTeams.get(1));
-        return html;
-    }
+    public String createHtml(Stat stat) {
+        var variables = new HashMap<String, Object>();
 
-    @SuppressLint("DefaultLocale")
-    private String getStat(String htmlTemplate, Team team, CricketTeam cricketTeam) {
-        String output = htmlTemplate
-                .replaceAll(team.name() + "_PLAYER_NAME", cricketTeam.toString())
-                .replaceAll(team.name() + "_SCORE", valueOf(cricketTeam.getPoints()));
-        for (Integer number : CricketTable.activeNumbers) {
-            int count = cricketTeam.getScores().getOrDefault(number, 0);
-            String pattern = String.format("%s_%d", team.name(), number);
-            output = output.replaceAll(pattern, getMark(count));
+        players.forEach((teamPlayer, player) -> variables.put(teamPlayer.toString(), player.getName()));
+        stat.getScores().forEach((team, score) -> variables.put(team.toString() + "_SCORE", score));
+
+        ArrayList<Integer> sorted = new ArrayList<>(activeNumbers);
+        sorted.sort(Integer::compareTo);
+        for (int i = 0; i < sorted.size(); i++) {
+            int key = sorted.get(i);
+            variables.put("N" + i, key);
+            int finalI = i;
+            stat.getStatMap().forEach((team, scores) -> {
+                Integer value = scores.get(key);
+                variables.put(team + "_" + finalI, getMark(Objects.requireNonNull(value)));
+            });
         }
-        return output;
+
+        Context ct = new Context();
+        ct.setVariables(variables);
+        return templateEngine.process(htmlTemplate, ct);
     }
 
-    private String getMark(final int count) {
+    private String getMark(Integer count) {
         return switch (count) {
             case 0 -> "<hh><br></hh>";
             case 1 -> "<hh>I<br></hh>";
