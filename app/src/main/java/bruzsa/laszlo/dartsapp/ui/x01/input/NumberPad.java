@@ -4,7 +4,6 @@ import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;
 
 import android.content.Context;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.TableLayout;
@@ -32,7 +31,6 @@ public class NumberPad extends TableLayout {
     }
 
     public void setInputTextNumber(InputTextNumber inputTextNumber) {
-        Log.d("NumberPad", "setInputTextNumber: " + inputTextNumber);
         this.inputTextNumber = inputTextNumber;
     }
 

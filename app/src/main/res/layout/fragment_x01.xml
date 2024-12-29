@@ -10,6 +10,8 @@
 
         <import type="android.view.View" />
 
+        <import type="android.graphics.Color" />
+
         <variable
             name="viewModel"
             type="bruzsa.laszlo.dartsapp.model.x01.X01ViewModel" />
@@ -130,6 +132,7 @@
                 android:padding="0dp"
                 android:text="@{viewModel.liveDatasMap.get(Team.TEAM2).score, default=701}"
                 android:textAlignment="textEnd"
+                android:textColor="@{viewModel.liveDatasMap.get(Team.TEAM2).possibleCheckout ? Color.GREEN : Color.BLUE }"
                 android:textSize="60sp"
                 android:textStyle="bold" />
 
@@ -179,7 +182,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="bottom|end"
-                    android:text="@{viewModel.liveDatasMap.get(Team.TEAM2).set,default = @string/_0}"
+                    android:text="@{viewModel.liveDatasMap.get(Team.TEAM2).leg,default = @string/_0}"
                     android:textSize="24sp" />
             </FrameLayout>
 
@@ -191,7 +194,9 @@
                 android:layout_gravity="start|fill_vertical"
                 android:padding="0dp"
                 android:text="@{viewModel.liveDatasMap.get(Team.TEAM1).score, default=701}"
+                android:textColor="@{viewModel.liveDatasMap.get(Team.TEAM1).possibleCheckout ? Color.GREEN : Color.BLUE }"
                 android:textSize="60sp"
+
                 android:textStyle="bold" />
 
         </FrameLayout>

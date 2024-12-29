@@ -11,9 +11,6 @@
             name="viewModel"
             type="bruzsa.laszlo.dartsapp.ui.singlex01.SingleX01ViewModel" />
 
-        <variable
-            name="sharedViewModel"
-            type="bruzsa.laszlo.dartsapp.model.SharedViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -26,7 +23,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_gravity="start|top|center_horizontal"
-            android:text="@{sharedViewModel.getPlayer(TeamPlayer.PLAYER_1_1).name,default=`Default Player`}"
+            android:text="@{viewModel.playerName,default=`Default Player`}"
             android:textAlignment="center"
             android:textSize="40sp"
             app:layout_constraintBottom_toTopOf="@+id/textScorePlayer"

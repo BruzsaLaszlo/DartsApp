@@ -5,6 +5,7 @@ import static android.graphics.Color.RED;
 import static java.lang.String.valueOf;
 import static bruzsa.laszlo.dartsapp.model.Team.TEAM1;
 import static bruzsa.laszlo.dartsapp.model.Team.TEAM2;
+import static bruzsa.laszlo.dartsapp.ui.webgui.WebServer.getServer;
 
 import android.graphics.Typeface;
 import android.view.View;
@@ -19,13 +20,14 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.function.Consumer;
+import java.util.function.IntConsumer;
 
 import bruzsa.laszlo.dartsapp.dao.Player;
 import bruzsa.laszlo.dartsapp.model.Team;
 import bruzsa.laszlo.dartsapp.model.TeamPlayer;
+import bruzsa.laszlo.dartsapp.ui.webgui.WebGuiX01;
 import bruzsa.laszlo.dartsapp.ui.x01.X01ThrowAdapter;
 import lombok.Getter;
-import lombok.Setter;
 
 @SuppressWarnings("ConstantConditions")
 public class X01ViewModel extends ViewModel {
@@ -35,10 +37,6 @@ public class X01ViewModel extends ViewModel {
             TEAM1, new LiveDatas(),
             TEAM2, new LiveDatas()
     );
-
-    private Map<Team, X01ThrowAdapter> throwAdapterMap;
-
-    private boolean gameStarted;
     @Getter
     private final MutableLiveData<Boolean> set = new MutableLiveData<>();
     @Getter
@@ -46,28 +44,23 @@ public class X01ViewModel extends ViewModel {
     @Getter
     private final MutableLiveData<Boolean> teamPlay = new MutableLiveData<>();
 
-    @Setter
-    private Consumer<Map<Team, X01SummaryStatistics>> onGuiChangeEvent;
-
+    private Map<Team, X01ThrowAdapter> throwAdapterMap;
+    private boolean gameStarted;
     private X01Service service;
+    private WebGuiX01 webGUI;
 
 
-    public void startGameOrContinue(Map<TeamPlayer, Player> activePlayersMap, X01GameSettings settings) {
-        if (!gameStarted) {
-            firstInic(activePlayersMap, settings);
-            gameStarted = true;
-        }
-        set.setValue(settings.getX01MatchType() == X01MatchType.SETS);
-    }
+    public void startGameOrContinue(Map<TeamPlayer, Player> activePlayersMap, X01Settings settings, String htmlTemplate) {
+        if (gameStarted) return;
+        gameStarted = true;
 
-    private void firstInic(Map<TeamPlayer, Player> activePlayersMap, X01GameSettings settings) {
         service = new X01Service(activePlayersMap, settings);
 
         activePlayer.setValue(service.getActive());
 
         teamPlay.setValue(activePlayersMap.size() == 4);
 
-        set.setValue(settings.getX01MatchType() == X01MatchType.SETS);
+        set.setValue(settings.getMatchType() == X01MatchType.SET);
 
         throwAdapterMap = new EnumMap<>(Map.of(
                 TEAM1, new X01ThrowAdapter(service.getThrowList(TEAM1), this::removeThrow, TEAM1),
@@ -76,48 +69,73 @@ public class X01ViewModel extends ViewModel {
         liveDatasMap.get(TEAM1).getScore().setValue(valueOf(settings.getStartScore()));
         liveDatasMap.get(TEAM2).getScore().setValue(valueOf(settings.getStartScore()));
 
-        onGuiChangeEvent.accept(Map.of(TEAM1, service.getStat(TEAM1), TEAM2, service.getStat(TEAM2)));
+        set.setValue(settings.getMatchType() == X01MatchType.SET);
+
+        webGUI = new WebGuiX01(htmlTemplate, activePlayersMap, service.getTeamScores(), settings);
+        updateWebGui();
     }
 
-    public void newThrow(int throwValue, Runnable onGameOverEvent) {
-        service.newThrow(throwValue, (gameOver, player) -> {
-            throwAdapterMap.get(player.team).inserted();
-            updateGUI(player);
-            if (Boolean.TRUE.equals(gameOver)) onGameOverEvent.run();
-        });
+    public void newThrow(int throwValue, IntConsumer onCheckoutEventListener) {
+        if (service.gameOver) return;
+        if (service.isCheckout(throwValue)) {
+            onCheckoutEventListener.accept(throwValue);
+        } else {
+            TeamPlayer player = service.newThrow(throwValue);
+            refreshGuiAfterNewThrow(player);
+        }
     }
 
-    private void updateGUI(TeamPlayer player) {
-        activePlayer.setValue(player.nextPlayer(teamPlay.getValue()));
-        updateGUI(player.team);
+    public void newCheckoutThrow(int throwValue, int dartCount, Consumer<Team> onGameOverEventListener) {
+        TeamPlayer player = service.newThrow(throwValue, dartCount, onGameOverEventListener);
+        throwAdapterMap.get(player.team).inserted();
+        activePlayer.setValue(service.getActive());
+        refreshGuiAfterNewThrow(TEAM1);
+        refreshGuiAfterNewThrow(TEAM2);
     }
 
-    private void updateGUI(Team team) {
+    public void refreshGuiAfterNewThrow(TeamPlayer player) {
+        throwAdapterMap.get(player.team).inserted();
+        refreshGuiAfterNewThrow(player.team);
+        activePlayer.setValue(service.getActive());
+    }
+
+    private void refreshGuiAfterNewThrow(Team team) {
+        Stat stat = service.getStat(team);
         liveDatasMap.get(team).set.setValue(service.getSet(team));
         liveDatasMap.get(team).leg.setValue(service.getLeg(team));
-        liveDatasMap.get(team).stat.setValue(getStatAsString(team));
-        liveDatasMap.get(team).score.setValue(valueOf(service.getScore(team)));
-        onGuiChangeEvent.accept(Map.of(TEAM1, service.getStat(TEAM1), TEAM2, service.getStat(TEAM2)));
+        liveDatasMap.get(team).stat.setValue(getStatAsString(stat));
+        liveDatasMap.get(team).possibleCheckout.setValue(isOut(stat.getScore()));
+        updateWebGui();
+        liveDatasMap.get(team).score.setValue(valueOf(stat.getScore()));
+    }
+
+    private Map<Team, Stat> getStats() {
+        return Map.of(TEAM1, service.getStat(TEAM1), TEAM2, service.getStat(TEAM2));
+    }
+
+    private void updateWebGui() {
+        String html = webGUI.createHtml(getStats(), service.getActive());
+        getServer().setWebServerContent(html);
     }
 
     public void setActive(TeamPlayer player) {
+        if (service.gameOver) return;
         service.setActive(player);
         activePlayer.setValue(player);
+        updateWebGui();
     }
 
 
     public boolean removeThrow(X01Throw x01Throw, Team team) {
-        return service.removeThrow(x01Throw, () -> updateGUI(team));
+        return service.removeThrow(x01Throw, () -> refreshGuiAfterNewThrow(team));
     }
 
-    public boolean isOut(Team team) {
-        int score = service.getScore(team);
+    public boolean isOut(int score) {
         return (score > 1 && score < 159) || List.of(160, 161, 164, 167, 170).contains(score);
     }
 
-    private String getStatAsString(Team team) {
-        X01SummaryStatistics stat = service.getStat(team);
-        if (stat.getDartCount() == 0) return "";
+    private String getStatAsString(Stat stat) {
+        if (stat.isEmpty()) return "";
         return String.format(Locale.ENGLISH, """
                         %d
                         %d
@@ -125,8 +143,8 @@ public class X01ViewModel extends ViewModel {
                         %d
                         %d
                         %s""",
-                stat.getHundredPlus(),
-                stat.getSixtyPlus(),
+                stat.getPlus100(),
+                stat.getPlus60(),
                 (int) stat.getAverage(),
                 stat.getMax(),
                 stat.getMin(),
@@ -139,37 +157,29 @@ public class X01ViewModel extends ViewModel {
 
     @BindingAdapter(value = {"active", "player"}, requireAll = false)
     public static void setColorAndFaceTypeForNameButtons(View view, MutableLiveData<TeamPlayer> active, TeamPlayer player) {
-        Button button;
-        if (view instanceof Button b) button = b;
-        else return;
-
-        if (active.getValue() == player) {
-            button.setTextColor(RED);
-            button.setTypeface(Typeface.DEFAULT_BOLD);
-        } else {
-            button.setTextColor(BLACK);
-            button.setTypeface(Typeface.DEFAULT);
+        if (view instanceof Button button) {
+            if (active.getValue() == player) {
+                button.setTextColor(RED);
+                button.setTypeface(Typeface.DEFAULT_BOLD);
+            } else {
+                button.setTextColor(BLACK);
+                button.setTypeface(Typeface.DEFAULT);
+            }
         }
     }
 
-    public int getThrowsAdapterCount(Team team) {
-        return throwAdapterMap.get(team).getItemCount();
-    }
-
-
+    @Getter
     public static class LiveDatas {
 
-        @Getter
         private final MutableLiveData<String> set = new MutableLiveData<>("0");
 
-        @Getter
         private final MutableLiveData<String> leg = new MutableLiveData<>("0");
 
-        @Getter
         private final MutableLiveData<String> stat = new MutableLiveData<>("");
 
-        @Getter
         private final MutableLiveData<String> score = new MutableLiveData<>();
+
+        private final MutableLiveData<Boolean> possibleCheckout = new MutableLiveData<>(false);
 
     }
 

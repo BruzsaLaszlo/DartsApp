@@ -108,7 +108,7 @@ public class X01SummaryStatistics {
 
     public int getDartCount() {
         return notRemovedThrows()
-                .mapToInt(X01Throw::getDart)
+                .mapToInt(X01Throw::getDartCount)
                 .sum();
     }
 

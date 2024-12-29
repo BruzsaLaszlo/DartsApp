@@ -2,6 +2,11 @@ package bruzsa.laszlo.dartsapp.model.x01;
 
 public enum X01MatchType {
 
-    SINGLE_LEG, LEGS, SETS
+    LEG,
+    SET;
+
+    public X01MatchType opposit() {
+        return this == LEG ? SET : LEG;
+    }
 
 }

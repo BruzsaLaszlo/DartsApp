@@ -1,10 +1,7 @@
 package bruzsa.laszlo.dartsapp.ui.x01;
 
 import static androidx.recyclerview.widget.LinearLayoutManager.VERTICAL;
-import static bruzsa.laszlo.dartsapp.Helper.X01_WEB_GUI;
 import static bruzsa.laszlo.dartsapp.Helper.getHtmlTemplate;
-import static bruzsa.laszlo.dartsapp.model.Team.TEAM1;
-import static bruzsa.laszlo.dartsapp.model.Team.TEAM2;
 
 import android.annotation.SuppressLint;
 import android.content.pm.ActivityInfo;
@@ -15,14 +12,21 @@ import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
+
+import java.util.List;
+
+import bruzsa.laszlo.dartsapp.Helper;
 import bruzsa.laszlo.dartsapp.R;
 import bruzsa.laszlo.dartsapp.databinding.FragmentX01Binding;
 import bruzsa.laszlo.dartsapp.model.SharedViewModel;
+import bruzsa.laszlo.dartsapp.model.Team;
 import bruzsa.laszlo.dartsapp.model.x01.X01ViewModel;
 import bruzsa.laszlo.dartsapp.ui.x01.input.InputViews;
 
@@ -43,12 +47,6 @@ public class X01Fragment extends Fragment {
         sharedViewModel = new ViewModelProvider(requireActivity()).get(SharedViewModel.class);
 
         viewModel = new ViewModelProvider(this).get(X01ViewModel.class);
-        X01WebGUI webGUI = new X01WebGUI(getHtmlTemplate(requireContext(), X01_WEB_GUI));
-        viewModel.setOnGuiChangeEvent(teamX01SummaryStatisticsMap -> {
-
-            String html = webGUI.getHTML(sharedViewModel.getSelectedPlayersMap(), teamX01SummaryStatisticsMap);
-            sharedViewModel.setWebServerContent(html);
-        });
     }
 
     @SuppressLint({"SetTextI18n", "SourceLockedOrientationActivity"})
@@ -64,7 +62,10 @@ public class X01Fragment extends Fragment {
         binding.setViewModel(viewModel);
         binding.setSharedViewModel(sharedViewModel);
 
-        viewModel.startGameOrContinue(sharedViewModel.getSelectedPlayersMap(), sharedViewModel.getSettings());
+        viewModel.startGameOrContinue(
+                sharedViewModel.getSelectedPlayersMap(),
+                sharedViewModel.getX01Settings(),
+                getHtmlTemplate(requireContext(), Helper.WEB_GUI_X01));
 
         return binding.getRoot();
     }
@@ -84,10 +85,38 @@ public class X01Fragment extends Fragment {
     }
 
     private void newThrow(int value) {
-        viewModel.newThrow(value, () -> {
-        }/* todo GAME OVER EVENT*/);
-        binding.listThrowsPlayer1.smoothScrollToPosition(viewModel.getThrowsAdapterCount(TEAM1));
-        binding.listThrowsPlayer2.smoothScrollToPosition(viewModel.getThrowsAdapterCount(TEAM2));
+        viewModel.newThrow(value, this::onCheckoutEventListener);
+    }
+
+    private void showGameOverScreen(Team winner) {
+        binding.includedInputs.inputText.setDisabled();
+        new MaterialAlertDialogBuilder(requireContext())
+                .setTitle("The Winner is : \n"
+                        + sharedViewModel.getPlayer(winner.player1()).getName()
+                        + (sharedViewModel.getSelectedPlayersMap().size() == 4 ? "\n" + sharedViewModel.getPlayer(winner.player2()).getName() : ""))
+                .setPositiveButton("Ok", null)
+                .create().show();
+    }
+
+    private void onCheckoutEventListener(int throwValue) {
+        if (throwValue > 110 || List.of(109, 108, 106, 105, 103, 102).contains(throwValue)) {
+            newCheckoutScore(throwValue, 3);
+        } else {
+            AlertDialog.Builder builder = new AlertDialog.Builder(requireActivity());
+            builder.setTitle("How many darts has been thrown?");
+            if ((throwValue > 40 && throwValue != 50) || throwValue % 2 == 1) {
+                builder.setItems(new CharSequence[]{"2 darts", "3 darts"},
+                        (dialog, which) -> newCheckoutScore(throwValue, which + 2));
+            } else {
+                builder.setItems(new CharSequence[]{"1 dart", "2 darts", "3 darts"},
+                        (dialog, which) -> newCheckoutScore(throwValue, which + 1));
+            }
+            builder.create().show();
+        }
+    }
+
+    private void newCheckoutScore(int throwValue, int dartCount) {
+        viewModel.newCheckoutThrow(throwValue, dartCount, this::showGameOverScreen);
     }
 
     @Override

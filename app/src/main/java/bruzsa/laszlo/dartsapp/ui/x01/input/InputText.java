@@ -6,6 +6,7 @@ import static com.google.android.material.R.style.Widget_Material3_Chip_Assist;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.MotionEvent;
 
 import androidx.annotation.NonNull;
@@ -77,6 +78,12 @@ public class InputText extends Chip implements InputTextNumber {
 
     public void setOnIconClickEvent(Consumer<Chip> iconEvent) {
         this.iconEvent = iconEvent;
+    }
+
+    public void setDisabled() {
+        setEnabled(false);
+        setHint("Game Over!");
+        onReady = x -> Log.w("InputText", "setDisabled: " + true);
     }
 
 

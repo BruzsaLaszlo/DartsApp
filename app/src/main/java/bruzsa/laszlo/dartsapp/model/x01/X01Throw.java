@@ -17,15 +17,15 @@ public class X01Throw {
     private final boolean valid;
     private final LocalDateTime time = LocalDateTime.now();
     private final int leg;
-    private final int dart;
+    private final int dartCount;
     private final boolean checkout;
     private boolean removed;
 
-    public X01Throw(int value, boolean valid, int leg, int dart, boolean checkout, Player player) {
+    public X01Throw(int value, boolean valid, int leg, int dartCount, boolean checkout, Player player) {
         this.value = value;
         this.valid = valid;
         this.leg = leg;
-        this.dart = dart;
+        this.dartCount = dartCount;
         this.checkout = checkout;
         this.player = player;
     }
@@ -39,7 +39,7 @@ public class X01Throw {
     public String toString() {
         String s = String.valueOf(value);
         if (checkout)
-            return s + "^" + dart;
+            return s + "^" + dartCount;
         return s;
     }
 
