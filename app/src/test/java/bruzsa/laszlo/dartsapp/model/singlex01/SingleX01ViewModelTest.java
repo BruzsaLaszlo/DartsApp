@@ -5,19 +5,23 @@ import static java.time.LocalDate.now;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.runner.RunWith;
+import org.mockito.junit.MockitoJUnitRunner;
 
 import bruzsa.laszlo.dartsapp.dao.Player;
 import bruzsa.laszlo.dartsapp.ui.singlex01.SingleX01ViewModel;
 
+@RunWith(MockitoJUnitRunner.class)
 class SingleX01ViewModelTest {
 
     static final Player player = new Player(1L, "Joe", "J", now(), null);
     static final int startScore = 501;
+
     SingleX01ViewModel viewModel = new SingleX01ViewModel();
 
     @BeforeEach
     void setUp() {
-        viewModel.startOrCountinue(player, startScore);
+        viewModel.startOrCountinue(player, startScore, "");
         viewModel.newThrow(180, 3);
         viewModel.newThrow(180, 3);
         viewModel.newThrow(180, 3);
