@@ -1,33 +1,39 @@
 package bruzsa.laszlo.dartsapp.ui.home;
 
-import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
+import static java.lang.Integer.parseInt;
+import static java.lang.String.valueOf;
+import static bruzsa.laszlo.dartsapp.Helper.getIPv4Address;
 import static bruzsa.laszlo.dartsapp.model.TeamPlayer.PLAYER_1_1;
 import static bruzsa.laszlo.dartsapp.model.TeamPlayer.PLAYER_1_2;
 import static bruzsa.laszlo.dartsapp.model.TeamPlayer.PLAYER_2_1;
 import static bruzsa.laszlo.dartsapp.model.TeamPlayer.PLAYER_2_2;
+import static bruzsa.laszlo.dartsapp.ui.home.HomeFragmentDirections.actionHomeFragmentToPlayerFragment;
+import static bruzsa.laszlo.dartsapp.ui.home.HomeFragmentDirections.actionHomeFragmentToSingleX01Fragment;
 
 import android.annotation.SuppressLint;
+import android.content.pm.ActivityInfo;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.NavDirections;
 import androidx.navigation.Navigation;
 
-import com.google.android.material.chip.Chip;
-import com.google.android.material.chip.ChipGroup;
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.snackbar.BaseTransientBottomBar;
 import com.google.android.material.snackbar.Snackbar;
 
 import java.util.Map;
+import java.util.TreeMap;
 
-import bruzsa.laszlo.dartsapp.Helper;
 import bruzsa.laszlo.dartsapp.R;
 import bruzsa.laszlo.dartsapp.dao.Player;
 import bruzsa.laszlo.dartsapp.databinding.FragmentHomeBinding;
@@ -35,21 +41,18 @@ import bruzsa.laszlo.dartsapp.model.SharedViewModel;
 import bruzsa.laszlo.dartsapp.model.TeamPlayer;
 import bruzsa.laszlo.dartsapp.model.home.GameMode;
 import bruzsa.laszlo.dartsapp.model.home.GameType;
-import bruzsa.laszlo.dartsapp.model.home.HomeViewModel;
 
 public class HomeFragment extends Fragment {
 
     private FragmentHomeBinding binding;
     private SharedViewModel sharedViewModel;
-    private HomeViewModel homeViewModel;
 
     @SuppressLint("SourceLockedOrientationActivity")
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-//        requireActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+        requireActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
-        homeViewModel = new ViewModelProvider(requireActivity()).get(HomeViewModel.class);
         sharedViewModel = new ViewModelProvider(requireActivity()).get(SharedViewModel.class);
     }
 
@@ -57,118 +60,22 @@ public class HomeFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         requireActivity().findViewById(R.id.toolbar).setVisibility(VISIBLE);
-        binding = FragmentHomeBinding.inflate(inflater, container, false);
+
+        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_home, container, false);
+        binding.setLifecycleOwner(getViewLifecycleOwner());
+        binding.setSharedViewModel(sharedViewModel);
+        binding.setFragment(this);
         return binding.getRoot();
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
-        inicPlayerModeAndTypeChips();
-        setVisibilityOfPlayers();
-        refreshPlayerChips();
-
-        binding.chipGroupGameTypes.setSelectionRequired(true);
-        binding.chipGroupGameTypes.setOnCheckedStateChangeListener(getOnCheckedStateChangeListenerForGameTypes());
-
-        binding.buttonStartGame.setOnClickListener(getOnClickListenerForStartButton());
-        binding.chipGroupPlayersMode.setSingleSelection(true);
-        binding.chipGroupPlayersMode.setOnCheckedStateChangeListener(getOnCheckedStateChangeListenerForGameModes());
-
-        setOnClickListenerForChip(binding.chipTeam1Player1, PLAYER_1_1);
-        setOnClickListenerForChip(binding.chipTeam1Player2, PLAYER_1_2);
-        setOnClickListenerForChip(binding.chipTeam2Player1, PLAYER_2_1);
-        setOnClickListenerForChip(binding.chipTeam2Player2, PLAYER_2_2);
-
-        Helper.getIPv4Address(requireContext()).ifPresent(binding.textIPAdress::setText);
     }
 
-    private ChipGroup.OnCheckedStateChangeListener getOnCheckedStateChangeListenerForGameTypes() {
-        return (group, checkedIds) -> {
-            if (checkedIds.isEmpty()) {
-                sharedViewModel.setGameType(GameType.NO_GAME);
-            } else {
-                int id = checkedIds.get(0);
-                if (id == binding.chipX01.getId()) {
-                    sharedViewModel.setGameType(GameType.NORMAL_X01);
-                } else if (id == binding.chipCricket.getId()) {
-                    sharedViewModel.setGameType(GameType.CRICKET);
-                }
-            }
-        };
-    }
-
-
-    private void setOnClickListenerForChip(Chip chip, TeamPlayer teamPlayer) {
-        chip.setOnClickListener(view -> {
-            sharedViewModel.setSelectedPlayer(teamPlayer);
-            Navigation.findNavController(view).navigate(R.id.action_nav_home_to_playerFragment);
-        });
-        chip.setOnCloseIconClickListener(view -> {
-            setChipStyle(chip, true, null);
-            sharedViewModel.removePlayerEnum(teamPlayer);
-        });
-    }
-
-    private void refreshPlayerChips() {
-        refreshPlayerChip(binding.chipTeam1Player1, PLAYER_1_1);
-        refreshPlayerChip(binding.chipTeam1Player2, PLAYER_1_2);
-        refreshPlayerChip(binding.chipTeam2Player1, PLAYER_2_1);
-        refreshPlayerChip(binding.chipTeam2Player2, PLAYER_2_2);
-    }
-
-    private void refreshPlayerChip(Chip chip, TeamPlayer teamPlayer) {
-        Player player = sharedViewModel.getPlayer(teamPlayer);
-        if (player == null) {
-            setChipStyle(chip, true, null);
-        } else {
-            setChipStyle(chip, false, player.getName());
-        }
-    }
-
-    private void setChipStyle(Chip chip, boolean empty, String text) {
-        chip.setChipIconVisible(empty);
-        chip.setCloseIconVisible(!empty);
-        chip.setText(empty ? "add player" : text);
-    }
-
-    @NonNull
-    private View.OnClickListener getOnClickListenerForStartButton() {
-        return v -> {
-            GameType type = sharedViewModel.getGameType();
-            GameMode mode = sharedViewModel.getGameMode();
-
-            switch (type) {
-                case NO_GAME -> showSnack("Please, set game mode!");
-                case NORMAL_X01 -> {
-                    switch (mode) {
-                        case TEAM, PLAYER ->
-                                navigateToFragment(R.id.action_nav_home_to_nav_dartsX01Fragment, mode);
-                        case SINGLE ->
-                                navigateToFragment(R.id.action_nav_home_to_dartsX01SinglePlayer, mode);
-                    }
-                }
-                case CRICKET -> {
-                    switch (mode) {
-                        case TEAM, PLAYER ->
-                                navigateToFragment(R.id.action_nav_home_to_nav_cricketFragment, mode);
-                        case SINGLE -> {// TODO
-                        }
-                    }
-                }
-            }
-
-        };
-
-    }
-
-    private void navigateToFragment(int actionNavHomeToNavFragment, GameMode gameMode) {
-        if (validSelectedPlayers(gameMode)) {
-            Navigation.findNavController(requireView()).navigate(actionNavHomeToNavFragment);
-        } else {
-            showSnack("Please choose players!");
-        }
+    public void choosePlayerFor(TeamPlayer teamPlayer) {
+        long[] playerIds = sharedViewModel.getSelectedPlayersMap().values().stream().mapToLong(Player::getId).toArray();
+        navigateToFragment(actionHomeFragmentToPlayerFragment(playerIds, teamPlayer));
     }
 
     private boolean validSelectedPlayers(GameMode gameMode) {
@@ -181,63 +88,43 @@ public class HomeFragment extends Fragment {
         };
     }
 
+    @SuppressWarnings("ConstantConditions")
+    public void showDialogX01StartScore(View v) {
+        var x01 = Map.of(
+                0, "201",
+                1, "301",
+                2, "501",
+                3, "701",
+                4, "1001",
+                5, "1501");
+        var sorted = new TreeMap<>(x01);
+        new MaterialAlertDialogBuilder(v.getContext())
+                .setItems(sorted.values().toArray(String[]::new), (dialog, which) -> {
+                    sharedViewModel.getX01Settings().setStartScore(parseInt(sorted.get(which)));
+                    ((TextView) v).setText(sorted.get(which));
+                })
+                .create().show();
+    }
+
+    private static final int MAX_LEGSET = 13;
+
+    @SuppressLint("SetTextI18n")
+    public void showDialogSetLegCount(View v) {
+        String[] s = new String[13];
+        for (int i = 0; i < MAX_LEGSET; i++) {
+            s[i] = valueOf(i + 1);
+        }
+        new MaterialAlertDialogBuilder(v.getContext())
+                .setItems(s, (dialog, which) -> {
+                    sharedViewModel.getX01Settings().setCount(which + 1);
+                    ((TextView) v).setText(valueOf(which + 1));
+                })
+                .create().show();
+    }
+
     private void showSnack(String message) {
         Snackbar.make(requireView(), message, BaseTransientBottomBar.LENGTH_LONG)
                 .setAction("Action", null).show();
-    }
-
-    @NonNull
-    private ChipGroup.OnCheckedStateChangeListener getOnCheckedStateChangeListenerForGameModes
-            () {
-        return (group, checkedIds) -> {
-            if (checkedIds.isEmpty()) {
-                sharedViewModel.setGameMode(GameMode.PLAYER);
-            } else {
-                int checked = checkedIds.get(0);
-                if (checked == binding.chipTeamPlayMode.getId()) {
-                    sharedViewModel.setGameMode(GameMode.TEAM);
-                } else if (checked == binding.chipSinglePlayerMode.getId()) {
-                    sharedViewModel.setGameMode(GameMode.SINGLE);
-                    Log.d("HomeFragment", "getOnCheckedStateChangeListenerForGameModes: ");
-                }
-            }
-            setVisibilityOfPlayers();
-        };
-    }
-
-    private void inicPlayerModeAndTypeChips() {
-        switch (sharedViewModel.getGameMode()) {
-            case PLAYER -> binding.chipGroupPlayersMode.clearCheck();
-            case SINGLE -> binding.chipSinglePlayerMode.setChecked(true);
-            case TEAM -> binding.chipTeamPlayMode.setChecked(true);
-        }
-
-        switch (sharedViewModel.getGameType()) {
-            case NORMAL_X01 -> binding.chipX01.setChecked(true);
-            case CRICKET -> binding.chipCricket.setChecked(true);
-            case NO_GAME -> binding.chipGroupGameTypes.clearCheck();
-        }
-    }
-
-    private void setVisibilityOfPlayers() {
-        switch (sharedViewModel.getGameMode()) {
-            case PLAYER -> setChipPlayerVisibilityAndInfoText(
-                    GONE, VISIBLE, GONE, "Player 1", "Player 2");
-            case TEAM -> setChipPlayerVisibilityAndInfoText(
-                    VISIBLE, VISIBLE, VISIBLE, "Team 1", "Team 2");
-            case SINGLE -> setChipPlayerVisibilityAndInfoText(
-                    GONE, GONE, GONE, "Player", null);
-        }
-    }
-
-    private void setChipPlayerVisibilityAndInfoText(int visibilityOfPlayer12, int visibilityOfPlayer21,
-                                                    int visibilityOfPlayer22, String textInfo1, String textInfo2) {
-        binding.chipTeam1Player2.setVisibility(visibilityOfPlayer12);
-        binding.chipTeam2Player1.setVisibility(visibilityOfPlayer21);
-        binding.chipTeam2Player2.setVisibility(visibilityOfPlayer22);
-        binding.textInfoPlayerTeam1.setText(textInfo1);
-        binding.textInfoPlayerTeam2.setText(textInfo2);
-        binding.divider.setVisibility(sharedViewModel.getGameMode() == GameMode.SINGLE ? View.GONE : VISIBLE);
     }
 
     @Override
@@ -245,4 +132,66 @@ public class HomeFragment extends Fragment {
         super.onDestroyView();
         binding = null;
     }
+
+    public void startGame() {
+        GameMode mode = sharedViewModel.getSettings().getGameMode();
+        if (!validSelectedPlayers(mode)) {
+            showSnack("Please choose players!");
+            return;
+        }
+
+        GameType type = sharedViewModel.getSettings().getGameType();
+        switch (type) {
+            case NO_GAME -> showSnack("Please, set game mode!");
+            case X01 -> {
+                switch (mode) {
+                    case TEAM, PLAYER ->
+                            navigateToFragment(R.id.action_homeFragment_to_X01Fragment);
+                    case SINGLE -> navigateToFragment(
+                            actionHomeFragmentToSingleX01Fragment(sharedViewModel.getPlayer(PLAYER_1_1))
+                                    .setStartScore(sharedViewModel.getX01Settings().getStartScore()));
+                }
+            }
+            case CRICKET -> {
+                sharedViewModel.getCricketSettings().setRandomNumbers(binding.chipCricketSettingsRandom.isChecked());
+                switch (mode) {
+                    case TEAM, PLAYER ->
+                            navigateToFragment(R.id.action_homeFragment_to_cricketFragment);
+                    case SINGLE -> {// TODO
+                    }
+                }
+            }
+        }
+    }
+
+    private void navigateToFragment(NavDirections navDirections) {
+        Navigation.findNavController(requireView()).navigate(navDirections);
+    }
+
+    private void navigateToFragment(int resId) {
+        Navigation.findNavController(requireView()).navigate(resId);
+    }
+
+    public void changeMatchType(View view) {
+        if (view instanceof TextView text) {
+            sharedViewModel.getX01Settings().setMatchType(sharedViewModel.getX01Settings().getMatchType().opposit());
+            text.setText(sharedViewModel.getX01Settings().getMatchType().name());
+        }
+    }
+
+    public void changeFirstBest(View view) {
+        if (view instanceof TextView text) {
+            sharedViewModel.getX01Settings().setFirstToBestOf(sharedViewModel.getX01Settings().getFirstToBestOf().opposit());
+            text.setText(sharedViewModel.getX01Settings().getFirstToBestOf().getLabel());
+        }
+    }
+
+    public void setIpAddress(View v) {
+        if (v instanceof TextView t) t.setText("WebGUI: " + getIpAddress());
+    }
+
+    public String getIpAddress() {
+        return getIPv4Address(requireContext()).orElse("Can not find ip address");
+    }
+
 }

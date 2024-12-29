@@ -6,13 +6,11 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.List;
 import java.util.function.Consumer;
 
-import bruzsa.laszlo.dartsapp.R;
 import bruzsa.laszlo.dartsapp.dao.Player;
 import bruzsa.laszlo.dartsapp.databinding.AdapterPlayerBinding;
 
@@ -36,11 +34,7 @@ public class PlayerAdapter extends RecyclerView.Adapter<PlayerAdapter.ViewHolder
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
         Player player = mValues.get(position);
-        holder.mContentView.setOnClickListener(v -> {
-            selected.accept(player);
-            Navigation.findNavController(holder.itemView).navigate(R.id.action_playerFragment_to_nav_home);
-        });
-        holder.mIdView.setText(player.getId().toString());
+        holder.mContentView.setOnClickListener(v -> selected.accept(player));
         holder.mContentView.setText(player.getName());
     }
 
@@ -50,12 +44,10 @@ public class PlayerAdapter extends RecyclerView.Adapter<PlayerAdapter.ViewHolder
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
-        public final TextView mIdView;
         public final TextView mContentView;
 
         public ViewHolder(@NonNull AdapterPlayerBinding binding) {
             super(binding.getRoot());
-            mIdView = binding.textPlayerId;
             mContentView = binding.textPlayerName;
         }
 
