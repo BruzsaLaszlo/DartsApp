@@ -660,7 +660,7 @@ public class FirstToBestOfCountTest {
     private static Matcher<View> childAtPosition(
             final Matcher<View> parentMatcher, final int position) {
 
-        return new TypeSafeMatcher<View>() {
+        return new TypeSafeMatcher<>() {
             @Override
             public void describeTo(Description description) {
                 description.appendText("Child at position " + position + " in parent ");

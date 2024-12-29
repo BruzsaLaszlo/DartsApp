@@ -114,7 +114,8 @@ android {
 
 dependencies {
 
-//    compileOnly(libs.lombok)
+    testImplementation("junit:junit:4.12")
+    //    compileOnly(libs.lombok)
 //    annotationProcessor(libs.lombok)
 //    testCompileOnly(libs.lombok)
 //    testAnnotationProcessor(libs.lombok)

@@ -3,7 +3,10 @@ package bruzsa.laszlo.dartsapp.model.cricket;
 import android.graphics.Color;
 
 import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 
+@RequiredArgsConstructor
+@Getter
 public enum State {
 
     OPEN(Color.BLUE),
@@ -11,12 +14,7 @@ public enum State {
     OPPONENT_CAN_SCORE(Color.RED),
     CLOSE(Color.BLACK);
 
-    @Getter
     private final int color;
-
-    State(int color) {
-        this.color = color;
-    }
 
     public static State getState(Integer multiply, Integer multiplyOpponent) {
         if (multiply == null || multiply < 3) {

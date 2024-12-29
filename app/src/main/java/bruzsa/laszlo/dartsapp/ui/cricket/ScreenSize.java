@@ -1,6 +1,5 @@
 package bruzsa.laszlo.dartsapp.ui.cricket;
 
-import android.app.Activity;
 import android.content.res.Configuration;
 import android.graphics.Insets;
 import android.graphics.Rect;
@@ -8,7 +7,6 @@ import android.util.Size;
 import android.view.WindowInsets;
 import android.view.WindowMetrics;
 
-import androidx.annotation.NonNull;
 import androidx.fragment.app.FragmentActivity;
 
 public class ScreenSize {
@@ -59,19 +57,4 @@ public class ScreenSize {
         }
     }
 
-    public static Size getLegacySize(@NonNull Activity activity) {
-        final WindowMetrics metrics = activity.getWindowManager().getCurrentWindowMetrics();
-        // Gets all excluding insets
-        final WindowInsets windowInsets = metrics.getWindowInsets();
-        Insets insets = windowInsets.getInsetsIgnoringVisibility(WindowInsets.Type.navigationBars()
-                | WindowInsets.Type.displayCutout());
-
-        int insetsWidth = insets.right + insets.left;
-        int insetsHeight = insets.top + insets.bottom;
-
-        // Legacy size that Display#getSize reports
-        final Rect bounds = metrics.getBounds();
-        return new Size(bounds.width() - insetsWidth,
-                bounds.height() - insetsHeight);
-    }
 }

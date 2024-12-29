@@ -11,10 +11,12 @@ import android.widget.TableRow;
 
 import bruzsa.laszlo.dartsapp.R;
 import bruzsa.laszlo.dartsapp.databinding.NumberPadChipBinding;
+import lombok.Setter;
 
 public class NumberPad extends TableLayout {
 
     private final Context context;
+    @Setter
     private InputTextNumber inputTextNumber;
 
     public static final int OK = 10;
@@ -28,10 +30,6 @@ public class NumberPad extends TableLayout {
         super(context, attrs);
         this.context = context;
         createChips();
-    }
-
-    public void setInputTextNumber(InputTextNumber inputTextNumber) {
-        this.inputTextNumber = inputTextNumber;
     }
 
     private void createChips() {

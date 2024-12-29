@@ -1,15 +1,13 @@
 package bruzsa.laszlo.dartsapp.ui.webgui;
 
 import fi.iki.elonen.NanoHTTPD;
+import lombok.Setter;
 
+@Setter
 public class Nano extends NanoHTTPD {
 
     public Nano(int port) {
         super(port);
-    }
-
-    public Nano(String hostname, int port) {
-        super("192.168.0.124", port);
     }
 
     private String response = "default response";
@@ -19,7 +17,4 @@ public class Nano extends NanoHTTPD {
         return newFixedLengthResponse(response);
     }
 
-    public void setResponse(String response) {
-        this.response = response;
-    }
 }

@@ -1,9 +1,6 @@
 package bruzsa.laszlo.dartsapp.model.x01;
 
-import android.os.Build;
-
 import androidx.annotation.NonNull;
-import androidx.annotation.RequiresApi;
 
 import java.util.IntSummaryStatistics;
 import java.util.List;
@@ -33,7 +30,6 @@ public class X01SummaryStatistics {
 
     @NonNull
     @Override
-    @RequiresApi(api = Build.VERSION_CODES.TIRAMISU)
     public String toString() {
         if (validThrows().findAny().isEmpty()) return "";
         var allStat = getAllStat();
@@ -118,7 +114,7 @@ public class X01SummaryStatistics {
 
     public int getScoreLastLeg() {
         Optional<Integer> lastLeg = validThrows().map(X01Throw::getLeg).max(Integer::compareTo);
-        if (lastLeg.isEmpty()) return startScore;
-        else return startScore - getSum(lastLeg.get());
+        return lastLeg.map(integer -> startScore - getSum(integer))
+                .orElse(startScore);
     }
 }

@@ -4,12 +4,12 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
+@Getter
 public enum FirstToBestOf {
 
     FIRST_TO("first to"),
     BEST_OF("best of");
 
-    @Getter
     private final String label;
 
     public FirstToBestOf opposit() {

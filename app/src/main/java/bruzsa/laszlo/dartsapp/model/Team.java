@@ -9,13 +9,13 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
+@Getter
 public enum Team {
 
     TEAM1(1),
 
     TEAM2(2);
 
-    @Getter
     private final Integer number;
 
     public TeamPlayer player1() {

@@ -11,14 +11,13 @@ import java.util.Random;
 import bruzsa.laszlo.dartsapp.ui.cricket.ScreenSize;
 import lombok.Getter;
 
+@Getter
 public class CricketSettings {
 
 
     public static final int BULL = 25;
     public static final List<Integer> defaultNumbers = List.of(15, 16, 17, 18, 19, 20, BULL);
-    @Getter
     private Size size;
-    @Getter
     private List<Integer> activeNumbers;
 
     private static final int NUMBER_COUNT = 6;

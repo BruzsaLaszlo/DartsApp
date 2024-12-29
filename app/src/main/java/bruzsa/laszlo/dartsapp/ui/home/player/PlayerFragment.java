@@ -27,7 +27,6 @@ import bruzsa.laszlo.dartsapp.model.TeamPlayer;
 
 public class PlayerFragment extends Fragment {
 
-    private static final int M_COLUMN_COUNT = 1;
     private SharedViewModel sharedViewModel;
     private TeamPlayer selectedTeamPlayer;
 
