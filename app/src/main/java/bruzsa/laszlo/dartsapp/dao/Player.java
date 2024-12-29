@@ -2,6 +2,7 @@ package bruzsa.laszlo.dartsapp.dao;
 
 import androidx.annotation.NonNull;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.Objects;
 
@@ -12,7 +13,7 @@ import lombok.RequiredArgsConstructor;
 @AllArgsConstructor
 @RequiredArgsConstructor
 @Getter
-public class Player {
+public class Player implements Serializable {
 
     private final Long id;
     private final String name;

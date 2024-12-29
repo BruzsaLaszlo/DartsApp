@@ -5,11 +5,18 @@ import static bruzsa.laszlo.dartsapp.model.TeamPlayer.PLAYER_1_2;
 import static bruzsa.laszlo.dartsapp.model.TeamPlayer.PLAYER_2_1;
 import static bruzsa.laszlo.dartsapp.model.TeamPlayer.PLAYER_2_2;
 
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+
+@RequiredArgsConstructor
 public enum Team {
 
-    TEAM1,
+    TEAM1(1),
 
-    TEAM2;
+    TEAM2(2);
+
+    @Getter
+    private final Integer number;
 
     public TeamPlayer player1() {
         return this == TEAM1 ? PLAYER_1_1 : PLAYER_2_1;
@@ -23,7 +30,4 @@ public enum Team {
         return this == TEAM1 ? TEAM2 : TEAM1;
     }
 
-    public boolean isTeam1() {
-        return this == TEAM1;
-    }
 }
