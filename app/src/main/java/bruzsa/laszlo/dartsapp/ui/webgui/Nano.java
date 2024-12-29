@@ -1,4 +1,4 @@
-package bruzsa.laszlo.dartsapp.ui;
+package bruzsa.laszlo.dartsapp.ui.webgui;
 
 import fi.iki.elonen.NanoHTTPD;
 

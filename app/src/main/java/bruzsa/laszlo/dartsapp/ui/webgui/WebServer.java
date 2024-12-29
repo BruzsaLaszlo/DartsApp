@@ -2,7 +2,6 @@ package bruzsa.laszlo.dartsapp.ui.webgui;
 
 import java.io.IOException;
 
-import bruzsa.laszlo.dartsapp.ui.Nano;
 import lombok.experimental.Delegate;
 
 public class WebServer {

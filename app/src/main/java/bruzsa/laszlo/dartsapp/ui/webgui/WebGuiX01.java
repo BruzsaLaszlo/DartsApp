@@ -1,4 +1,4 @@
-package bruzsa.laszlo.dartsapp.ui.x01;
+package bruzsa.laszlo.dartsapp.ui.webgui;
 
 import static java.lang.String.format;
 import static java.util.Locale.US;

@@ -1,4 +1,4 @@
-package bruzsa.laszlo.dartsapp.ui.cricket;
+package bruzsa.laszlo.dartsapp.ui.webgui;
 
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
@@ -14,14 +14,14 @@ import bruzsa.laszlo.dartsapp.dao.Player;
 import bruzsa.laszlo.dartsapp.model.TeamPlayer;
 import bruzsa.laszlo.dartsapp.model.cricket.Stat;
 
-public class CricketWebGui {
+public class WebGuiCricket {
 
     private final TemplateEngine templateEngine = new TemplateEngine();
     private final String htmlTemplate;
     private final Map<TeamPlayer, Player> players;
     private final List<Integer> activeNumbers;
 
-    public CricketWebGui(String htmlTemplate, Map<TeamPlayer, Player> players, List<Integer> activeNumbers) {
+    public WebGuiCricket(String htmlTemplate, Map<TeamPlayer, Player> players, List<Integer> activeNumbers) {
         this.htmlTemplate = htmlTemplate;
         this.players = players;
         this.activeNumbers = activeNumbers;
