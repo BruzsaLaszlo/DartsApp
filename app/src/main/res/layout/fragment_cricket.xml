@@ -1,88 +1,140 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".ui.cricket.CricketFragment">
+    xmlns:tools="http://schemas.android.com/tools">
 
-    <bruzsa.laszlo.dartsapp.ui.cricket.CricketTable
-        android:id="@+id/cricketTable1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center|start"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+    <data>
 
-    <bruzsa.laszlo.dartsapp.ui.cricket.CricketTable
-        android:id="@+id/cricketTable2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="end"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        <import type="bruzsa.laszlo.dartsapp.model.Team" />
 
-    <TextView
-        android:id="@+id/text_name_cricket_player_2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="top|end"
-        android:layout_marginStart="5dp"
-        android:layout_marginEnd="-80dp"
-        android:autoSizeTextType="none"
-        android:drawablePadding="0dp"
-        android:includeFontPadding="true"
-        android:padding="0dp"
-        android:text="@string/player2"
-        android:textAlignment="textEnd"
-        android:textSize="24sp"
-        app:layout_constraintEnd_toStartOf="@+id/cricketTable2"
-        app:layout_constraintStart_toEndOf="@+id/text_name_cricket_player_1"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:ignore="TouchTargetSizeCheck" />
+        <import type="bruzsa.laszlo.dartsapp.model.TeamPlayer" />
 
-    <TextView
-        android:id="@+id/textCricketScore"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginEnd="16dp"
-        android:text="@string/_00"
-        android:textSize="40sp"
-        app:layout_constraintBottom_toTopOf="@id/listThrows"
-        app:layout_constraintEnd_toStartOf="@+id/cricketTable2"
-        app:layout_constraintStart_toEndOf="@+id/cricketTable1"
-        app:layout_constraintTop_toBottomOf="@+id/text_name_cricket_player_2" />
+        <variable
+            name="viewModel"
+            type="bruzsa.laszlo.dartsapp.model.cricket.CricketViewModel" />
+    </data>
 
-    <TextView
-        android:id="@+id/text_name_cricket_player_1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="-80dp"
-        android:layout_marginEnd="5dp"
-        android:drawablePadding="0dp"
-        android:includeFontPadding="true"
-        android:padding="0dp"
-        android:text="@string/player1"
-        android:textAlignment="textStart"
-        android:textSize="24sp"
-        app:layout_constraintEnd_toStartOf="@+id/text_name_cricket_player_2"
-        app:layout_constraintStart_toEndOf="@+id/cricketTable1"
-        app:layout_constraintTop_toTopOf="parent" />
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context=".ui.cricket.CricketFragment">
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/listThrows"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:layout_marginStart="-10dp"
-        android:layout_marginTop="20dp"
-        android:layout_marginEnd="-10dp"
-        android:layout_marginBottom="20dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@id/cricketTable2"
-        app:layout_constraintStart_toEndOf="@id/cricketTable1"
-        app:layout_constraintTop_toBottomOf="@id/textCricketScore" />
+        <bruzsa.laszlo.dartsapp.ui.cricket.CricketTable
+            android:id="@+id/cricketTable1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center|start"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:state="@{viewModel.stat}"
+            app:team="@{Team.TEAM1}" />
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+        <TextView
+            android:id="@+id/text_name_cricket_player_1_1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="30dp"
+            android:drawablePadding="0dp"
+            android:includeFontPadding="true"
+            android:padding="0dp"
+            android:rotation="-45"
+            android:text="@{viewModel.getPlayerName(TeamPlayer.PLAYER_1_1)}"
+            android:textSize="16sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="@string/player_1_1" />
+
+        <TextView
+            android:id="@+id/textCricketScore"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="10dp"
+            android:text="@{viewModel.score}"
+            android:textSize="34sp"
+            app:layout_constraintBottom_toTopOf="@id/listThrows"
+            app:layout_constraintEnd_toStartOf="@+id/cricketTable2"
+            app:layout_constraintStart_toEndOf="@+id/cricketTable1"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="@string/_00" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/listThrows"
+            android:layout_width="103dp"
+            android:layout_height="0dp"
+            android:layout_marginStart="-10dp"
+            android:layout_marginEnd="-10dp"
+            android:adapter="@{viewModel.throwsAdapter}"
+            android:padding="0dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/cricketTable2"
+            app:layout_constraintStart_toEndOf="@+id/cricketTable1"
+            app:layout_constraintTop_toBottomOf="@id/textCricketScore" />
+
+        <TextView
+            android:id="@+id/text_name_cricket_player_2_1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="top|end"
+            android:layout_marginTop="30dp"
+            android:autoSizeTextType="none"
+            android:drawablePadding="0dp"
+            android:includeFontPadding="true"
+            android:padding="0dp"
+            android:rotation="45"
+            android:text="@{viewModel.getPlayerName(TeamPlayer.PLAYER_2_1)}"
+            android:textSize="16sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:ignore="TouchTargetSizeCheck"
+            tools:text="@string/player_2_1" />
+
+        <TextView
+            android:id="@+id/text_name_cricket_player_1_2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="top|end"
+            android:layout_marginStart="5dp"
+            android:layout_marginBottom="30dp"
+            android:autoSizeTextType="none"
+            android:drawablePadding="0dp"
+            android:includeFontPadding="true"
+            android:padding="0dp"
+            android:rotation="45"
+            android:text="@{viewModel.getPlayerName(TeamPlayer.PLAYER_1_2)}"
+            android:textSize="16sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            tools:ignore="TouchTargetSizeCheck"
+            tools:text="@string/player_1_2" />
+
+        <bruzsa.laszlo.dartsapp.ui.cricket.CricketTable
+            android:id="@+id/cricketTable2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:state="@{viewModel.stat}"
+            app:team="@{Team.TEAM2}" />
+
+        <TextView
+            android:id="@+id/text_name_cricket_player_2_2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="5dp"
+            android:layout_marginBottom="30dp"
+            android:drawablePadding="0dp"
+            android:includeFontPadding="true"
+            android:padding="0dp"
+            android:rotation="-45"
+            android:text="@{viewModel.getPlayerName(TeamPlayer.PLAYER_2_2)}"
+            android:textSize="16sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            tools:text="@string/player_2_2" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

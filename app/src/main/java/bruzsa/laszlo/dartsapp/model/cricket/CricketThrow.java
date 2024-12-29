@@ -6,21 +6,19 @@ import androidx.annotation.NonNull;
 
 import java.time.LocalDateTime;
 
+import bruzsa.laszlo.dartsapp.model.Team;
 import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 
+@RequiredArgsConstructor
 @Getter
 public class CricketThrow {
     private final int multiply;
-    private final int value;
+    private final int number;
     private final CricketTeam player;
+    private final Team team;
     private boolean removed;
     private final LocalDateTime dateTime = now();
-
-    public CricketThrow(int multiply, int value, CricketTeam player) {
-        this.multiply = multiply;
-        this.value = value;
-        this.player = player;
-    }
 
     public boolean setRemoved() {
         if (removed) return false;
@@ -31,9 +29,9 @@ public class CricketThrow {
     @NonNull
     public String toString() {
         return switch (multiply) {
-            case 1 -> " " + value;
-            case 2 -> "D" + value;
-            case 3 -> "T" + value;
+            case 1 -> " " + number;
+            case 2 -> "D" + number;
+            case 3 -> "T" + number;
             default -> throw new IllegalStateException("Unexpected value: " + multiply);
         } + " " + player.toString();
     }

@@ -19,11 +19,12 @@ import bruzsa.laszlo.dartsapp.model.cricket.CricketThrow;
 public class CricketThrowsAdapter extends RecyclerView.Adapter<CricketThrowsAdapter.ViewHolder> {
 
     private final List<CricketThrow> mDataSet;
-    private final Consumer<CricketThrow> removeThrow;
+    private final Consumer<CricketThrow> removeEventListener;
+    private RecyclerView recyclerView;
 
-    public CricketThrowsAdapter(List<CricketThrow> mDataSet, Consumer<CricketThrow> removeThrow) {
+    public CricketThrowsAdapter(List<CricketThrow> mDataSet, Consumer<CricketThrow> removeEventListener) {
         this.mDataSet = mDataSet;
-        this.removeThrow = removeThrow;
+        this.removeEventListener = removeEventListener;
     }
 
     @NonNull
@@ -43,12 +44,11 @@ public class CricketThrowsAdapter extends RecyclerView.Adapter<CricketThrowsAdap
         if (cricketThrow.isRemoved()) {
             viewHolder.throwTextView.setTypeface(null, Typeface.ITALIC);
             viewHolder.throwTextView.setPaintFlags(Paint.STRIKE_THRU_TEXT_FLAG);
+        } else {
+            viewHolder.throwTextView.setTypeface(null, Typeface.NORMAL);
+            viewHolder.throwTextView.setPaintFlags(
+                    viewHolder.throwTextView.getPaintFlags() & (~Paint.STRIKE_THRU_TEXT_FLAG));
         }
-    }
-
-    @Override
-    public int getItemCount() {
-        return mDataSet.size();
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
@@ -58,11 +58,27 @@ public class CricketThrowsAdapter extends RecyclerView.Adapter<CricketThrowsAdap
         public ViewHolder(View v) {
             super(v);
             v.setOnLongClickListener(v1 -> {
-                removeThrow.accept(cricketThrow);
+                removeEventListener.accept(cricketThrow);
                 notifyItemChanged(mDataSet.indexOf(cricketThrow));
                 return true;
             });
             throwTextView = v.findViewById(R.id.cricketThrowItem);
         }
+    }
+
+    @Override
+    public void onAttachedToRecyclerView(@NonNull RecyclerView recyclerView) {
+        this.recyclerView = recyclerView;
+    }
+
+    @Override
+    public int getItemCount() {
+        return mDataSet.size();
+    }
+
+    public void addNewThrow() {
+        int position = getItemCount() - 1;
+        notifyItemInserted(position);
+        recyclerView.smoothScrollToPosition(position);
     }
 }

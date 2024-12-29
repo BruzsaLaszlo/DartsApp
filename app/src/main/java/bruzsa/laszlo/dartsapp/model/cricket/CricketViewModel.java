@@ -3,85 +3,77 @@ package bruzsa.laszlo.dartsapp.model.cricket;
 import static bruzsa.laszlo.dartsapp.model.Team.TEAM1;
 import static bruzsa.laszlo.dartsapp.model.Team.TEAM2;
 
-import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.EnumMap;
-import java.util.List;
 import java.util.Map;
 
 import bruzsa.laszlo.dartsapp.dao.Player;
 import bruzsa.laszlo.dartsapp.model.Team;
 import bruzsa.laszlo.dartsapp.model.TeamPlayer;
+import bruzsa.laszlo.dartsapp.ui.cricket.CricketThrowsAdapter;
+import bruzsa.laszlo.dartsapp.ui.webgui.WebGuiCricket;
+import bruzsa.laszlo.dartsapp.ui.webgui.WebServer;
+import lombok.Getter;
 
 public class CricketViewModel extends ViewModel {
 
-    private CricketTeam team1;
-    private CricketTeam team2;
-    private Map<Team, CricketTeam> cricketTeamMap = new EnumMap<>(Team.class);
-    private final List<CricketThrow> shoots = new ArrayList<>();
-    private final MutableLiveData<Boolean> isGameOver = new MutableLiveData<>(false);
+    @Getter
+    private final MutableLiveData<String> score = new MutableLiveData<>("0:0");
+    @Getter
+    private final MutableLiveData<Stat> stat = new MutableLiveData<>();
+    private WebGuiCricket webGUI;
 
-    public void newGame(Map<TeamPlayer, Player> players) {
-        this.team1 = new CricketTeam(players.get(TEAM1.player1()), players.get(TEAM1.player2()));
-        this.team2 = new CricketTeam(players.get(TEAM2.player1()), players.get(TEAM2.player2()));
+    private CricketService service;
+    @Getter
+    private CricketThrowsAdapter throwsAdapter;
+    private Map<TeamPlayer, Player> players;
+
+    public void startNewGameOrContinue(Map<TeamPlayer, Player> players, CricketSettings settings,
+                                       OnNewGameCallback callback, String htmlTemplate) {
+        if (service != null) return;
+
+        this.players = players;
+        var team1 = new CricketTeam(players.get(TEAM1.player1()), players.get(TEAM1.player2()));
+        var team2 = new CricketTeam(players.get(TEAM2.player1()), players.get(TEAM2.player2()));
+        service = new CricketService(Map.of(TEAM1, team1, TEAM2, team2), settings.getActiveNumbers());
+        throwsAdapter = new CricketThrowsAdapter(service.getThrows(), cricketThrow ->
+                service.removeThrow(cricketThrow, this::getOnScoreChangeListener));
+        callback.onNewGame(throwsAdapter);
+
+        stat.setValue(service.getEmptyStat());
+
+        webGUI = new WebGuiCricket(htmlTemplate, players, settings.getActiveNumbers());
+        refreshWebGui(service.getEmptyStat());
     }
 
-    public void newThrow(int multiplier, int value, Team team) {
-        if (Boolean.TRUE.equals(isGameOver.getValue())) return;
-        shoots.add(new CricketThrow(multiplier, value, team == TEAM1 ? team1 : team2));
-        updatePoints();
+    public void newThrow(int multiplier, int value, Team team, Runnable gameOverListener) {
+        service.newThrow(multiplier, value, team, gameOverListener,
+                statistics -> {
+                    getOnScoreChangeListener(statistics);
+                    throwsAdapter.addNewThrow();
+                });
     }
 
-    public String updatePoints() {
-        team1.clearPoints();
-        team2.clearPoints();
-        reCalculatePoints();
-        isGameEnd();
-        return team1.getPoints() + " : " + team2.getPoints();
+    private void getOnScoreChangeListener(Stat stat) {
+        score.setValue(stat.getScores().get(TEAM1) + " : " + stat.getScores().get(TEAM2));
+        this.stat.setValue(stat);
+        refreshWebGui(stat);
     }
 
-    private void isGameEnd() {
-        boolean player1ThrowAll = team1.getScores().size() == 7 &&
-                team1.getScores().values().stream().allMatch(m -> m >= 3);
-        boolean player2ThrowAll = team2.getScores().size() == 7 &&
-                team2.getScores().values().stream().allMatch(m -> m >= 3);
-        if ((player1ThrowAll && team1.getPoints() > team2.getPoints()) ||
-                (player2ThrowAll && team2.getPoints() > team1.getPoints()))
-            isGameOver.setValue(true);
+    private void refreshWebGui(Stat stat) {
+        String html = webGUI.createHtml(stat);
+        WebServer.getServer().setWebServerContent(html);
     }
 
-    public boolean shootRemove(CricketThrow cricketThrow) {
-        return cricketThrow.setRemoved() && !isGameOver.getValue();
+    public interface OnNewGameCallback {
+        void onNewGame(CricketThrowsAdapter throwsAdapter);
     }
 
-    private void reCalculatePoints() {
-        for (CricketThrow shoot : shoots) {
-            CricketTeam opponent = shoot.getPlayer() == team1 ? team2 : team1;
-            shoot.getPlayer().addThrow(shoot, opponent.getScores().get(shoot.getValue()));
-        }
+    public String getPlayerName(TeamPlayer player) {
+        Player p = players.get(player);
+        if (p == null) return "";
+        else return p.getName();
     }
 
-    public List<CricketThrow> getThrows() {
-        return Collections.unmodifiableList(shoots);
-    }
-
-    public boolean isGameNotStarted() {
-        return shoots.isEmpty();
-    }
-
-    public Map<Integer, Integer> getPlayerScore(int player) {
-        return player == 1 ? team1.getScores() : team2.getScores();
-    }
-
-    public LiveData<Boolean> isGameOver() {
-        return isGameOver;
-    }
-
-    public List<CricketTeam> getCricketTeams() {
-        return List.of(team1, team2);
-    }
 }
