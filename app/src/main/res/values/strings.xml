@@ -10,7 +10,7 @@
     <string name="player1" tools:ignore="Typos">Player1</string>
     <string name="player2">Player2</string>
     <string name="D_double">D</string>
-    <string name="_00">0:0</string>
+    <string name="_00">0 : 0</string>
     <string name="bull">BULL</string>
     <string name="_X01">X01</string>
     <string name="score">score</string>
@@ -25,10 +25,7 @@
     <string name="_X01Single">X01 Single Player</string>
     <string name="new_game">NEW GAME</string>
     <string name="start_game">Start Game!</string>
-    <string name="_X01_single">X01 Single</string>
-    <string name="cricket_single">Cricket Single</string>
     <string name="_1">1</string>
-    <string name="valami">Valami</string>
     <string name="_0_n0">0\n0</string>
     <string name="SetLeg">S\nL</string>
     <string name="team">Team</string>
@@ -55,4 +52,16 @@
     <string name="l">L</string>
     <string name="add">Add</string>
     <string name="name">Name</string>
+    <string name="textipadress">textIPAdress</string>
+    <string name="ip_address">IP ADDRESS</string>
+    <string name="_501">501</string>
+    <string name="leg">LEG</string>
+    <string name="set">SET</string>
+    <string name="_1_vs_1">1 vs 1</string>
+    <string name="_2_vs_2">2 vs 2</string>
+    <string name="_default">Default</string>
+    <string name="random">Random</string>
+    <string name="first_to">first to</string>
+    <string name="_2">2</string>
+    <string name="enter_throw_value">Enter throw value</string>
 </resources>

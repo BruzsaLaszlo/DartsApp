@@ -2,49 +2,63 @@
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    app:startDestination="@+id/nav_home">
+    app:startDestination="@+id/nav_homeFragment">
 
     <fragment
-        android:id="@+id/nav_home"
+        android:id="@+id/nav_homeFragment"
         android:name="bruzsa.laszlo.dartsapp.ui.home.HomeFragment"
         android:label="@string/menu_home"
-        tools:layout="@layout/fragment_home" >
+        tools:layout="@layout/fragment_home">
         <action
-            android:id="@+id/action_nav_home_to_playerFragment"
-            app:destination="@id/playerFragment" />
+            android:id="@+id/action_homeFragment_to_playerFragment"
+            app:destination="@id/nav_playerFragment" />
         <action
-            android:id="@+id/action_nav_home_to_nav_cricketFragment"
+            android:id="@+id/action_homeFragment_to_cricketFragment"
             app:destination="@id/nav_cricketFragment" />
         <action
-            android:id="@+id/action_nav_home_to_nav_dartsX01Fragment"
-            app:destination="@id/nav_dartsX01Fragment" />
+            android:id="@+id/action_homeFragment_to_X01Fragment"
+            app:destination="@id/nav_X01Fragment" />
         <action
-            android:id="@+id/action_nav_home_to_dartsX01SinglePlayer"
-            app:destination="@id/dartsX01SinglePlayer" />
+            android:id="@+id/action_homeFragment_to_SingleX01Fragment"
+            app:destination="@id/nav_single_x01" />
     </fragment>
 
     <fragment
         android:id="@+id/nav_cricketFragment"
         android:name="bruzsa.laszlo.dartsapp.ui.cricket.CricketFragment"
         android:label="CricketFragment"
-        tools:layout="@layout/fragment_cricket"/>
+        tools:layout="@layout/fragment_cricket" />
     <fragment
-        android:id="@+id/nav_dartsX01Fragment"
+        android:id="@+id/nav_X01Fragment"
         android:name="bruzsa.laszlo.dartsapp.ui.x01.X01Fragment"
         android:label="DartsX01Fragment"
-        tools:layout="@layout/fragment_x01"/>
+        tools:layout="@layout/fragment_x01" />
     <fragment
-        android:id="@+id/dartsX01SinglePlayer"
+        android:id="@+id/nav_single_x01"
         android:name="bruzsa.laszlo.dartsapp.ui.singlex01.SingleX01Fragment"
         android:label="fragment_dartsX01_single_player"
-        tools:layout="@layout/fragment_singlex01" />
+        tools:layout="@layout/fragment_singlex01">
+        <argument
+            android:name="Player"
+            app:argType="bruzsa.laszlo.dartsapp.dao.Player" />
+        <argument
+            android:name="StartScore"
+            app:argType="integer"
+            android:defaultValue="501" />
+    </fragment>
     <fragment
-        android:id="@+id/playerFragment"
+        android:id="@+id/nav_playerFragment"
         android:name="bruzsa.laszlo.dartsapp.ui.home.player.PlayerFragment"
         android:label="Select player..."
-        tools:layout="@layout/fragment_player" >
+        tools:layout="@layout/fragment_player">
         <action
-            android:id="@+id/action_playerFragment_to_nav_home"
-            app:destination="@id/nav_home" />
+            android:id="@+id/action_playerFragment_to_homeFragment"
+            app:destination="@id/nav_homeFragment" />
+        <argument
+            android:name="playerIds"
+            app:argType="long[]" />
+        <argument
+            android:name="selectedTeamPlayer"
+            app:argType="bruzsa.laszlo.dartsapp.model.TeamPlayer" />
     </fragment>
 </navigation>
