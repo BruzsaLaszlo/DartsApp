@@ -1,4 +1,7 @@
-package bruzsa.laszlo.dartsapp.ui;
+package bruzsa.laszlo.dartsapp.speech;
+
+import static android.Manifest.permission.INTERNET;
+import static android.Manifest.permission.RECORD_AUDIO;
 
 import android.content.Context;
 import android.content.Intent;
@@ -10,38 +13,45 @@ import android.speech.tts.TextToSpeech;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
-import java.util.function.Consumer;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
-import lombok.Setter;
+import bruzsa.laszlo.dartsapp.Helper;
+import bruzsa.laszlo.dartsapp.speech.events.ErrorEventListener;
+import bruzsa.laszlo.dartsapp.speech.events.ResultEventListener;
 
 public class Speech {
 
-    private TextToSpeech textToSpeech = null;
+    private TextToSpeech textToSpeech;
 
     private final SpeechRecognizer speechRecognizer;
     private Language language = Language.HUNGARIAN;
     private static final String TAG = "Speech";
 
-    @Setter
-    private Consumer<List<String>> onResultEventListener;
-    @Setter
-    private Consumer<String> onErrorEventListener;
+    private final ResultEventListener resultEventListener;
+    private final ErrorEventListener errorEventListener;
 
     private static Speech speech;
 
-    public static Speech getInstance(@NonNull Context context) {
-        if (speech == null)
-            speech = new Speech(context);
+    public static Speech build(@NonNull Fragment fragment, ResultEventListener resultEventListener, ErrorEventListener errorEventListener) {
+        Helper.requestRecordPermission(fragment, INTERNET);
+        if (Helper.requestRecordPermission(fragment, RECORD_AUDIO)) {
+            if (speech == null)
+                speech = new Speech(fragment.getContext(), resultEventListener, errorEventListener);
+        }
         return speech;
     }
 
-    private Speech(Context context) {
+    private Speech(Context context, ResultEventListener resultEventListener, ErrorEventListener errorEventListener) {
+        this.resultEventListener = resultEventListener;
+        this.errorEventListener = errorEventListener;
+
         textToSpeech = new TextToSpeech(context, status -> {
             Log.d(TAG, "Speech: " + textToSpeech.getAvailableLanguages());
             if (status != TextToSpeech.ERROR) {
@@ -51,11 +61,11 @@ public class Speech {
 
         Log.i(TAG, "isRecognitionAvailable: " + SpeechRecognizer.isRecognitionAvailable(context));
         speechRecognizer = SpeechRecognizer.createSpeechRecognizer(context);
-        speechRecognizer.setRecognitionListener(getRecognitionListener());
+        speechRecognizer.setRecognitionListener(getCustomRecognizerListener());
     }
 
     @NonNull
-    private RecognitionListener getRecognitionListener() {
+    private RecognitionListener getCustomRecognizerListener() {
         return new RecognitionListener() {
 
             @Override
@@ -86,14 +96,14 @@ public class Speech {
             @Override
             public void onError(int error) {
                 Log.d(TAG, "onError: " + getErrorText(error));
-                onErrorEventListener.accept(getErrorText(error));
+                errorEventListener.onError(getErrorText(error));
             }
 
             @Override
             public void onResults(Bundle results) {
                 ArrayList<String> data = results.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION);
                 Log.d(TAG, "onResults: " + data);
-                List<String> numbers = data.stream()
+                List<String> numbers = Objects.requireNonNull(data).stream()
                         .flatMap(s -> Arrays.stream(s.split("\\s")))
                         .map(s -> switch (s.toLowerCase()) {
                             case "zero", "zérus", "semmi" -> "0";
@@ -106,7 +116,7 @@ public class Speech {
                         })
                         .filter(s -> s.chars().anyMatch(Character::isDigit))
                         .collect(Collectors.toList());
-                onResultEventListener.accept(numbers);
+                resultEventListener.onResult(numbers);
             }
 
             @Override
@@ -132,7 +142,7 @@ public class Speech {
         textToSpeech.setLanguage(new Locale(language.getCountryCode()));
     }
 
-    public Intent getSpeechRecognizerIntent() {
+    private Intent getSpeechRecognizerIntent() {
         Intent speechRecognizerIntent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
         speechRecognizerIntent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
         if (language == null)
