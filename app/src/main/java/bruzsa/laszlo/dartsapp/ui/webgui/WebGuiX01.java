@@ -19,6 +19,7 @@ import bruzsa.laszlo.dartsapp.model.TeamPlayer;
 import bruzsa.laszlo.dartsapp.model.x01.Stat;
 import bruzsa.laszlo.dartsapp.model.x01.X01Settings;
 import bruzsa.laszlo.dartsapp.model.x01.X01TeamScores;
+import bruzsa.laszlo.dartsapp.model.x01.X01Throw;
 
 public class WebGuiX01 {
 
@@ -55,11 +56,12 @@ public class WebGuiX01 {
         });
         teamScoresMap.forEach((team, teamScores) -> {
             int size = teamScores.getThrowsList().size();
-            for (int i = 1; i <= MAX_THROW; i++) {
-                String s = "";
-                if (size - i >= 0)
-                    s = teamScores.getThrowsList().get(size - i).toString();
-                variables.put(team + "_T" + i, s);
+            for (int i = 1, n = 0; n < MAX_THROW && size - i >= 0; i++) {
+                X01Throw x01Throw = teamScores.getThrowsList().get(size - i);
+                if (!x01Throw.isRemoved()) {
+                    variables.put(team + "_T" + i, x01Throw.toString());
+                    n++;
+                }
             }
             if (x01Settings.getMatchType() == SET) {
                 variables.put(team + "_SET", teamScores.getSets());
