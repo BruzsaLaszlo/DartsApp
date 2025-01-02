@@ -40,7 +40,7 @@
         tools:layout="@layout/fragment_singlex01">
         <argument
             android:name="Player"
-            app:argType="bruzsa.laszlo.dartsapp.dao.Player" />
+            app:argType="bruzsa.laszlo.dartsapp.enties.Player" />
         <argument
             android:name="StartScore"
             app:argType="integer"
@@ -56,7 +56,8 @@
             app:destination="@id/nav_homeFragment" />
         <argument
             android:name="playerIds"
-            app:argType="long[]" />
+            app:argType="long[]"
+            app:nullable="true" />
         <argument
             android:name="selectedTeamPlayer"
             app:argType="bruzsa.laszlo.dartsapp.model.TeamPlayer" />
