@@ -4,7 +4,7 @@ import androidx.annotation.NonNull;
 
 import java.time.LocalDateTime;
 
-import bruzsa.laszlo.dartsapp.dao.Player;
+import bruzsa.laszlo.dartsapp.enties.Player;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 

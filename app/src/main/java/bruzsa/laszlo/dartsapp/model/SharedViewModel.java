@@ -1,28 +1,28 @@
 package bruzsa.laszlo.dartsapp.model;
 
-import static bruzsa.laszlo.dartsapp.model.TeamPlayer.PLAYER_1_1;
 import static bruzsa.laszlo.dartsapp.model.TeamPlayer.PLAYER_1_2;
 import static bruzsa.laszlo.dartsapp.model.TeamPlayer.PLAYER_2_1;
 import static bruzsa.laszlo.dartsapp.model.TeamPlayer.PLAYER_2_2;
 import static bruzsa.laszlo.dartsapp.model.home.GameMode.PLAYER;
 import static bruzsa.laszlo.dartsapp.model.home.GameType.X01;
 
+import android.content.Context;
 import android.util.Log;
 
-import androidx.lifecycle.SavedStateHandle;
 import androidx.lifecycle.ViewModel;
 
 import java.util.ArrayList;
 import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.Executors;
 
-import bruzsa.laszlo.dartsapp.dao.Player;
+import bruzsa.laszlo.dartsapp.dabatase.AppDatabase;
+import bruzsa.laszlo.dartsapp.enties.Player;
 import bruzsa.laszlo.dartsapp.model.cricket.CricketSettings;
 import bruzsa.laszlo.dartsapp.model.home.GameMode;
 import bruzsa.laszlo.dartsapp.model.home.GameType;
 import bruzsa.laszlo.dartsapp.model.x01.X01Settings;
-import bruzsa.laszlo.dartsapp.repository.home.PlayersRepository;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
@@ -30,11 +30,9 @@ import lombok.Setter;
 public class SharedViewModel extends ViewModel {
 
 
-    private SavedStateHandle state;
+    private static final String TAG = "SharedViewModel";
+    private AppDatabase database;
     public static final String VOICE_INPUT_ENABLED = "isVoiceInputEnabled";
-
-    private final PlayersRepository playersRepository = new PlayersRepository() {
-    };
 
     private final Map<TeamPlayer, Player> selectedPlayers = new EnumMap<>(TeamPlayer.class);
     @Getter
@@ -44,18 +42,16 @@ public class SharedViewModel extends ViewModel {
     @Getter
     private final Settings settings = Settings.getDefault();
 
-    public SharedViewModel(SavedStateHandle state) {
-        this();
-        this.state = state;
-        Log.d("SharedViewModel", "SharedViewModel: " + state.get(VOICE_INPUT_ENABLED));
-    }
+    public void startDatabase(Context context) {
+        Executors.newSingleThreadExecutor().submit(() -> {
+            database = AppDatabase.getInstance(context);
 
-
-    public SharedViewModel() {
-        selectedPlayers.put(PLAYER_1_1, getAllPlayers().get(0));
-        selectedPlayers.put(PLAYER_2_1, getAllPlayers().get(1));
-        selectedPlayers.put(PLAYER_1_2, getAllPlayers().get(2));
-        selectedPlayers.put(PLAYER_2_2, getAllPlayers().get(3));
+            List<Player> allPlayers = getAllPlayers();
+            TeamPlayer[] teamPlayer = TeamPlayer.values();
+            for (int i = 0; i < 4 && i <= allPlayers.size(); i++) {
+                selectedPlayers.put(teamPlayer[i], allPlayers.get(i));
+            }
+        });
     }
 
     public Map<TeamPlayer, Player> getSelectedPlayersMap() {
@@ -72,11 +68,18 @@ public class SharedViewModel extends ViewModel {
     }
 
     public void addPlayer(TeamPlayer teamPlayer, Player player) {
-        selectedPlayers.put(teamPlayer, player);
+        Player foundPlayer = database.playerDao().findByName(player.getName());
+        if (foundPlayer == null) {
+            database.playerDao().insert(player);
+            selectedPlayers.put(teamPlayer, player);
+        } else {
+            selectedPlayers.put(teamPlayer, foundPlayer);
+        }
     }
 
     public List<Player> getAllPlayers() {
-        return new ArrayList<>(playersRepository.getAllPlayers());
+        Log.i(TAG, "getAllPlayers: " + database.playerDao().getAll());
+        return new ArrayList<>(database.playerDao().getAll());
     }
 
     public void clearPLayers(TeamPlayer... players) {

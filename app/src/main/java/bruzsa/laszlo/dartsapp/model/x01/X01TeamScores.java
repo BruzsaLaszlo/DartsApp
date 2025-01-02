@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import bruzsa.laszlo.dartsapp.dao.Player;
+import bruzsa.laszlo.dartsapp.enties.Player;
 import lombok.Getter;
 
 @Getter

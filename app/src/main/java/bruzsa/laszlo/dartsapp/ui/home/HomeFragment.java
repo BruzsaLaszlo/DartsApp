@@ -32,11 +32,12 @@ import com.google.android.material.snackbar.BaseTransientBottomBar;
 import com.google.android.material.snackbar.Snackbar;
 
 import java.util.Map;
+import java.util.Objects;
 import java.util.TreeMap;
 
 import bruzsa.laszlo.dartsapp.R;
-import bruzsa.laszlo.dartsapp.dao.Player;
 import bruzsa.laszlo.dartsapp.databinding.FragmentHomeBinding;
+import bruzsa.laszlo.dartsapp.enties.Player;
 import bruzsa.laszlo.dartsapp.model.SharedViewModel;
 import bruzsa.laszlo.dartsapp.model.TeamPlayer;
 import bruzsa.laszlo.dartsapp.model.home.GameMode;
@@ -74,7 +75,10 @@ public class HomeFragment extends Fragment {
     }
 
     public void choosePlayerFor(TeamPlayer teamPlayer) {
-        long[] playerIds = sharedViewModel.getSelectedPlayersMap().values().stream().mapToLong(Player::getId).toArray();
+        long[] playerIds = sharedViewModel.getSelectedPlayersMap().values().stream()
+                .filter(player -> Objects.nonNull(player.getId()))
+                .mapToLong(Player::getId)
+                .toArray();
         navigateToFragment(actionHomeFragmentToPlayerFragment(playerIds, teamPlayer));
     }
 

@@ -8,7 +8,7 @@ import androidx.lifecycle.ViewModel;
 
 import java.util.Map;
 
-import bruzsa.laszlo.dartsapp.dao.Player;
+import bruzsa.laszlo.dartsapp.enties.Player;
 import bruzsa.laszlo.dartsapp.model.Team;
 import bruzsa.laszlo.dartsapp.model.TeamPlayer;
 import bruzsa.laszlo.dartsapp.ui.cricket.CricketThrowsAdapter;

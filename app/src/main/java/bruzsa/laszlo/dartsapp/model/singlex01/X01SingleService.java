@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
-import bruzsa.laszlo.dartsapp.dao.Player;
+import bruzsa.laszlo.dartsapp.enties.Player;
 import bruzsa.laszlo.dartsapp.model.x01.Stat;
 import bruzsa.laszlo.dartsapp.model.x01.X01TeamScores;
 import bruzsa.laszlo.dartsapp.model.x01.X01Throw;

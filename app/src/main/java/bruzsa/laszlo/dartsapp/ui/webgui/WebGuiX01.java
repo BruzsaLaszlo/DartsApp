@@ -13,7 +13,7 @@ import org.thymeleaf.templateresolver.StringTemplateResolver;
 import java.util.HashMap;
 import java.util.Map;
 
-import bruzsa.laszlo.dartsapp.dao.Player;
+import bruzsa.laszlo.dartsapp.enties.Player;
 import bruzsa.laszlo.dartsapp.model.Team;
 import bruzsa.laszlo.dartsapp.model.TeamPlayer;
 import bruzsa.laszlo.dartsapp.model.x01.Stat;
@@ -42,7 +42,7 @@ public class WebGuiX01 {
         var variables = new HashMap<String, Object>();
         playerMap.forEach((teamPlayer, player) -> {
             String element = active == teamPlayer ? "playerActive" : "playerInactive";
-            String formatted = "<%s> %s </%s>".formatted(element, player.getName(), element);
+            String formatted = String.format("<%s> %s </%s>", element, player.getName(), element);
             variables.put(teamPlayer.toString(), formatted);
         });
         statMap.forEach((team, stat) -> {

@@ -2,7 +2,7 @@ package bruzsa.laszlo.dartsapp.model.cricket;
 
 import androidx.annotation.NonNull;
 
-import bruzsa.laszlo.dartsapp.dao.Player;
+import bruzsa.laszlo.dartsapp.enties.Player;
 
 public class CricketTeam {
 

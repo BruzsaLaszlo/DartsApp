@@ -12,7 +12,7 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.function.IntConsumer;
 
-import bruzsa.laszlo.dartsapp.dao.Player;
+import bruzsa.laszlo.dartsapp.enties.Player;
 import bruzsa.laszlo.dartsapp.model.Team;
 import bruzsa.laszlo.dartsapp.model.singlex01.X01SingleService;
 import bruzsa.laszlo.dartsapp.model.x01.Stat;

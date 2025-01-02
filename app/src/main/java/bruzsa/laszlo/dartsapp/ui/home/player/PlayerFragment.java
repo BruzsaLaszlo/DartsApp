@@ -17,11 +17,10 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.List;
-import java.util.Random;
 
 import bruzsa.laszlo.dartsapp.R;
-import bruzsa.laszlo.dartsapp.dao.Player;
 import bruzsa.laszlo.dartsapp.databinding.FragmentPlayerBinding;
+import bruzsa.laszlo.dartsapp.enties.Player;
 import bruzsa.laszlo.dartsapp.model.SharedViewModel;
 import bruzsa.laszlo.dartsapp.model.TeamPlayer;
 
@@ -57,10 +56,7 @@ public class PlayerFragment extends Fragment {
                 .collect(toList());
         selectedTeamPlayer = args.getSelectedTeamPlayer();
 
-        Random random = new Random();
-        binding.buttonAdd.setOnClickListener(v -> moveToHome(new Player(
-                random.nextLong(),
-                binding.editTextName.getText().toString())));
+        binding.buttonAdd.setOnClickListener(v -> moveToHome(new Player(binding.editTextName.getText().toString())));
 
         recyclerView.setAdapter(new PlayerAdapter(players, this::moveToHome));
         return binding.getRoot();
