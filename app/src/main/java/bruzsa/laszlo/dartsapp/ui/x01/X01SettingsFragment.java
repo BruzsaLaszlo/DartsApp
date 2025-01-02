@@ -9,11 +9,7 @@ import androidx.fragment.app.Fragment;
 
 import bruzsa.laszlo.dartsapp.R;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link X01SettingsFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
+
 public class X01SettingsFragment extends Fragment {
 
     @Override

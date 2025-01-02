@@ -92,7 +92,6 @@ public class HomeFragment extends Fragment {
         };
     }
 
-    @SuppressWarnings("ConstantConditions")
     public void showDialogX01StartScore(View v) {
         var x01 = Map.of(
                 0, "201",
@@ -103,7 +102,7 @@ public class HomeFragment extends Fragment {
                 5, "1501");
         var sorted = new TreeMap<>(x01);
         new MaterialAlertDialogBuilder(v.getContext())
-                .setItems(sorted.values().toArray(String[]::new), (dialog, which) -> {
+                .setItems(sorted.values().toArray(new String[0]), (dialog, which) -> {
                     sharedViewModel.getX01Settings().setStartScore(parseInt(sorted.get(which)));
                     ((TextView) v).setText(sorted.get(which));
                 })

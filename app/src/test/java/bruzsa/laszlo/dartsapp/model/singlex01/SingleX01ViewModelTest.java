@@ -8,7 +8,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
 import org.mockito.junit.MockitoJUnitRunner;
 
-import bruzsa.laszlo.dartsapp.dao.Player;
+import bruzsa.laszlo.dartsapp.enties.Player;
 import bruzsa.laszlo.dartsapp.ui.singlex01.SingleX01ViewModel;
 
 @RunWith(MockitoJUnitRunner.class)

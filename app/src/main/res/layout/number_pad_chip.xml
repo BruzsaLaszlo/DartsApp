@@ -6,7 +6,6 @@
     android:layout_weight="0.5">
 
     <com.google.android.material.chip.Chip
-        android:id="@+id/numpad_chip"
         style="@style/Widget.Material3.Chip.Assist"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
