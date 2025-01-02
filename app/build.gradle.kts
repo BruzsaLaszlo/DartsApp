@@ -27,7 +27,7 @@ android {
 
     defaultConfig {
         applicationId = "bruzsa.laszlo.dartsapp"
-        minSdk = 34
+        minSdk = 29
         targetSdk = 34
         versionCode = 3
         versionName = "0.1"
@@ -114,7 +114,9 @@ android {
 
 dependencies {
 
-    testImplementation("junit:junit:4.12")
+    implementation("androidx.room:room-runtime:2.6.1")
+    annotationProcessor("androidx.room:room-compiler:2.6.1")
+    testImplementation("junit:junit:4.13.2")
     //    compileOnly(libs.lombok)
 //    annotationProcessor(libs.lombok)
 //    testCompileOnly(libs.lombok)
