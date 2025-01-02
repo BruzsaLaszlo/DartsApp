@@ -18,6 +18,7 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.MutableLiveData;
 
 import java.util.Arrays;
+import java.util.List;
 import java.util.function.IntConsumer;
 
 import bruzsa.laszlo.dartsapp.R;
@@ -56,18 +57,8 @@ public class InputViews {
     private boolean inicSpeech(Fragment fragment) {
         speech = Speech.build(
                 fragment,
-                numbers -> {
-                    String input = String.join("+", numbers);
-                    inputText.setText(input);
-                    imageMicrophone.setImageResource(R.drawable.mute);
-                    onOKClick();
-                    inputText.setHint(input);
-                    speech.textToSpeech(input);
-                },
-                error -> {
-                    inputText.setHint(error);
-                    imageMicrophone.setImageResource(R.drawable.mute);
-                });
+                this::onSpeechResult,
+                this::onSpeechError);
         return speech != null;
     }
 
@@ -167,5 +158,21 @@ public class InputViews {
         SharedPreferences sh = context.getSharedPreferences(INPUT_VIEWS_PREFERENCES, MODE_PRIVATE);
         String name = sh.getString(InputType.class.toString(), NUMPAD.name());
         return InputType.valueOf(name);
+    }
+
+    private void onSpeechResult(List<String> numbers) {
+        String input = String.join("+", numbers);
+        inputText.setText(input);
+        imageMicrophone.setImageResource(R.drawable.mute);
+        onOKClick();
+        inputText.setHint(input);
+        speech.textToSpeech(input);
+    }
+
+    private void onSpeechError(String error) {
+        if (inputType.getValue() == VOICE) {
+            inputText.setHint(error);
+            imageMicrophone.setImageResource(R.drawable.mute);
+        }
     }
 }
