@@ -23,12 +23,12 @@ android {
     }
 
     namespace = "bruzsa.laszlo.dartsapp"
-    compileSdk = 34
+    compileSdk = 35
 
     defaultConfig {
         applicationId = "bruzsa.laszlo.dartsapp"
         minSdk = 29
-        targetSdk = 34
+        targetSdk = 35
         versionCode = 3
         versionName = "0.1"
         multiDexEnabled = true
