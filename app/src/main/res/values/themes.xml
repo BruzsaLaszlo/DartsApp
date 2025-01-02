@@ -11,6 +11,7 @@
         <item name="colorOnSecondary">@color/black</item>
         <!-- Status bar color. -->
         <item name="android:statusBarColor">?attr/colorPrimaryVariant</item>
+        <item name="android:windowFullscreen">true</item>
         <!-- Customize your theme here. -->
     </style>
 
@@ -27,6 +28,7 @@
         <!--        &lt;!&ndash; Customize your theme here. &ndash;&gt;-->
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
+        <item name="android:windowFullscreen">true</item>
     </style>
 
 <!--    <style name="Theme.DartsApp.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />-->
