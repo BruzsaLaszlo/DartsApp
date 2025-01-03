@@ -8,7 +8,6 @@ import android.speech.tts.TextToSpeech;
 import android.util.Log;
 import android.view.Menu;
 
-import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
@@ -22,28 +21,14 @@ import androidx.navigation.ui.NavigationUI;
 
 import com.google.android.material.navigation.NavigationView;
 
+import java.util.Objects;
+
 import bruzsa.laszlo.dartsapp.databinding.ActivityMainBinding;
 import bruzsa.laszlo.dartsapp.model.SharedViewModel;
 
 public class MainActivity extends AppCompatActivity {
 
     private AppBarConfiguration mAppBarConfiguration;
-    private SharedViewModel sharedViewModel;
-    private ActivityMainBinding binding;
-
-    ActivityResultLauncher<Intent> mStartForResult = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(),
-            result -> {
-                if (result.getResultCode() == TextToSpeech.Engine.CHECK_VOICE_DATA_PASS) {
-                    Log.d("MainActivity", "EXTRA_AVAILABLE_VOICES: " + result.getData()
-                            .getCharSequenceArrayListExtra(EXTRA_AVAILABLE_VOICES));
-                } else {
-                    // missing data, install it
-                    Intent installIntent = new Intent();
-                    installIntent.setAction(
-                            TextToSpeech.Engine.ACTION_INSTALL_TTS_DATA);
-                    startActivity(installIntent);
-                }
-            });
 
 
     @Override
@@ -52,14 +37,12 @@ public class MainActivity extends AppCompatActivity {
 
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
 
-        Intent checkIntent = new Intent();
-        checkIntent.setAction(TextToSpeech.Engine.ACTION_CHECK_TTS_DATA);
-        mStartForResult.launch(checkIntent);
+        checkTtsData();
 
-        sharedViewModel = new ViewModelProvider(this).get(SharedViewModel.class);
+        SharedViewModel sharedViewModel = new ViewModelProvider(this).get(SharedViewModel.class);
         sharedViewModel.startDatabase(this);
 
-        binding = ActivityMainBinding.inflate(getLayoutInflater());
+        ActivityMainBinding binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
         setSupportActionBar(binding.appBarMain.toolbar);
 //        binding.appBarMain.fab.setOnClickListener(view -> Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
@@ -75,12 +58,27 @@ public class MainActivity extends AppCompatActivity {
                 .build();
 
         NavHostFragment navHostFragment = (NavHostFragment) getSupportFragmentManager().findFragmentById(R.id.nav_host_fragment_content_main);
-        assert navHostFragment != null : "navHostFragment not found";
-        NavController navController = navHostFragment.getNavController();
+        NavController navController = Objects.requireNonNull(navHostFragment).getNavController();
 //        NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_content_main);
         NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
         NavigationUI.setupWithNavController(navigationView, navController);
 
+    }
+
+    private void checkTtsData() {
+        registerForActivityResult(new ActivityResultContracts.StartActivityForResult(),
+                result -> {
+                    if (result.getResultCode() == TextToSpeech.Engine.CHECK_VOICE_DATA_PASS) {
+                        Log.d("MainActivity", "EXTRA_AVAILABLE_VOICES: " + result.getData()
+                                .getCharSequenceArrayListExtra(EXTRA_AVAILABLE_VOICES));
+                    } else {
+                        // missing data, install it
+                        Intent installIntent = new Intent();
+                        installIntent.setAction(TextToSpeech.Engine.ACTION_INSTALL_TTS_DATA);
+                        startActivity(installIntent);
+                    }
+                })
+                .launch(new Intent().setAction(TextToSpeech.Engine.ACTION_CHECK_TTS_DATA));
     }
 
     @Override

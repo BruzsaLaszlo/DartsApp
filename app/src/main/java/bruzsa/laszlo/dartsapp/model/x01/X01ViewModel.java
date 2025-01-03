@@ -19,8 +19,8 @@ import java.util.EnumMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.function.BiConsumer;
 import java.util.function.Consumer;
-import java.util.function.IntConsumer;
 
 import bruzsa.laszlo.dartsapp.enties.Player;
 import bruzsa.laszlo.dartsapp.model.Team;
@@ -75,17 +75,32 @@ public class X01ViewModel extends ViewModel {
         updateWebGui();
     }
 
-    public void newThrow(int throwValue, IntConsumer onCheckoutEventListener) {
+    public void newThrow(int throwValue, BiConsumer<Darts, Consumer<Integer>> onDartsCount, Consumer<Team> onGameOverEventListener) {
+        if (service.isCheckout(throwValue)) {
+            if ((throwValue > 40 && throwValue != 50) || throwValue % 2 == 1) {
+                onDartsCount.accept(Darts.TWO, dartsCount -> newThrow(throwValue, dartsCount, onGameOverEventListener));
+            } else {
+                onDartsCount.accept(Darts.THREE, dartsCount -> newThrow(throwValue, dartsCount, onGameOverEventListener));
+            }
+        } else {
+            newThrow(throwValue, 3, onGameOverEventListener);
+        }
+    }
+
+    public enum Darts {TWO, THREE}
+
+    private void newThrow(int throwValue, int dartsCount, Consumer<Team> onGameOverEventListener) {
         if (service.gameOver) return;
         if (service.isCheckout(throwValue)) {
-            onCheckoutEventListener.accept(throwValue);
+            newCheckoutThrow(throwValue, dartsCount, onGameOverEventListener);
         } else {
             TeamPlayer player = service.newThrow(throwValue);
             refreshGuiAfterNewThrow(player);
         }
     }
 
-    public void newCheckoutThrow(int throwValue, int dartCount, Consumer<Team> onGameOverEventListener) {
+
+    private void newCheckoutThrow(int throwValue, int dartCount, Consumer<Team> onGameOverEventListener) {
         TeamPlayer player = service.newThrow(throwValue, dartCount, onGameOverEventListener);
         throwAdapterMap.get(player.team).inserted();
         activePlayer.setValue(service.getActive());
@@ -93,7 +108,7 @@ public class X01ViewModel extends ViewModel {
         refreshGuiAfterNewThrow(TEAM2);
     }
 
-    public void refreshGuiAfterNewThrow(TeamPlayer player) {
+    private void refreshGuiAfterNewThrow(TeamPlayer player) {
         throwAdapterMap.get(player.team).inserted();
         refreshGuiAfterNewThrow(player.team);
         activePlayer.setValue(service.getActive());

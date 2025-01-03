@@ -15,7 +15,6 @@ import java.util.ArrayList;
 import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.Executors;
 
 import bruzsa.laszlo.dartsapp.dabatase.AppDatabase;
 import bruzsa.laszlo.dartsapp.enties.Player;
@@ -43,15 +42,18 @@ public class SharedViewModel extends ViewModel {
     private final Settings settings = Settings.getDefault();
 
     public void startDatabase(Context context) {
-        Executors.newSingleThreadExecutor().submit(() -> {
-            database = AppDatabase.getInstance(context);
-
-            List<Player> allPlayers = getAllPlayers();
-            TeamPlayer[] teamPlayer = TeamPlayer.values();
-            for (int i = 0; i < 4 && i <= allPlayers.size(); i++) {
-                selectedPlayers.put(teamPlayer[i], allPlayers.get(i));
-            }
+        AppDatabase.getInstance(context, appDatabase -> {
+            database = appDatabase;
+            inicPlayerList();
         });
+    }
+
+    private void inicPlayerList() {
+        List<Player> allPlayers = getAllPlayers();
+        TeamPlayer[] teamPlayer = TeamPlayer.values();
+        for (int i = 0; i < 4 && i <= allPlayers.size(); i++) {
+            selectedPlayers.put(teamPlayer[i], allPlayers.get(i));
+        }
     }
 
     public Map<TeamPlayer, Player> getSelectedPlayersMap() {
