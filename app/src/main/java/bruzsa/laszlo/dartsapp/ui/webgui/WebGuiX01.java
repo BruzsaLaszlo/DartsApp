@@ -16,6 +16,7 @@ import java.util.Map;
 import bruzsa.laszlo.dartsapp.enties.Player;
 import bruzsa.laszlo.dartsapp.model.Team;
 import bruzsa.laszlo.dartsapp.model.TeamPlayer;
+import bruzsa.laszlo.dartsapp.model.x01.CheckoutTable;
 import bruzsa.laszlo.dartsapp.model.x01.Stat;
 import bruzsa.laszlo.dartsapp.model.x01.X01Settings;
 import bruzsa.laszlo.dartsapp.model.x01.X01TeamScores;
@@ -40,11 +41,15 @@ public class WebGuiX01 {
 
     public String createHtml(Map<Team, Stat> statMap, TeamPlayer active) {
         var variables = new HashMap<String, Object>();
-        playerMap.forEach((teamPlayer, player) -> {
-            String element = active == teamPlayer ? "playerActive" : "playerInactive";
-            String formatted = String.format("<%s> %s </%s>", element, player.getName(), element);
-            variables.put(teamPlayer.toString(), formatted);
-        });
+        for (TeamPlayer teamPlayer : TeamPlayer.values()) {
+            if (playerMap.containsKey(teamPlayer)) {
+                String element = active == teamPlayer ? "active" : "inactive";
+                String formatted = String.format("<%s> %s </%s>", element, playerMap.get(teamPlayer).getName(), element);
+                variables.put(teamPlayer.toString(), formatted);
+            } else {
+                variables.put(teamPlayer.toString(), "");
+            }
+        }
         statMap.forEach((team, stat) -> {
             variables.put(team + "_HC", stat.getHighestCheckout().or(() -> of(0)).map(integer -> integer == 0 ? "-" : integer.toString()).get());
             variables.put(team + "_P100", stat.getPlus100());
@@ -53,13 +58,14 @@ public class WebGuiX01 {
             variables.put(team + "_MAX", stat.getMax() == 0 ? "-" : stat.getMax());
             variables.put(team + "_AVERAGE", stat.getAverage() == 0f ? "-" : format(US, "%.0f", stat.getAverage()));
             variables.put(team + "_SCORE", stat.getScore());
+            variables.put(team + "_CHECKOUT", CheckoutTable.getCheckoutFor(stat.getScore()));
         });
         teamScoresMap.forEach((team, teamScores) -> {
             int size = teamScores.getThrowsList().size();
             for (int i = 1, n = 0; n < MAX_THROW && size - i >= 0; i++) {
                 X01Throw x01Throw = teamScores.getThrowsList().get(size - i);
                 if (!x01Throw.isRemoved()) {
-                    variables.put(team + "_T" + i, x01Throw.toString());
+                    variables.put(team + "_LAST_THROW" + i, x01Throw.toString());
                     n++;
                 }
             }

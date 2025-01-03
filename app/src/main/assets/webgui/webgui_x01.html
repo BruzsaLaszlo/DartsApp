@@ -1,236 +1,159 @@
-<!DOCTYPE HTML>
+<!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" lang="hu">
 <head>
+    <title>Darts</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
     <meta http-equiv="refresh" content="1"/>
 
     <style>
-
-        playerActive {
-          color: purple;
-          font-family: verdana, sans-serif;
-          font-size: 500%;
-        }
-        playerInactive {
-          color: black;
-          font-family: verdana, sans-serif;
-          font-size: 500%;
-        }
-        avg {
-          color: gray;
-          font-family: verdana, sans-serif;
-          font-size: 400%;
-        }
-        player1score, player2score {
-          color: blue;
+        .player {
           font-family: verdana, sans-serif;
           font-size: 600%;
         }
 
-        table, th, td {
-        <!--  border: 1px solid black;-->
+        active {
+          color: green;
         }
 
-        table {
-          margin-left: auto;
-          margin-right: auto;
-        }
-
-        throw {
+        inactive {
           color: black;
         }
 
-        p1, p2, label {
+        .grid-container {
+          display: grid;
+          grid-template-columns: auto 400px 250px 180px 250px 400px auto;
+<!--          gap: 10px;-->
+<!--          background-color: #2196F3;-->
+<!--          padding: 10px;-->
+<!--          border:1px solid black;-->
+<!--          border-collapse: collapse;-->
+        }
+
+        .grid-container > div {
+          background-color: rgba(255, 255, 255, 0.8);
+          padding: 0 0;
+        }
+
+        .name1 {
+          grid-column: 1 / 4;
+          justify-self: right;
+        }
+        .name2 {
+          grid-column:5 / 8;
+          justify-self: left;
+        }
+        .score {
+          color: blue;
+          font-family: verdana, sans-serif;
+          font-size: 600%;
+        }
+        .setleg {
+          color: #FF7F50;
+          font-size: 250%;
+          justify-self: center;
+        }
+        .checkout {
           color: gray;
           font-family: verdana, sans-serif;
           font-size: 300%;
+        }
+        .throw {
+          color: gray;
+          font-family: verdana, sans-serif;
+          font-size: 200%;
             text-align: right;
+        }
+        .stat {
+          justify-self: center;
+          font-size: 200%;
+          color: black;
+          padding: 0 100px;
+        }
+        .avg {
+          justify-self: center;
+          font-size: 450%;
+          color: black;
+        }
+        .empty {
+          justify-self: center;
+        }
+        .left {
+          justify-self: left;
+        }
+        .right {
+          justify-self: right;
         }
 
     </style>
 </head>
 <body>
 
+<div class="grid-container">
+    <div class="name1 player" th:utext="${PLAYER_1_1} + '<br>' + ${PLAYER_1_2}"> Player 1</div>
+    <div class="empty"></div>
+    <div class="name2 player" th:utext="${PLAYER_2_1} + '<br>' + ${PLAYER_2_2}"> Player 2</div>
 
-<table>
-    <thead>
 
-    </thead>
-    <tbody>
-    <tr>
-        <th style="text-align:right;">
-            <player1name th:utext="${PLAYER_1_1}"></player1name>
-            <br>
-            <player1name th:utext="${PLAYER_1_2}"></player1name>
-            <br>
-            <player1score th:text="${TEAM1_SCORE}" style="margin: 50px;"></player1score>
-        </th>
+    <div class="empty"></div>
+    <div class="right checkout" style="padding-top: 30px;" th:text="${TEAM1_CHECKOUT}">T16 D20</div>
+    <div class="right score" th:text="${TEAM1_SCORE}">501</div>
+    <div class="setleg" style="padding-top: 20px;"
+         th:utext="${TEAM1_SET} + ' ' + ${S} + ' ' + ${TEAM2_SET} + '<br>' + ${TEAM1_LEG} + ' ' + ${L} + ' ' + ${TEAM2_LEG}"></div>
+    <div class="left score" th:text="${TEAM2_SCORE}">501</div>
+    <div class="left checkout" style="padding-top: 30px;" th:text="${TEAM2_CHECKOUT}">T20 D20</div>
+    <div class="empty"></div>
 
-        <td style="text-align:center;">
-            <label><br></label>
-            <label><br></label>
-            <label><br></label>
-            <label><br></label>
-            <set><label style="color: #FF7F50;"
-                        th:text="${TEAM1_SET} + ' ' + ${S} + ' ' + ${TEAM2_SET}">
-            </label></set>
-            <br>
-            <label style="color: #FF7F50;"
-                   th:text="${TEAM1_LEG} + ' ' + ${L} + ' ' + ${TEAM2_LEG}">
-            </label>
-        </td>
+    <div class="empty"></div>
+    <div class="right throw  avg" th:text="${TEAM1_LAST_THROW1}"></div>
+    <div class="right stat avg" th:text="${TEAM1_AVERAGE}"></div>
+    <div class="stat avg">AVG</div>
+    <div class="left stat avg" th:text="${TEAM2_AVERAGE}"></div>
+    <div class="left throw avg" th:text="${TEAM2_LAST_THROW1}"></div>
+    <div class="empty"></div>
 
-        <th style="text-align:left;">
-            <player2name th:utext="${PLAYER_2_1}"></player2name>
-            <br>
-            <player2name th:utext="${PLAYER_2_2}"></player2name>
-            <br>
-            <player2score th:text="${TEAM2_SCORE}" style="margin: 50px;"></player2score>
-        </th>
+    <div class="empty"></div>
+    <div class="right throw" th:text="${TEAM1_LAST_THROW2}"></div>
+    <div class="right stat" th:text="${TEAM1_P100}"></div>
+    <div class="stat">100+</div>
+    <div class="left stat" th:text="${TEAM2_P100}"></div>
+    <div class="left throw" th:text="${TEAM2_LAST_THROW2}"></div>
+    <div class="empty"></div>
 
-    </tr>
-    <tr>
-        <td>
-            <p1>
-                <div style="float:left;width: 0%;padding-right: 100px;color: black;"
-                     th:text="${TEAM1_T1}"/>
-                </div>
-                <div style="float:right;padding-right: 30px;" th:text="${TEAM1_AVERAGE}"/>
-                </div>
-            </p1>
-        </td>
-        <td align="center">
-            <label>AVG</label>
-        </td>
-        <td>
-            <p2>
-                <div style="float:left;width:0%;padding-left: 30px;" th:text="${TEAM2_AVERAGE}"/>
-                </div>
-                <div style="float:right;padding-left: 100px;color: black;"
-                     th:text="${TEAM2_T1}"/>
-                </div>
-            </p2>
-        </td>
-    </tr>
-    <tr>
-        <td>
-            <p1>
-                <div style="float:left;width: 0%;padding-right: 100px;color: black;"
-                     th:text="${TEAM1_T2}"/>
-                </div>
-                <div style="float:right;padding-right: 30px;width: 40%;"
-                     th:text="${TEAM1_P100}"/>
-                </div>
-            </p1>
-        </td>
-        <td align="center">
-            <label>100+</label>
-        </td>
-        <td>
-            <p2>
-                <div style="float:left;width:0%;padding-left: 30px;"
-                     th:text="${TEAM2_P100}"/>
-                </div>
-                <div style="float:right;padding-left: 100px;color: black;"
-                     th:text="${TEAM2_T2}"/>
-                </div>
-            </p2>
-        </td>
-    </tr>
-    <tr>
-        <td>
-            <p1>
-                <div style="float:left;width: 0%;padding-right: 100px;color: black;"
-                     th:text="${TEAM1_T3}"/>
-                </div>
-                <div style="float:right;padding-right: 30px;width: 40%;" th:text="${TEAM1_P60}"/>
-                </div>
-            </p1>
-        </td>
-        <td align="center">
-            <label>60+</label>
-        </td>
-        <td>
-            <p2>
-                <div style="float:left;width:0%;padding-left: 30px;" th:text="${TEAM2_P60}"/>
-                </div>
-                <div style="float:right;padding-left: 100px;color: black;"
-                     th:text="${TEAM2_T3}"/>
-                </div>
-            </p2>
-        </td>
-    </tr>
-    <tr>
-        <td>
-            <p1>
-                <div style="float:left;width: 0%;padding-right: 100px;color: black;"
-                     th:text="${TEAM1_T4}"/>
-                </div>
-                <div style="float:right;padding-right: 30px;width: 40%;" th:text="${TEAM1_MAX}"/>
-                </div>
-            </p1>
-        </td>
-        <td align="center">
-            <label>MAX</label>
-        </td>
-        <td>
-            <p2>
-                <div style="float:left;width:0%;padding-left: 30px;" th:text="${TEAM2_MAX}"/>
-                </div>
-                <div style="float:right;padding-left: 100px;color: black;"
-                     th:text="${TEAM2_T4}"/>
-                </div>
-            </p2>
-        </td>
-    </tr>
-    <tr>
-        <td>
-            <p1>
-                <div style="float:left;width: 0%;padding-right: 100px;color: black;"
-                     th:text="${TEAM1_T5}"/>
-                </div>
-                <div style="float:right;padding-right: 30px;width: 40%;" th:text="${TEAM1_MIN}"/>
-                </div>
-            </p1>
-        </td>
-        <td align="center">
-            <label>MIN</label>
-        </td>
-        <td>
-            <p2>
-                <div style="float:left;width:0%;padding-left: 30px;" th:text="${TEAM2_MIN}"/>
-                </div>
-                <div style="float:right;padding-left: 100px;color: black;"
-                     th:text="${TEAM2_T5}"/>
-                </div>
-            </p2>
-        </td>
-    </tr>
-    <tr>
-        <td>
-            <p1>
-                <div style="float:left;width: 0%;padding-right: 100px;color: black;"
-                     th:text="${TEAM1_T6}"/>
-                </div>
-                <div style="float:right;padding-right: 30px;width: 40%;" th:text="${TEAM1_HC}"/>
-                </div>
-            </p1>
-        </td>
-        <td align="center">
-            <label>HC</label>
-        </td>
-        <td>
-            <p2>
-                <div style="float:left;width:0%;padding-left: 30px;" th:text="${TEAM2_HC}"/>
-                </div>
-                <div style="float:right;padding-left: 100px;color: black;"
-                     th:text="${TEAM2_T6}"/>
-                </div>
-            </p2>
-        </td>
-    </tr>
+    <div class="empty"></div>
+    <div class="right throw" th:text="${TEAM1_LAST_THROW3}"></div>
+    <div class="right stat" th:text="${TEAM1_P60}"></div>
+    <div class="stat">60+</div>
+    <div class="left stat" th:text="${TEAM2_P60}"></div>
+    <div class="left throw" th:text="${TEAM2_LAST_THROW3}"></div>
+    <div class="empty"></div>
 
-    </tbody>
-</table>
+    <div class="empty"></div>
+    <div class="right throw" th:text="${TEAM1_LAST_THROW4}"></div>
+    <div class="right stat" th:text="${TEAM1_MAX}"></div>
+    <div class="stat">MAX</div>
+    <div class="left stat" th:text="${TEAM2_MAX}"></div>
+    <div class="left throw" th:text="${TEAM2_LAST_THROW4}"></div>
+    <div class="empty"></div>
+
+    <div class="empty"></div>
+    <div class="right throw" th:text="${TEAM1_LAST_THROW5}"></div>
+    <div class="right stat" th:text="${TEAM1_MIN}"></div>
+    <div class="stat">MIN</div>
+    <div class="left stat" th:text="${TEAM2_MIN}"></div>
+    <div class="left throw" th:text="${TEAM2_LAST_THROW5}"></div>
+    <div class="empty"></div>
+
+    <div class="empty"></div>
+    <div class="right throw" th:text="${TEAM1_LAST_THROW6}"></div>
+    <div class="right stat" th:text="${TEAM1_HC}"></div>
+    <div class="stat">HC</div>
+    <div class="left stat" th:text="${TEAM2_HC}"></div>
+    <div class="left throw" th:text="${TEAM2_LAST_THROW6}"></div>
+    <div class="empty"></div>
+
+</div>
+
 </body>
 </html>
+
+
