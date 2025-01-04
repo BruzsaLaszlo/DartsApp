@@ -72,7 +72,7 @@ public class X01ViewModel extends ViewModel {
         set.setValue(settings.getMatchType() == X01MatchType.SET);
 
         webGUI = new WebGuiX01(htmlTemplate, activePlayersMap, service.getTeamScores(), settings);
-        updateWebGui();
+        updateWebGui(getStats());
     }
 
     public void newThrow(int throwValue, BiConsumer<Darts, Consumer<Integer>> onDartsCount, Consumer<Team> onGameOverEventListener) {
@@ -89,6 +89,11 @@ public class X01ViewModel extends ViewModel {
         } else {
             newThrow(throwValue, 3, onGameOverEventListener);
         }
+    }
+
+    public void newPartialValue(int value) {
+        service.newPartialValue(value);
+        refreshGui();
     }
 
     public enum Darts {TWO, THREE}
@@ -108,32 +113,33 @@ public class X01ViewModel extends ViewModel {
         TeamPlayer player = service.newThrow(throwValue, dartCount, onGameOverEventListener);
         throwAdapterMap.get(player.team).inserted();
         activePlayer.setValue(service.getActive());
-        refreshGuiAfterNewThrow(TEAM1);
-        refreshGuiAfterNewThrow(TEAM2);
+        refreshGui();
     }
 
     private void refreshGuiAfterNewThrow(TeamPlayer player) {
         throwAdapterMap.get(player.team).inserted();
-        refreshGuiAfterNewThrow(player.team);
+        refreshGui();
         activePlayer.setValue(service.getActive());
     }
 
-    private void refreshGuiAfterNewThrow(Team team) {
-        Stat stat = service.getStat(team);
-        liveDatasMap.get(team).set.setValue(service.getSet(team));
-        liveDatasMap.get(team).leg.setValue(service.getLeg(team));
-        liveDatasMap.get(team).stat.setValue(getStatAsString(stat));
-        liveDatasMap.get(team).possibleCheckout.setValue(isOut(stat.getScore()));
-        updateWebGui();
-        liveDatasMap.get(team).score.setValue(valueOf(stat.getScore()));
+    private void refreshGui() {
+        Map<Team, Stat> stats = getStats();
+        stats.forEach((team, stat) -> {
+            liveDatasMap.get(team).score.setValue(valueOf(stat.getScore()));
+            liveDatasMap.get(team).set.setValue(service.getSet(team));
+            liveDatasMap.get(team).leg.setValue(service.getLeg(team));
+            liveDatasMap.get(team).stat.setValue(getStatAsString(stat));
+            liveDatasMap.get(team).possibleCheckout.setValue(isOut(stat.getScore()));
+        });
+        updateWebGui(stats);
     }
 
     private Map<Team, Stat> getStats() {
         return Map.of(TEAM1, service.getStat(TEAM1), TEAM2, service.getStat(TEAM2));
     }
 
-    private void updateWebGui() {
-        String html = webGUI.createHtml(getStats(), service.getActive());
+    private void updateWebGui(Map<Team, Stat> stats) {
+        String html = webGUI.createHtml(stats, service.getActive());
         getWebServer().setWebServerContent(html);
     }
 
@@ -141,12 +147,13 @@ public class X01ViewModel extends ViewModel {
         if (service.gameOver) return;
         service.setActive(player);
         activePlayer.setValue(player);
-        updateWebGui();
+        service.newPartialValue(0);
+        refreshGui();
     }
 
 
     public boolean removeThrow(X01Throw x01Throw, Team team) {
-        return service.removeThrow(x01Throw, () -> refreshGuiAfterNewThrow(team));
+        return service.removeThrow(x01Throw, this::refreshGui);
     }
 
     public boolean isOut(int score) {
