@@ -2,6 +2,7 @@ package bruzsa.laszlo.dartsapp.model.cricket;
 
 import static bruzsa.laszlo.dartsapp.model.Team.TEAM1;
 import static bruzsa.laszlo.dartsapp.model.Team.TEAM2;
+import static bruzsa.laszlo.dartsapp.ui.webgui.WebServer.getWebServer;
 
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
@@ -13,7 +14,6 @@ import bruzsa.laszlo.dartsapp.model.Team;
 import bruzsa.laszlo.dartsapp.model.TeamPlayer;
 import bruzsa.laszlo.dartsapp.ui.cricket.CricketThrowsAdapter;
 import bruzsa.laszlo.dartsapp.ui.webgui.WebGuiCricket;
-import bruzsa.laszlo.dartsapp.ui.webgui.WebServer;
 import lombok.Getter;
 
 public class CricketViewModel extends ViewModel {
@@ -63,7 +63,7 @@ public class CricketViewModel extends ViewModel {
 
     private void refreshWebGui(Stat stat) {
         String html = webGUI.createHtml(stat);
-        WebServer.getServer().setWebServerContent(html);
+        getWebServer().setWebServerContent(html);
     }
 
     public interface OnNewGameCallback {

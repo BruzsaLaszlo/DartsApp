@@ -2,7 +2,7 @@ package bruzsa.laszlo.dartsapp.ui.singlex01;
 
 import static bruzsa.laszlo.dartsapp.model.Team.TEAM1;
 import static bruzsa.laszlo.dartsapp.model.TeamPlayer.PLAYER_1_1;
-import static bruzsa.laszlo.dartsapp.ui.webgui.WebServer.getServer;
+import static bruzsa.laszlo.dartsapp.ui.webgui.WebServer.getWebServer;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
@@ -93,7 +93,7 @@ public class SingleX01ViewModel extends ViewModel {
     private void updateWebGui(Stat stat) {
         assert stat != null : "n u l l";
         String html = webGui.createHtml(Map.of(TEAM1, stat), PLAYER_1_1);
-        getServer().setWebServerContent(html);
+        getWebServer().setWebServerContent(html);
     }
 
     public LiveData<Integer> getScore() {

@@ -5,7 +5,7 @@ import static android.graphics.Color.RED;
 import static java.lang.String.valueOf;
 import static bruzsa.laszlo.dartsapp.model.Team.TEAM1;
 import static bruzsa.laszlo.dartsapp.model.Team.TEAM2;
-import static bruzsa.laszlo.dartsapp.ui.webgui.WebServer.getServer;
+import static bruzsa.laszlo.dartsapp.ui.webgui.WebServer.getWebServer;
 
 import android.graphics.Typeface;
 import android.view.View;
@@ -77,10 +77,14 @@ public class X01ViewModel extends ViewModel {
 
     public void newThrow(int throwValue, BiConsumer<Darts, Consumer<Integer>> onDartsCount, Consumer<Team> onGameOverEventListener) {
         if (service.isCheckout(throwValue)) {
-            if ((throwValue > 40 && throwValue != 50) || throwValue % 2 == 1) {
-                onDartsCount.accept(Darts.TWO, dartsCount -> newThrow(throwValue, dartsCount, onGameOverEventListener));
+            if (throwValue > 110 || List.of(109, 108, 106, 105, 103, 102).contains(throwValue)) {
+                newThrow(throwValue, 3, onGameOverEventListener);
+            } else if ((throwValue > 40 && throwValue != 50) || throwValue % 2 == 1) {
+                onDartsCount.accept(Darts.TWO, dartsCount ->
+                        newThrow(throwValue, dartsCount, onGameOverEventListener));
             } else {
-                onDartsCount.accept(Darts.THREE, dartsCount -> newThrow(throwValue, dartsCount, onGameOverEventListener));
+                onDartsCount.accept(Darts.THREE, dartsCount ->
+                        newThrow(throwValue, dartsCount, onGameOverEventListener));
             }
         } else {
             newThrow(throwValue, 3, onGameOverEventListener);
@@ -130,7 +134,7 @@ public class X01ViewModel extends ViewModel {
 
     private void updateWebGui() {
         String html = webGUI.createHtml(getStats(), service.getActive());
-        getServer().setWebServerContent(html);
+        getWebServer().setWebServerContent(html);
     }
 
     public void setActive(TeamPlayer player) {

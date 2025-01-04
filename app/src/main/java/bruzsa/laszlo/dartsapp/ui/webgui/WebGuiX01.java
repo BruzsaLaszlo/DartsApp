@@ -12,6 +12,7 @@ import org.thymeleaf.templateresolver.StringTemplateResolver;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 import bruzsa.laszlo.dartsapp.enties.Player;
 import bruzsa.laszlo.dartsapp.model.Team;
@@ -26,7 +27,7 @@ public class WebGuiX01 {
 
     private final TemplateEngine templateEngine = new TemplateEngine();
     private final String htmlTemplate;
-    private static final int MAX_THROW = 6;
+    private static final int MAX_THROW = 5;
     private final Map<TeamPlayer, Player> playerMap;
     private final Map<Team, X01TeamScores> teamScoresMap;
     private final X01Settings x01Settings;
@@ -44,7 +45,8 @@ public class WebGuiX01 {
         for (TeamPlayer teamPlayer : TeamPlayer.values()) {
             if (playerMap.containsKey(teamPlayer)) {
                 String element = active == teamPlayer ? "active" : "inactive";
-                String formatted = String.format("<%s> %s </%s>", element, playerMap.get(teamPlayer).getName(), element);
+                String name = Objects.requireNonNull(playerMap.get(teamPlayer)).getName();
+                String formatted = String.format("<%s> %s </%s>", element, name, element);
                 variables.put(teamPlayer.toString(), formatted);
             } else {
                 variables.put(teamPlayer.toString(), "");

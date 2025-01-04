@@ -1,37 +1,50 @@
 package bruzsa.laszlo.dartsapp.ui.webgui;
 
 import java.io.IOException;
+import java.util.concurrent.Executors;
 
-import lombok.experimental.Delegate;
+import fi.iki.elonen.NanoHTTPD;
 
-public class WebServer {
+public class WebServer extends NanoHTTPD {
 
-    public static final int PORT = 9000;
+    public static final int WEBSERVER_PORT = 9000;
     private static WebServer webServer;
+    private String response = "Nothing to show now...";
+
 
     private WebServer() {
-        startWebserver();
+        super(WEBSERVER_PORT);
     }
 
-    public static WebServer getServer() {
-        if (webServer == null) webServer = new WebServer();
+    public static WebServer getWebServer() {
+        if (webServer == null || !webServer.wasStarted()) {
+            throw new IllegalStateException("WebServer was null or not started!");
+        }
         return webServer;
     }
 
-    @Delegate
-    private final Nano nano = new Nano(PORT);
-
-    public void startWebserver() {
-        try {
-            if (!nano.wasStarted())
-                nano.start();
-        } catch (IOException e) {
-            throw new IllegalStateException("Nano webserver can not start!", e);
-        }
+    public static void startWebserver() {
+        Executors.newSingleThreadExecutor().submit(() -> {
+            try {
+                if (webServer == null) {
+                    webServer = new WebServer();
+                }
+                if (!webServer.wasStarted())
+                    webServer.start();
+            } catch (IOException e) {
+                throw new IllegalStateException("WebServer can not start!", e);
+            }
+        });
     }
 
     public void setWebServerContent(String html) {
-        nano.setResponse(html);
+        response = html;
+    }
+
+
+    @Override
+    public Response serve(IHTTPSession session) {
+        return newFixedLengthResponse(response);
     }
 
 }
