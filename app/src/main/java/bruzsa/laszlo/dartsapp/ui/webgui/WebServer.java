@@ -9,7 +9,18 @@ public class WebServer extends NanoHTTPD {
 
     public static final int WEBSERVER_PORT = 9000;
     private static WebServer webServer;
-    private String response = "Nothing to show now...";
+    private String response = """
+            <!DOCTYPE html>
+            <html lang="hu">
+            <head>
+                <title>Darts</title>
+                <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+                <meta http-equiv="refresh" content="1"/>
+            </head>
+            <body>
+                Nothing to show now...
+            </body>
+            </html>""";
 
 
     private WebServer() {
