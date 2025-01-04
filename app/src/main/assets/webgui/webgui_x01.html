@@ -71,7 +71,7 @@
         }
         .avg {
           justify-self: center;
-          font-size: 450%;
+          font-size: 300%;
           color: black;
         }
         .empty {
@@ -104,51 +104,51 @@
     <div class="empty"></div>
 
     <div class="empty"></div>
-    <div class="right throw  avg" th:text="${TEAM1_LAST_THROW1}"></div>
+    <div class="empty"></div>
     <div class="right stat avg" th:text="${TEAM1_AVERAGE}"></div>
     <div class="stat avg">AVG</div>
     <div class="left stat avg" th:text="${TEAM2_AVERAGE}"></div>
-    <div class="left throw avg" th:text="${TEAM2_LAST_THROW1}"></div>
+    <div class="empty"></div>
+    <div class="empty"></div>
+
+    <div class="empty"></div>
+    <div class="right throw" th:text="${TEAM1_LAST_THROW1}"></div>
+    <div class="right stat" th:text="${TEAM1_P100}"></div>
+    <div class="stat">100+</div>
+    <div class="left stat" th:text="${TEAM2_P100}"></div>
+    <div class="left throw" th:text="${TEAM2_LAST_THROW1}"></div>
     <div class="empty"></div>
 
     <div class="empty"></div>
     <div class="right throw" th:text="${TEAM1_LAST_THROW2}"></div>
-    <div class="right stat" th:text="${TEAM1_P100}"></div>
-    <div class="stat">100+</div>
-    <div class="left stat" th:text="${TEAM2_P100}"></div>
+    <div class="right stat" th:text="${TEAM1_P60}"></div>
+    <div class="stat">60+</div>
+    <div class="left stat" th:text="${TEAM2_P60}"></div>
     <div class="left throw" th:text="${TEAM2_LAST_THROW2}"></div>
     <div class="empty"></div>
 
     <div class="empty"></div>
     <div class="right throw" th:text="${TEAM1_LAST_THROW3}"></div>
-    <div class="right stat" th:text="${TEAM1_P60}"></div>
-    <div class="stat">60+</div>
-    <div class="left stat" th:text="${TEAM2_P60}"></div>
+    <div class="right stat" th:text="${TEAM1_MAX}"></div>
+    <div class="stat">MAX</div>
+    <div class="left stat" th:text="${TEAM2_MAX}"></div>
     <div class="left throw" th:text="${TEAM2_LAST_THROW3}"></div>
     <div class="empty"></div>
 
     <div class="empty"></div>
     <div class="right throw" th:text="${TEAM1_LAST_THROW4}"></div>
-    <div class="right stat" th:text="${TEAM1_MAX}"></div>
-    <div class="stat">MAX</div>
-    <div class="left stat" th:text="${TEAM2_MAX}"></div>
+    <div class="right stat" th:text="${TEAM1_MIN}"></div>
+    <div class="stat">MIN</div>
+    <div class="left stat" th:text="${TEAM2_MIN}"></div>
     <div class="left throw" th:text="${TEAM2_LAST_THROW4}"></div>
     <div class="empty"></div>
 
     <div class="empty"></div>
     <div class="right throw" th:text="${TEAM1_LAST_THROW5}"></div>
-    <div class="right stat" th:text="${TEAM1_MIN}"></div>
-    <div class="stat">MIN</div>
-    <div class="left stat" th:text="${TEAM2_MIN}"></div>
-    <div class="left throw" th:text="${TEAM2_LAST_THROW5}"></div>
-    <div class="empty"></div>
-
-    <div class="empty"></div>
-    <div class="right throw" th:text="${TEAM1_LAST_THROW6}"></div>
     <div class="right stat" th:text="${TEAM1_HC}"></div>
     <div class="stat">HC</div>
     <div class="left stat" th:text="${TEAM2_HC}"></div>
-    <div class="left throw" th:text="${TEAM2_LAST_THROW6}"></div>
+    <div class="left throw" th:text="${TEAM2_LAST_THROW5}"></div>
     <div class="empty"></div>
 
 </div>
