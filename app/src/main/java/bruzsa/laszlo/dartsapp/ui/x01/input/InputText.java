@@ -22,6 +22,7 @@ public class InputText extends Chip implements InputTextNumber {
 
     private Consumer<Chip> iconEvent;
     private IntConsumer onReady;
+    private IntConsumer onPartialResult;
 
     private final InputValidator validator = new InputValidator();
 
@@ -68,12 +69,20 @@ public class InputText extends Chip implements InputTextNumber {
         this.onReady = callback;
     }
 
+    public void setOnPartialResultAction(IntConsumer onPartialResult) {
+        this.onPartialResult = onPartialResult;
+    }
+
     @Override
     public void setReady() {
         getThrow().ifPresent(value -> {
             onReady.accept(value);
             clear();
         });
+    }
+
+    public void setPartialResult() {
+        getThrow().ifPresent(onPartialResult::accept);
     }
 
     public void setOnIconClickEvent(Consumer<Chip> iconEvent) {

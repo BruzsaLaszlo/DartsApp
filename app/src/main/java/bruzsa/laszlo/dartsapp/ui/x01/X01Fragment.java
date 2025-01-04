@@ -78,6 +78,7 @@ public class X01Fragment extends Fragment {
         binding.includedInputs.setInputViews(inputViews);
         binding.includedInputs.setLifecycleOwner(getViewLifecycleOwner());
         inputViews.setOnReadyAction(this::newThrow);
+        inputViews.setOnPartialResultAction(value -> viewModel.newPartialValue(value));
 
         binding.listThrowsPlayer1.setLayoutManager(new LinearLayoutManager(getActivity(), VERTICAL, true));
         binding.listThrowsPlayer2.setLayoutManager(new LinearLayoutManager(getActivity(), VERTICAL, true));

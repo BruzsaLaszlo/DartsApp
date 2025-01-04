@@ -13,17 +13,16 @@ import lombok.Getter;
 public class X01Throw {
 
     private final int value;
-    private final Player player;
-    private final boolean valid;
-    private final LocalDateTime time = LocalDateTime.now();
     private final int leg;
     private final int dartCount;
     private final boolean checkout;
-    private boolean removed;
+    private final Player player;
+    private final LocalDateTime time = LocalDateTime.now();
+    private Status status;
 
-    public X01Throw(int value, boolean valid, int leg, int dartCount, boolean checkout, Player player) {
+    public X01Throw(int value, Status status, int leg, int dartCount, boolean checkout, Player player) {
         this.value = value;
-        this.valid = valid;
+        this.status = status;
         this.leg = leg;
         this.dartCount = dartCount;
         this.checkout = checkout;
@@ -31,7 +30,19 @@ public class X01Throw {
     }
 
     public void setRemoved() {
-        removed = true;
+        status = Status.REMOVED;
+    }
+
+    public boolean isRemoved() {
+        return status == Status.REMOVED;
+    }
+
+    public boolean isValid() {
+        return status == Status.VALID;
+    }
+
+    public void setPartial() {
+        status = Status.PARTIAL;
     }
 
     @NonNull

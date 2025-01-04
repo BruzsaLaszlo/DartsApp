@@ -52,6 +52,13 @@ public class InputViews {
         } else {
             inputType.setValue(NUMPAD);
         }
+
+        inputText.setOnClickListener(getOnClickListener());
+    }
+
+    private static View.OnClickListener getOnClickListener() {
+        return v -> {
+        };
     }
 
     private boolean inicSpeech(Fragment fragment) {
@@ -79,6 +86,10 @@ public class InputViews {
 
     public void onOKClick() {
         inputText.setReady();
+    }
+
+    public void onPartialResult(View v) {
+        inputText.setPartialResult();
     }
 
     public boolean createAlertDialogChangeInputType(View view) {
@@ -124,6 +135,10 @@ public class InputViews {
 
     public void setOnReadyAction(IntConsumer callback) {
         inputText.setOnReadyAction(callback);
+    }
+
+    public void setOnPartialResultAction(IntConsumer onPartialResult) {
+        inputText.setOnPartialResultAction(onPartialResult);
     }
 
     @BindingAdapter("src")

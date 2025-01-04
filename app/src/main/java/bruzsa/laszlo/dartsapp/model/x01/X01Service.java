@@ -2,12 +2,15 @@ package bruzsa.laszlo.dartsapp.model.x01;
 
 import static bruzsa.laszlo.dartsapp.model.Team.TEAM1;
 import static bruzsa.laszlo.dartsapp.model.Team.TEAM2;
+import static bruzsa.laszlo.dartsapp.model.x01.Status.PARTIAL;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
 
 import bruzsa.laszlo.dartsapp.enties.Player;
+import bruzsa.laszlo.dartsapp.enties.x01.X01TeamScores;
 import bruzsa.laszlo.dartsapp.model.Team;
 import bruzsa.laszlo.dartsapp.model.TeamPlayer;
 import lombok.Getter;
@@ -24,6 +27,7 @@ public class X01Service {
     private final boolean teamPlay;
     @Getter
     private final Map<Team, X01TeamScores> teamScores;
+    private X01Throw partialThrow;
     private final Map<TeamPlayer, Player> teamPlayerMap;
     @Getter
     boolean gameOver;
@@ -42,6 +46,8 @@ public class X01Service {
     }
 
     public TeamPlayer newThrow(int throwValue, int dartCount, Consumer<Team> onGameOverEvent) {
+        partialThrow = null;
+
         var actual = active;
         Team team = actual.team;
         X01TeamScores aPlayer = teamScores.get(team);
@@ -51,7 +57,12 @@ public class X01Service {
 
         boolean checkedOut = newScore == 0;
         X01Throw newThrow = new X01Throw(
-                throwValue, newScore > 1 || checkedOut, legCount, dartCount, checkedOut, teamPlayerMap.get(active));
+                throwValue,
+                Status.getStatus(newScore > 1 || checkedOut),
+                legCount,
+                dartCount,
+                checkedOut,
+                teamPlayerMap.get(active));
         aPlayer.addThrow(newThrow);
 
         if (checkedOut) {
@@ -100,7 +111,13 @@ public class X01Service {
     }
 
     public Stat getStat(Team team) {
-        return new Stat(settings.getStartScore(), legCount, teamScores.get(team).getThrowsList());
+        List<X01Throw> throwList = teamScores.get(team).getThrowsList();
+        if (partialThrow != null && team == active.team) {
+            throwList = new ArrayList<>(throwList);
+            throwList.add(partialThrow);
+            partialThrow = null;
+        }
+        return Stat.calculate(settings.getStartScore(), legCount, throwList);
     }
 
     public List<X01Throw> getThrowList(Team team) {
@@ -120,10 +137,17 @@ public class X01Service {
     }
 
     public void setActive(TeamPlayer active) {
+        partialThrow = null;
         this.active = active;
         if (teamScores.get(TEAM1).getThrowsList().isEmpty() && teamScores.get(TEAM2).getThrowsList().isEmpty()) {
             startLeg = active;
             startSet = active;
         }
+    }
+
+    public void newPartialValue(int value) {
+        partialThrow = partialThrow == null
+                ? new X01Throw(value, PARTIAL, legCount, 0, false, teamPlayerMap.get(active))
+                : null;
     }
 }
