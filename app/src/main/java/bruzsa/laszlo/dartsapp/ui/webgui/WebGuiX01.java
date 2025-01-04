@@ -15,12 +15,12 @@ import java.util.Map;
 import java.util.Objects;
 
 import bruzsa.laszlo.dartsapp.enties.Player;
+import bruzsa.laszlo.dartsapp.enties.x01.X01TeamScores;
 import bruzsa.laszlo.dartsapp.model.Team;
 import bruzsa.laszlo.dartsapp.model.TeamPlayer;
 import bruzsa.laszlo.dartsapp.model.x01.CheckoutTable;
 import bruzsa.laszlo.dartsapp.model.x01.Stat;
 import bruzsa.laszlo.dartsapp.model.x01.X01Settings;
-import bruzsa.laszlo.dartsapp.model.x01.X01TeamScores;
 import bruzsa.laszlo.dartsapp.model.x01.X01Throw;
 
 public class WebGuiX01 {
@@ -58,10 +58,15 @@ public class WebGuiX01 {
             variables.put(team + "_P60", stat.getPlus60());
             variables.put(team + "_MIN", stat.getMin() == Integer.MAX_VALUE ? "-" : stat.getMin());
             variables.put(team + "_MAX", stat.getMax() == 0 ? "-" : stat.getMax());
-            variables.put(team + "_AVERAGE", stat.getAverage() == 0f ? "-" : format(US, "%.0f", stat.getAverage()));
+            variables.put(team + "_AVERAGE", Double.isNaN(stat.getAverage()) ? "-" : format(US, "%d", (int) stat.getAverage()));
             variables.put(team + "_SCORE", stat.getScore());
             variables.put(team + "_CHECKOUT", CheckoutTable.getCheckoutFor(stat.getScore()));
         });
+
+        variables.put("TEAM2_SET", "");
+        variables.put("TEAM2_LEG", "");
+        variables.put("S", "");
+        variables.put("L", "");
         teamScoresMap.forEach((team, teamScores) -> {
             int size = teamScores.getThrowsList().size();
             for (int i = 1, n = 0; n < MAX_THROW && size - i >= 0; i++) {
@@ -76,13 +81,11 @@ public class WebGuiX01 {
                 variables.put("S", "S");
             } else {
                 variables.put(team + "_SET", "");
-                variables.put("S", "");
             }
             if (x01Settings.getMatchType() != LEG || x01Settings.getCount() != 1) {
                 variables.put(team + "_LEG", teamScores.getLegs());
                 variables.put("L", "L");
             } else {
-                variables.put("L", "");
                 variables.put(team + "_LEG", "");
             }
         });

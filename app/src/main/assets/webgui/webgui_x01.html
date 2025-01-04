@@ -21,9 +21,9 @@
 
         .grid-container {
           display: grid;
-          grid-template-columns: auto 400px 250px 180px 250px 400px auto;
+          grid-template-columns: auto 380px 200px 180px 200px 380px auto;
 <!--          gap: 10px;-->
-<!--          background-color: #2196F3;-->
+          background-color: #2196F3;
 <!--          padding: 10px;-->
 <!--          border:1px solid black;-->
 <!--          border-collapse: collapse;-->
@@ -89,18 +89,25 @@
 <body>
 
 <div class="grid-container">
-    <div class="name1 player" th:utext="${PLAYER_1_1} + '<br>' + ${PLAYER_1_2}"> Player 1</div>
+    <div class="name1 player" th:utext="${PLAYER_1_1}"> Player 1</div>
     <div class="empty"></div>
-    <div class="name2 player" th:utext="${PLAYER_2_1} + '<br>' + ${PLAYER_2_2}"> Player 2</div>
+    <div class="name2 player" th:utext="${PLAYER_2_1}"> Player 2</div>
+
+    <div class="name1 player" th:utext="${PLAYER_1_2}"> Player 1</div>
+    <div class="empty"></div>
+    <div class="name2 player" th:utext="${PLAYER_2_2}"> Player 2</div>
 
 
     <div class="empty"></div>
-    <div class="right checkout" style="padding-top: 30px;" th:text="${TEAM1_CHECKOUT}">T16 D20</div>
+    <div class="right checkout" style="padding-top: 30px;" th:text="${TEAM1_CHECKOUT}">BULL BULL
+        D16
+    </div>
     <div class="right score" th:text="${TEAM1_SCORE}">501</div>
     <div class="setleg" style="padding-top: 20px;"
          th:utext="${TEAM1_SET} + ' ' + ${S} + ' ' + ${TEAM2_SET} + '<br>' + ${TEAM1_LEG} + ' ' + ${L} + ' ' + ${TEAM2_LEG}"></div>
     <div class="left score" th:text="${TEAM2_SCORE}">501</div>
-    <div class="left checkout" style="padding-top: 30px;" th:text="${TEAM2_CHECKOUT}">T20 D20</div>
+    <div class="left checkout" style="padding-top: 30px;" th:text="${TEAM2_CHECKOUT}">T20 BULL D20
+    </div>
     <div class="empty"></div>
 
     <div class="empty"></div>
