@@ -113,6 +113,10 @@ android {
 //}
 
 dependencies {
+    compileOnly("org.projectlombok:lombok:1.18.36")
+    annotationProcessor("org.projectlombok:lombok:1.18.36")
+    testCompileOnly("org.projectlombok:lombok:1.18.36")
+    testAnnotationProcessor("org.projectlombok:lombok:1.18.36")
 
     implementation("androidx.room:room-runtime:2.6.1")
     annotationProcessor("androidx.room:room-compiler:2.6.1")
@@ -122,12 +126,9 @@ dependencies {
 //    testCompileOnly(libs.lombok)
 //    testAnnotationProcessor(libs.lombok)
 
-    compileOnly("org.projectlombok:lombok:1.18.36")
-    annotationProcessor("org.projectlombok:lombok:1.18.36")
-    testCompileOnly("org.projectlombok:lombok:1.18.36")
-    testAnnotationProcessor("org.projectlombok:lombok:1.18.36")
-
     implementation("org.nanohttpd:nanohttpd:2.3.1")
+
+    implementation("org.slf4j:slf4j-simple:2.0.16")
 
     implementation("androidx.appcompat:appcompat:1.7.0")
     implementation("com.google.android.material:material:1.12.0")
