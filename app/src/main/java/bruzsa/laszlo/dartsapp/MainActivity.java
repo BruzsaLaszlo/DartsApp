@@ -1,14 +1,8 @@
 package bruzsa.laszlo.dartsapp;
 
-import static android.speech.tts.TextToSpeech.Engine.EXTRA_AVAILABLE_VOICES;
-
-import android.content.Intent;
 import android.os.Bundle;
-import android.speech.tts.TextToSpeech;
-import android.util.Log;
 import android.view.Menu;
 
-import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.drawerlayout.widget.DrawerLayout;
@@ -25,6 +19,7 @@ import java.util.Objects;
 
 import bruzsa.laszlo.dartsapp.databinding.ActivityMainBinding;
 import bruzsa.laszlo.dartsapp.model.SharedViewModel;
+import bruzsa.laszlo.dartsapp.ui.webgui.WebServer;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -37,10 +32,10 @@ public class MainActivity extends AppCompatActivity {
 
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
 
-        checkTtsData();
-
         SharedViewModel sharedViewModel = new ViewModelProvider(this).get(SharedViewModel.class);
         sharedViewModel.startDatabase(this);
+
+        WebServer.startWebserver();
 
         ActivityMainBinding binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
@@ -63,22 +58,6 @@ public class MainActivity extends AppCompatActivity {
         NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
         NavigationUI.setupWithNavController(navigationView, navController);
 
-    }
-
-    private void checkTtsData() {
-        registerForActivityResult(new ActivityResultContracts.StartActivityForResult(),
-                result -> {
-                    if (result.getResultCode() == TextToSpeech.Engine.CHECK_VOICE_DATA_PASS) {
-                        Log.d("MainActivity", "EXTRA_AVAILABLE_VOICES: " + result.getData()
-                                .getCharSequenceArrayListExtra(EXTRA_AVAILABLE_VOICES));
-                    } else {
-                        // missing data, install it
-                        Intent installIntent = new Intent();
-                        installIntent.setAction(TextToSpeech.Engine.ACTION_INSTALL_TTS_DATA);
-                        startActivity(installIntent);
-                    }
-                })
-                .launch(new Intent().setAction(TextToSpeech.Engine.ACTION_CHECK_TTS_DATA));
     }
 
     @Override
