@@ -91,7 +91,6 @@ public class SingleX01ViewModel extends ViewModel {
     }
 
     private void updateWebGui(Stat stat) {
-        assert stat != null : "n u l l";
         String html = webGui.createHtml(Map.of(TEAM1, stat), PLAYER_1_1);
         getWebServer().setWebServerContent(html);
     }

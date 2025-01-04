@@ -47,20 +47,19 @@ public class X01ThrowAdapter extends RecyclerView.Adapter<X01ThrowAdapter.ViewHo
 
 
     @Override
-    public void onBindViewHolder(ViewHolder viewHolder, final int position) {
+    public void onBindViewHolder(@NonNull ViewHolder viewHolder, final int position) {
         X01Throw x01Throw = mDataSet.get(position);
         viewHolder.throwTextView.setText(x01Throw.toString());
-        if (x01Throw.isValid()) {
-            viewHolder.throwTextView.setTextColor(Color.BLACK);
-        } else {
-            viewHolder.throwTextView.setTextColor(Color.RED);
-        }
-        if (x01Throw.isRemoved()) {
-            viewHolder.throwTextView.setTypeface(null, Typeface.ITALIC);
-            viewHolder.throwTextView.setPaintFlags(Paint.STRIKE_THRU_TEXT_FLAG);
-        } else {
-            viewHolder.throwTextView.setTypeface(null, Typeface.NORMAL);
-            viewHolder.throwTextView.setPaintFlags(Paint.CURSOR_AFTER);
+
+        viewHolder.throwTextView.setTypeface(null, Typeface.NORMAL);
+        viewHolder.throwTextView.setPaintFlags(Paint.CURSOR_AFTER);
+        switch (x01Throw.getStatus()) {
+            case VALID -> viewHolder.throwTextView.setTextColor(Color.BLACK);
+            case INVALID -> viewHolder.throwTextView.setTextColor(Color.RED);
+            case REMOVED -> {
+                viewHolder.throwTextView.setTypeface(null, Typeface.ITALIC);
+                viewHolder.throwTextView.setPaintFlags(Paint.STRIKE_THRU_TEXT_FLAG);
+            }
         }
         if (!viewHolder.throwTextView.hasOnClickListeners()) {
             viewHolder.throwTextView.setOnLongClickListener(v1 -> {
