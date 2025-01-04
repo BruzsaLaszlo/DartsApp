@@ -28,17 +28,34 @@ public class Stat {
     public Stat(int startScore, int actualLeg, List<X01Throw> throwList) {
         this.startScore = startScore;
         this.actualLeg = actualLeg;
-        throwList.forEach(this::add);
+        throwList.forEach(x01Throw -> {
+            switch (x01Throw.getStatus()) {
+                case VALID -> add(x01Throw);
+                case INVALID -> dartCount += 3;
+                case PARTIAL -> {
+                    int value = x01Throw.getValue();
+                    legSum.compute(
+                            x01Throw.getLeg(),
+                            (k, v) -> v == null ? value : v + value);
+                }
+                case REMOVED -> { // Nothing to do
+                }
+            }
+        });
+    }
+
+    public static Stat calculate(int startScore, int actualLeg, List<X01Throw> throwList) {
+        return new Stat(startScore, actualLeg, throwList);
     }
 
     private void add(X01Throw x01Throw) {
-        if (x01Throw.isRemoved()) return;
+        int value = x01Throw.getValue();
 
         dartCount += x01Throw.getDartCount();
 
-        if (!x01Throw.isValid()) return;
-
-        int value = x01Throw.getValue();
+        legSum.compute(
+                x01Throw.getLeg(),
+                (k, v) -> v == null ? value : v + value);
 
         if (max < value) max = value;
         if (min > value) min = value;
@@ -49,8 +66,6 @@ public class Stat {
         sum += value;
 
         if (x01Throw.isCheckout() && hc < value) hc = value;
-
-        legSum.compute(x01Throw.getLeg(), (k, v) -> v == null ? value : v + value);
     }
 
     public double getAverage() {
@@ -61,7 +76,7 @@ public class Stat {
         return hc == 0 ? Optional.empty() : Optional.of(hc);
     }
 
-    public int getScore() {
+    public Integer getScore() {
         //noinspection ConstantConditions
         return startScore - legSum.getOrDefault(actualLeg, 0);
     }

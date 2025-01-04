@@ -1,13 +1,15 @@
 package bruzsa.laszlo.dartsapp.model.singlex01;
 
+import static bruzsa.laszlo.dartsapp.model.x01.Status.getStatus;
+
 import java.util.Collections;
 import java.util.List;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
 import bruzsa.laszlo.dartsapp.enties.Player;
+import bruzsa.laszlo.dartsapp.enties.x01.X01TeamScores;
 import bruzsa.laszlo.dartsapp.model.x01.Stat;
-import bruzsa.laszlo.dartsapp.model.x01.X01TeamScores;
 import bruzsa.laszlo.dartsapp.model.x01.X01Throw;
 import lombok.Getter;
 
@@ -28,7 +30,12 @@ public class X01SingleService {
         int newScore = calculateStat().getScore() - throwValue;
         boolean checkedOut = newScore == 0;
         X01Throw newThrow = new X01Throw(
-                throwValue, newScore > 1 || checkedOut, scores.getLegs(), dartCount, checkedOut, scores.getPlayer1());
+                throwValue,
+                getStatus(newScore > 1 || checkedOut),
+                scores.getLegs(),
+                dartCount,
+                checkedOut,
+                scores.getPlayer1());
         scores.addThrow(newThrow);
         if (checkedOut) scores.wonLeg();
         onNewThrowListener.accept(scores.getLegs(), calculateStat());
@@ -48,7 +55,7 @@ public class X01SingleService {
     }
 
     public Stat calculateStat() {
-        return new Stat(startScore, scores.getLegs(), scores.getThrowsList());
+        return Stat.calculate(startScore, scores.getLegs(), scores.getThrowsList());
     }
 
 }
