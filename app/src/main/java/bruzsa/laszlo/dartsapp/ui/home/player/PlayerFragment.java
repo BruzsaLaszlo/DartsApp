@@ -51,20 +51,25 @@ public class PlayerFragment extends Fragment {
 //        }
 
         PlayerFragmentArgs args = PlayerFragmentArgs.fromBundle(requireArguments());
-        List<Player> players = sharedViewModel.getAllPlayers().stream()
+        List<Player> players = sharedViewModel.getAllPlayers()
+                .stream()
                 .filter(player -> stream(args.getPlayerIds()).noneMatch(id -> player.getId().equals(id)))
                 .collect(toList());
         selectedTeamPlayer = args.getSelectedTeamPlayer();
 
-        binding.buttonAdd.setOnClickListener(v -> moveToHome(new Player(binding.editTextName.getText().toString())));
+        binding.buttonAdd.setOnClickListener(v -> moveToHome(new Player(binding.editTextName.getText().toString()), Action.ADD));
 
         recyclerView.setAdapter(new PlayerAdapter(players, this::moveToHome));
         return binding.getRoot();
     }
 
-    private void moveToHome(Player selectedPlayer) {
-        sharedViewModel.addPlayer(selectedTeamPlayer, selectedPlayer);
-        Navigation.findNavController(requireView()).navigate(R.id.action_playerFragment_to_homeFragment);
+    private void moveToHome(Player selectedPlayer, Action action) {
+        if (action == Action.REMOVE) {
+            sharedViewModel.removePlayer(selectedPlayer);
+        } else {
+            sharedViewModel.selectPlayer(selectedTeamPlayer, selectedPlayer);
+            Navigation.findNavController(requireView()).navigate(R.id.action_playerFragment_to_homeFragment);
+        }
     }
 
 }

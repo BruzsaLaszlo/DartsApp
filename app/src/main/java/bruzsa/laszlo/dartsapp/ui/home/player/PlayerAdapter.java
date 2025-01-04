@@ -6,22 +6,23 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.List;
-import java.util.function.Consumer;
+import java.util.function.BiConsumer;
 
 import bruzsa.laszlo.dartsapp.databinding.AdapterPlayerBinding;
 import bruzsa.laszlo.dartsapp.enties.Player;
 
 public class PlayerAdapter extends RecyclerView.Adapter<PlayerAdapter.ViewHolder> {
 
-    private final List<Player> mValues;
-    private final Consumer<Player> selected;
+    private final List<Player> players;
+    private final BiConsumer<Player, Action> selected;
 
-    public PlayerAdapter(List<Player> mValues, Consumer<Player> selected) {
-        this.mValues = mValues;
-        this.selected = selected;
+    public PlayerAdapter(List<Player> players, BiConsumer<Player, Action> onClick) {
+        this.players = players;
+        this.selected = onClick;
     }
 
     @NonNull
@@ -33,14 +34,28 @@ public class PlayerAdapter extends RecyclerView.Adapter<PlayerAdapter.ViewHolder
     @SuppressLint("SetTextI18n")
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
-        Player player = mValues.get(position);
-        holder.mContentView.setOnClickListener(v -> selected.accept(player));
+        Player player = players.get(position);
+        holder.mContentView.setOnClickListener(v -> selected.accept(player, Action.ADD));
+        holder.mContentView.setOnLongClickListener(v -> {
+            new AlertDialog.Builder(v.getContext())
+                    .setTitle("Remove Player")
+                    .setMessage("Are you sure you delete: " + player.getName())
+                    .setPositiveButton("DELETE", (dialog, which) -> {
+                        selected.accept(player, Action.REMOVE);
+                        players.remove(player);
+                        notifyItemRemoved(position);
+                    })
+                    .setNegativeButton("cancel", (dialog, which) -> {
+                    })
+                    .show();
+            return true;
+        });
         holder.mContentView.setText(player.getName());
     }
 
     @Override
     public int getItemCount() {
-        return mValues.size();
+        return players.size();
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {

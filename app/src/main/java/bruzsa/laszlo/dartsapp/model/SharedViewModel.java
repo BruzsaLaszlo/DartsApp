@@ -11,7 +11,6 @@ import android.util.Log;
 
 import androidx.lifecycle.ViewModel;
 
-import java.util.ArrayList;
 import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
@@ -44,7 +43,7 @@ public class SharedViewModel extends ViewModel {
     public void startDatabase(Context context) {
         AppDatabase.getInstance(context, appDatabase -> {
             database = appDatabase;
-            inicPlayerList();
+//            inicPlayerList();
         });
     }
 
@@ -69,7 +68,7 @@ public class SharedViewModel extends ViewModel {
         return selectedPlayers.get(player);
     }
 
-    public void addPlayer(TeamPlayer teamPlayer, Player player) {
+    public void selectPlayer(TeamPlayer teamPlayer, Player player) {
         Player foundPlayer = database.playerDao().findByName(player.getName());
         if (foundPlayer == null) {
             database.playerDao().insert(player);
@@ -81,7 +80,11 @@ public class SharedViewModel extends ViewModel {
 
     public List<Player> getAllPlayers() {
         Log.i(TAG, "getAllPlayers: " + database.playerDao().getAll());
-        return new ArrayList<>(database.playerDao().getAll());
+        return database.playerDao().getAll();
+    }
+
+    public void removePlayer(Player player) {
+        database.playerDao().delete(player);
     }
 
     public void clearPLayers(TeamPlayer... players) {
