@@ -1,9 +1,9 @@
 plugins {
-//    id ("kotlin-kapt")
-    id("org.jetbrains.kotlin.android")
-    id("com.android.application")
+    id("com.google.dagger.hilt.android")
 
-    id("io.freefair.lombok") version "8.11"
+    id("org.jetbrains.kotlin.android")
+
+    id("com.android.application")
 
     id("de.mannodermaus.android-junit5")
 
@@ -117,6 +117,9 @@ dependencies {
     annotationProcessor("org.projectlombok:lombok:1.18.36")
     testCompileOnly("org.projectlombok:lombok:1.18.36")
     testAnnotationProcessor("org.projectlombok:lombok:1.18.36")
+
+    implementation("com.google.dagger:hilt-android:2.54")
+    annotationProcessor("com.google.dagger:hilt-compiler:2.54")
 
     implementation("androidx.room:room-runtime:2.6.1")
     annotationProcessor("androidx.room:room-compiler:2.6.1")
