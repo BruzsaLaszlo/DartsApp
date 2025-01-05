@@ -51,6 +51,13 @@ public class MainActivity extends AppCompatActivity {
                 R.id.nav_homeFragment, R.id.nav_X01Fragment, R.id.nav_cricketFragment)
                 .setOpenableLayout(drawer)
                 .build();
+//
+//        getOnBackPressedDispatcher().addCallback(new OnBackPressedCallback(true) {
+//            @Override
+//            public void handleOnBackPressed() {
+//                super.cancel
+//            }
+//        });
 
         NavHostFragment navHostFragment = (NavHostFragment) getSupportFragmentManager().findFragmentById(R.id.nav_host_fragment_content_main);
         NavController navController = Objects.requireNonNull(navHostFragment).getNavController();

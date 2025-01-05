@@ -122,7 +122,8 @@ public class X01ViewModel extends ViewModel {
         activePlayer.setValue(service.getActive());
     }
 
-    private void refreshGui() {
+
+    public void refreshGui() {
         Map<Team, Stat> stats = getStats();
         stats.forEach((team, stat) -> {
             liveDatasMap.get(team).score.setValue(valueOf(stat.getScore()));
@@ -193,6 +194,14 @@ public class X01ViewModel extends ViewModel {
             }
         }
     }
+
+//    public void getGameInfo(View view){
+//        new AlertDialog.Builder(view.getContext())
+//                .setTitle("Game info")
+//                .setTitle(String.format(US,
+//                        """
+//                               %s"""),)
+//    }
 
     @Getter
     public static class LiveDatas {
