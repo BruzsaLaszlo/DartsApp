@@ -56,8 +56,7 @@
             app:destination="@id/nav_homeFragment" />
         <argument
             android:name="playerIds"
-            app:argType="long[]"
-            app:nullable="true" />
+            app:argType="long[]" />
         <argument
             android:name="selectedTeamPlayer"
             app:argType="bruzsa.laszlo.dartsapp.model.TeamPlayer" />
