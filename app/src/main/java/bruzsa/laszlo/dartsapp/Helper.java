@@ -1,14 +1,17 @@
 package bruzsa.laszlo.dartsapp;
 
 import static android.content.pm.PackageManager.PERMISSION_DENIED;
+import static android.speech.tts.TextToSpeech.Engine.EXTRA_AVAILABLE_VOICES;
 import static androidx.core.content.ContextCompat.checkSelfPermission;
 
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.LinkAddress;
 import android.net.LinkProperties;
 import android.os.StrictMode;
+import android.speech.tts.TextToSpeech;
 import android.util.Log;
 
 import androidx.activity.result.contract.ActivityResultContracts;
@@ -71,6 +74,25 @@ public final class Helper {
         return result.get();
     }
 
+    private void checkTtsData(Fragment fragment) {
+        fragment.registerForActivityResult(new ActivityResultContracts.StartActivityForResult(),
+                        result -> {
+                            if (result.getResultCode() == TextToSpeech.Engine.CHECK_VOICE_DATA_PASS) {
+                                Intent data = result.getData();
+                                if (data != null) {
+                                    var list = data.getCharSequenceArrayListExtra(EXTRA_AVAILABLE_VOICES);
+                                    Log.d("MainActivity", "EXTRA_AVAILABLE_VOICES: " + list);
+                                }
+                            } else {
+                                // missing data, install it
+                                Intent installIntent = new Intent();
+                                installIntent.setAction(TextToSpeech.Engine.ACTION_INSTALL_TTS_DATA);
+                                fragment.startActivity(installIntent);
+                            }
+                        })
+                .launch(new Intent().setAction(TextToSpeech.Engine.ACTION_CHECK_TTS_DATA));
+    }
+
 
     public static Optional<String> getIPv4Address(Context context) {
         var connectivityManager = context.getSystemService(Context.CONNECTIVITY_SERVICE);
@@ -83,7 +105,7 @@ public final class Helper {
                     .filter(linkAddress -> linkAddress.getAddress().getAddress().length == 4)
                     .findFirst()
                     .map(LinkAddress::toString)
-                    .map(s -> s.substring(0, s.indexOf("/")) + ":" + WebServer.PORT);
+                    .map(s -> s.substring(0, s.indexOf("/")) + ":" + WebServer.WEBSERVER_PORT);
         }
         return Optional.empty();
     }
