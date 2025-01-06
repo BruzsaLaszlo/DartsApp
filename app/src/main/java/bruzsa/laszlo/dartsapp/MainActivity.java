@@ -19,8 +19,10 @@ import java.util.Objects;
 
 import bruzsa.laszlo.dartsapp.databinding.ActivityMainBinding;
 import bruzsa.laszlo.dartsapp.model.SharedViewModel;
-import bruzsa.laszlo.dartsapp.ui.webgui.WebServer;
+import bruzsa.laszlo.dartsapp.model.cricket.CricketViewModel;
+import dagger.hilt.android.AndroidEntryPoint;
 
+@AndroidEntryPoint
 public class MainActivity extends AppCompatActivity {
 
     private AppBarConfiguration mAppBarConfiguration;
@@ -33,9 +35,7 @@ public class MainActivity extends AppCompatActivity {
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
 
         SharedViewModel sharedViewModel = new ViewModelProvider(this).get(SharedViewModel.class);
-        sharedViewModel.startDatabase(this);
-
-        WebServer.startWebserver();
+        CricketViewModel cricketViewModel = new ViewModelProvider(this).get(CricketViewModel.class);
 
         ActivityMainBinding binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());

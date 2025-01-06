@@ -1,5 +1,7 @@
 package bruzsa.laszlo.dartsapp.enties;
 
+import android.util.Log;
+
 import androidx.annotation.NonNull;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
@@ -25,6 +27,11 @@ public class Player implements Serializable {
     private Long id;
 
     private String name;
+
+    public String getName() {
+        Log.e("error", "getPlayer: " + name);
+        return name;
+    }
 
     @ColumnInfo(name = "nick_name")
     private String nickName;

@@ -2,7 +2,6 @@ package bruzsa.laszlo.dartsapp.ui.singlex01;
 
 import static bruzsa.laszlo.dartsapp.model.Team.TEAM1;
 import static bruzsa.laszlo.dartsapp.model.TeamPlayer.PLAYER_1_1;
-import static bruzsa.laszlo.dartsapp.ui.webgui.WebServer.getWebServer;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
@@ -12,16 +11,23 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.function.IntConsumer;
 
+import javax.inject.Inject;
+
+import bruzsa.laszlo.dartsapp.AppSettings;
+import bruzsa.laszlo.dartsapp.HtmlTemplateReader;
 import bruzsa.laszlo.dartsapp.enties.Player;
 import bruzsa.laszlo.dartsapp.model.Team;
 import bruzsa.laszlo.dartsapp.model.singlex01.X01SingleService;
 import bruzsa.laszlo.dartsapp.model.x01.Stat;
 import bruzsa.laszlo.dartsapp.model.x01.X01Settings;
 import bruzsa.laszlo.dartsapp.model.x01.X01Throw;
+import bruzsa.laszlo.dartsapp.ui.webgui.WebGuiServer;
 import bruzsa.laszlo.dartsapp.ui.webgui.WebGuiX01;
 import bruzsa.laszlo.dartsapp.ui.x01.X01ThrowAdapter;
+import dagger.hilt.android.lifecycle.HiltViewModel;
 import lombok.Getter;
 
+@HiltViewModel
 public class SingleX01ViewModel extends ViewModel {
 
     private final MutableLiveData<Integer> leg = new MutableLiveData<>(0);
@@ -30,23 +36,29 @@ public class SingleX01ViewModel extends ViewModel {
 
     @Getter
     private X01ThrowAdapter throwsAdapter;
-    private X01SingleService service;
-    @Getter
-    private boolean gameStarted;
+    private final X01SingleService service;
+    private final WebGuiX01 webGui;
+    private final WebGuiServer webGuiServer;
 
-    private WebGuiX01 webGui;
+    @Inject
+    public SingleX01ViewModel(AppSettings appSettings, WebGuiServer webGuiServer, HtmlTemplateReader htmlTemplate) {
+        X01Settings settings = appSettings.getX01Settings();
+        Player player = appSettings.getSelectedPlayers().get(PLAYER_1_1);
+        int startScore = settings.getStartScore();
 
-
-    public void startOrCountinue(Player player, int startScore, String htmlTemplate) {
-        if (gameStarted) return;
-        gameStarted = true;
+        this.webGuiServer = webGuiServer;
 
         service = new X01SingleService(player, startScore);
 
         score.setValue(startScore);
         throwsAdapter = new X01ThrowAdapter(service.getThrowsList(), this::removeThrow, TEAM1);
 
-        webGui = new WebGuiX01(htmlTemplate, Map.of(PLAYER_1_1, player), Map.of(TEAM1, service.getScores()), new X01Settings());
+        webGui = new WebGuiX01(
+                htmlTemplate.getX01Template(),
+                Map.of(PLAYER_1_1, player),
+                Map.of(TEAM1, service.getScores()),
+                settings);
+
         updateWebGui(Stat.getEmptyStat(startScore));
     }
 
@@ -92,7 +104,7 @@ public class SingleX01ViewModel extends ViewModel {
 
     private void updateWebGui(Stat stat) {
         String html = webGui.createHtml(Map.of(TEAM1, stat), PLAYER_1_1);
-        getWebServer().setWebServerContent(html);
+        webGuiServer.setContent(html);
     }
 
     public LiveData<Integer> getScore() {

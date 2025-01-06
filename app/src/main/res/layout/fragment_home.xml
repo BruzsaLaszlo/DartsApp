@@ -63,7 +63,7 @@
                 app:closeIconVisible="false"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/textInfoPlayerTeam1"
-                app:selected_players="@{sharedViewModel.selectedPlayersMap}"
+                app:selected_players="@{sharedViewModel.settings.selectedPlayers}"
                 app:team_player="@{TeamPlayer.PLAYER_1_1}" />
 
             <com.google.android.material.chip.Chip
@@ -81,7 +81,7 @@
                 app:closeIconVisible="false"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/chipTeam2Player1"
-                app:selected_players="@{sharedViewModel.selectedPlayersMap}"
+                app:selected_players="@{sharedViewModel.settings.selectedPlayers}"
                 app:team_player="@{TeamPlayer.PLAYER_2_2}" />
 
             <View
@@ -123,7 +123,7 @@
                 app:closeIconVisible="false"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/textInfoPlayerTeam2"
-                app:selected_players="@{sharedViewModel.selectedPlayersMap}"
+                app:selected_players="@{sharedViewModel.settings.selectedPlayers}"
                 app:team_player="@{TeamPlayer.PLAYER_2_1}" />
 
             <com.google.android.material.chip.Chip
@@ -141,7 +141,7 @@
                 app:closeIconVisible="false"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/chipTeam1Player1"
-                app:selected_players="@{sharedViewModel.selectedPlayersMap}"
+                app:selected_players="@{sharedViewModel.settings.selectedPlayers}"
                 app:team_player="@{TeamPlayer.PLAYER_1_2}" />
 
             <com.google.android.material.chip.ChipGroup
@@ -166,7 +166,7 @@
                     app:checkedIcon="@drawable/check"
                     app:checkedIconVisible="true"
                     app:mode="@{GameMode.PLAYER}"
-                    app:settings="@{sharedViewModel.settings}" />
+                    app:settings="@{sharedViewModel.settings.generalSettings}" />
 
                 <com.google.android.material.chip.Chip
                     android:id="@+id/chipTeamPlayMode"
@@ -179,7 +179,7 @@
                     app:checkedIcon="@drawable/check"
                     app:checkedIconVisible="true"
                     app:mode="@{GameMode.TEAM}"
-                    app:settings="@{sharedViewModel.settings}" />
+                    app:settings="@{sharedViewModel.settings.generalSettings}" />
 
                 <com.google.android.material.chip.Chip
                     android:id="@+id/chipSinglePlayerMode"
@@ -192,7 +192,7 @@
                     app:checkedIcon="@drawable/check"
                     app:checkedIconVisible="true"
                     app:mode="@{GameMode.SINGLE}"
-                    app:settings="@{sharedViewModel.settings}" />
+                    app:settings="@{sharedViewModel.settings.generalSettings}" />
             </com.google.android.material.chip.ChipGroup>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
@@ -244,7 +244,7 @@
                     android:textSize="26sp"
                     app:checkedIcon="@drawable/table"
                     app:game_type="@{GameType.X01}"
-                    app:settings="@{sharedViewModel.settings}" />
+                    app:settings="@{sharedViewModel.settings.generalSettings}" />
 
                 <com.google.android.material.chip.Chip
                     android:id="@+id/chipCricket"
@@ -257,7 +257,7 @@
                     android:textSize="26sp"
                     app:checkedIcon="@drawable/table"
                     app:game_type="@{GameType.CRICKET}"
-                    app:settings="@{sharedViewModel.settings}" />
+                    app:settings="@{sharedViewModel.settings.generalSettings}" />
 
             </com.google.android.material.chip.ChipGroup>
 
@@ -274,14 +274,14 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:onClick="@{(v) -> fragment.showDialogX01StartScore(v)}"
-                    android:text="@{Integer.toString(sharedViewModel.x01Settings.startScore)}"
+                    android:text="@{Integer.toString(sharedViewModel.settings.x01Settings.startScore)}"
                     tools:text="701" />
 
                 <com.google.android.material.chip.Chip
                     android:id="@+id/chipFirstTo"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@{sharedViewModel.x01Settings.firstToBestOf.label}"
+                    android:text="@{sharedViewModel.settings.x01Settings.firstToBestOf.label}"
                     android:onClick="@{(v) -> fragment.changeFirstBest(v)}"
                     tools:text="@string/first_to" />
 
@@ -290,7 +290,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:onClick="@{(v) -> fragment.showDialogSetLegCount(v)}"
-                    android:text="@{String.valueOf(sharedViewModel.x01Settings.count)}"
+                    android:text="@{String.valueOf(sharedViewModel.settings.x01Settings.count)}"
                     tools:text="@string/_2" />
 
                 <com.google.android.material.chip.Chip
@@ -298,7 +298,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:onClick="@{(v) -> fragment.changeMatchType(v)}"
-                    android:text="@{sharedViewModel.x01Settings.matchType.name()}"
+                    android:text="@{sharedViewModel.settings.x01Settings.matchType.name()}"
                     tools:text="@string/leg" />
             </com.google.android.material.chip.ChipGroup>
 

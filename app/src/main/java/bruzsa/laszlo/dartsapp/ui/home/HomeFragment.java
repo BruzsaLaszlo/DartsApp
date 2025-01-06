@@ -103,7 +103,7 @@ public class HomeFragment extends Fragment {
         var sorted = new TreeMap<>(x01);
         new MaterialAlertDialogBuilder(v.getContext())
                 .setItems(sorted.values().toArray(new String[0]), (dialog, which) -> {
-                    sharedViewModel.getX01Settings().setStartScore(parseInt(sorted.get(which)));
+                    sharedViewModel.getSettings().getX01Settings().setStartScore(parseInt(sorted.get(which)));
                     ((TextView) v).setText(sorted.get(which));
                 })
                 .create().show();
@@ -119,7 +119,7 @@ public class HomeFragment extends Fragment {
         }
         new MaterialAlertDialogBuilder(v.getContext())
                 .setItems(s, (dialog, which) -> {
-                    sharedViewModel.getX01Settings().setCount(which + 1);
+                    sharedViewModel.getSettings().getX01Settings().setCount(which + 1);
                     ((TextView) v).setText(valueOf(which + 1));
                 })
                 .create().show();
@@ -137,13 +137,13 @@ public class HomeFragment extends Fragment {
     }
 
     public void startGame() {
-        GameMode mode = sharedViewModel.getSettings().getGameMode();
+        GameMode mode = sharedViewModel.getSettings().getGeneralSettings().getGameMode();
         if (!validSelectedPlayers(mode)) {
             showSnack("Please choose players!");
             return;
         }
 
-        GameType type = sharedViewModel.getSettings().getGameType();
+        GameType type = sharedViewModel.getSettings().getGeneralSettings().getGameType();
         switch (type) {
             case NO_GAME -> showSnack("Please, set game mode!");
             case X01 -> {
@@ -152,11 +152,11 @@ public class HomeFragment extends Fragment {
                             navigateToFragment(R.id.action_homeFragment_to_X01Fragment);
                     case SINGLE -> navigateToFragment(
                             actionHomeFragmentToSingleX01Fragment(sharedViewModel.getPlayer(PLAYER_1_1))
-                                    .setStartScore(sharedViewModel.getX01Settings().getStartScore()));
+                                    .setStartScore(sharedViewModel.getSettings().getX01Settings().getStartScore()));
                 }
             }
             case CRICKET -> {
-                sharedViewModel.getCricketSettings().setRandomNumbers(binding.chipCricketSettingsRandom.isChecked());
+                sharedViewModel.getSettings().getCricketSettings().setRandomNumbers(binding.chipCricketSettingsRandom.isChecked());
                 switch (mode) {
                     case TEAM, PLAYER ->
                             navigateToFragment(R.id.action_homeFragment_to_cricketFragment);
@@ -177,15 +177,15 @@ public class HomeFragment extends Fragment {
 
     public void changeMatchType(View view) {
         if (view instanceof TextView text) {
-            sharedViewModel.getX01Settings().setMatchType(sharedViewModel.getX01Settings().getMatchType().opposit());
-            text.setText(sharedViewModel.getX01Settings().getMatchType().name());
+            sharedViewModel.getSettings().getX01Settings().setMatchType(sharedViewModel.getSettings().getX01Settings().getMatchType().opposit());
+            text.setText(sharedViewModel.getSettings().getX01Settings().getMatchType().name());
         }
     }
 
     public void changeFirstBest(View view) {
         if (view instanceof TextView text) {
-            sharedViewModel.getX01Settings().setFirstToBestOf(sharedViewModel.getX01Settings().getFirstToBestOf().opposit());
-            text.setText(sharedViewModel.getX01Settings().getFirstToBestOf().getLabel());
+            sharedViewModel.getSettings().getX01Settings().setFirstToBestOf(sharedViewModel.getSettings().getX01Settings().getFirstToBestOf().opposit());
+            text.setText(sharedViewModel.getSettings().getX01Settings().getFirstToBestOf().getLabel());
         }
     }
 

@@ -1,8 +1,6 @@
 package bruzsa.laszlo.dartsapp.ui.singlex01;
 
 import static android.view.View.GONE;
-import static bruzsa.laszlo.dartsapp.Helper.WEB_GUI_X01;
-import static bruzsa.laszlo.dartsapp.Helper.getHtmlTemplate;
 import static bruzsa.laszlo.dartsapp.Helper.showCheckoutDialog;
 
 import android.annotation.SuppressLint;
@@ -22,7 +20,9 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import bruzsa.laszlo.dartsapp.R;
 import bruzsa.laszlo.dartsapp.databinding.FragmentSinglex01Binding;
 import bruzsa.laszlo.dartsapp.ui.x01.input.InputViews;
+import dagger.hilt.android.AndroidEntryPoint;
 
+@AndroidEntryPoint
 public class SingleX01Fragment extends Fragment {
 
     private SingleX01ViewModel viewModel;
@@ -50,10 +50,7 @@ public class SingleX01Fragment extends Fragment {
         binding.setViewModel(viewModel);
 
         SingleX01FragmentArgs args = SingleX01FragmentArgs.fromBundle(requireArguments());
-        viewModel.startOrCountinue(
-                args.getPlayer(),
-                args.getStartScore(),
-                getHtmlTemplate(requireContext(), WEB_GUI_X01));
+
 
         return binding.getRoot();
     }

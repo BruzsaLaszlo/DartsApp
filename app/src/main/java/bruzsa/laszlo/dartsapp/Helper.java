@@ -19,10 +19,6 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -105,23 +101,11 @@ public final class Helper {
                     .filter(linkAddress -> linkAddress.getAddress().getAddress().length == 4)
                     .findFirst()
                     .map(LinkAddress::toString)
-                    .map(s -> s.substring(0, s.indexOf("/")) + ":" + WebServer.WEBSERVER_PORT);
+                    .map(s -> s.substring(0, s.indexOf("/")) + ":" + WebServer.WEBSERVER_DEFAULT_PORT);
         }
         return Optional.empty();
     }
 
-    public static final String WEB_GUI_X01 = "webgui/webgui_x01.html";
-    public static final String CRICKET_WEB_GUI = "webgui/webgui_cricket.html";
-
-    public static String getHtmlTemplate(Context context, String assetFile) {
-        try (BufferedReader reader = new BufferedReader(new InputStreamReader(context.getAssets().open(assetFile), StandardCharsets.UTF_8))) {
-            return reader.lines()
-                    .collect(StringBuilder::new, StringBuilder::append, StringBuilder::append)
-                    .toString();
-        } catch (IOException ioException) {
-            throw new IllegalArgumentException("File can not read", ioException);
-        }
-    }
 
     public static void showCheckoutDialog(int throwValue, Context context, IntConsumer onClickListener) {
         if (throwValue > 110 || List.of(109, 108, 106, 105, 103, 102).contains(throwValue)) {

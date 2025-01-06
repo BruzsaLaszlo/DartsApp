@@ -4,8 +4,6 @@ import static android.content.pm.ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE;
 import static android.content.pm.ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED;
 import static android.view.View.GONE;
 import static androidx.recyclerview.widget.LinearLayoutManager.VERTICAL;
-import static bruzsa.laszlo.dartsapp.Helper.CRICKET_WEB_GUI;
-import static bruzsa.laszlo.dartsapp.Helper.getHtmlTemplate;
 
 import android.graphics.Color;
 import android.graphics.drawable.GradientDrawable;
@@ -25,9 +23,12 @@ import bruzsa.laszlo.dartsapp.R;
 import bruzsa.laszlo.dartsapp.databinding.FragmentCricketBinding;
 import bruzsa.laszlo.dartsapp.model.SharedViewModel;
 import bruzsa.laszlo.dartsapp.model.Team;
+import bruzsa.laszlo.dartsapp.model.cricket.CricketSettings;
 import bruzsa.laszlo.dartsapp.model.cricket.CricketViewModel;
 import bruzsa.laszlo.dartsapp.ui.cricket.CricketTable.TouchValue;
+import dagger.hilt.android.AndroidEntryPoint;
 
+@AndroidEntryPoint
 public class CricketFragment extends Fragment {
 
     private static final String TAG = "CricketFragment";
@@ -60,18 +61,14 @@ public class CricketFragment extends Fragment {
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        sharedViewModel.getCricketSettings().updateSize(requireActivity());
-        binding.cricketTable1.inic(sharedViewModel.getCricketSettings(), this::getOnTouchEventListener);
-        binding.cricketTable2.inic(sharedViewModel.getCricketSettings(), this::getOnTouchEventListener);
+        CricketSettings cricketSettings = viewModel.getSettings();
+
+        cricketSettings.updateSize(requireActivity());
+        binding.cricketTable1.inic(cricketSettings, this::getOnTouchEventListener);
+        binding.cricketTable2.inic(cricketSettings, this::getOnTouchEventListener);
 
         binding.listThrows.setLayoutManager(new LinearLayoutManager(getActivity(), VERTICAL, true));
-
-        viewModel.startNewGameOrContinue(
-                sharedViewModel.getSelectedPlayersMap(),
-                sharedViewModel.getCricketSettings(),
-                binding.listThrows::setAdapter,
-                getHtmlTemplate(requireContext(), CRICKET_WEB_GUI)
-        );
+//        binding.listThrows.setAdapter(viewModel.getThrowsAdapter());
 
     }
 

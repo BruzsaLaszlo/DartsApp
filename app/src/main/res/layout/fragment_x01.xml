@@ -16,9 +16,6 @@
             name="viewModel"
             type="bruzsa.laszlo.dartsapp.model.x01.X01ViewModel" />
 
-        <variable
-            name="sharedViewModel"
-            type="bruzsa.laszlo.dartsapp.model.SharedViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -47,7 +44,7 @@
                 android:maxLines="1"
                 android:onClick="@{() -> viewModel.setActive(TeamPlayer.PLAYER_1_1)}"
                 android:padding="0dp"
-                android:text="@{sharedViewModel.getPlayer(TeamPlayer.PLAYER_1_1).name, default = @string/player_1_1}"
+                android:text="@{viewModel.playerMap.get(TeamPlayer.PLAYER_1_1).name, default = @string/player_1_1}"
                 android:textSize="30sp"
                 app:active="@{viewModel.activePlayer}"
                 app:player="@{TeamPlayer.PLAYER_1_1}" />
@@ -61,7 +58,7 @@
                 android:maxLines="1"
                 android:onClick="@{() -> viewModel.setActive(TeamPlayer.PLAYER_1_2)}"
                 android:padding="0dp"
-                android:text="@{sharedViewModel.getPlayer(TeamPlayer.PLAYER_1_2).name, default = @string/player_1_2}"
+                android:text="@{viewModel.playerMap.get(TeamPlayer.PLAYER_1_2).name, default = @string/player_1_2}"
                 android:textSize="30sp"
                 android:visibility="@{viewModel.teamPlay ? View.VISIBLE : View.GONE}"
                 app:active="@{viewModel.activePlayer}"
@@ -90,7 +87,7 @@
                 android:maxLines="1"
                 android:onClick="@{() -> viewModel.setActive(TeamPlayer.PLAYER_2_1)}"
                 android:padding="0dp"
-                android:text="@{sharedViewModel.getPlayer(TeamPlayer.PLAYER_2_1).name, default = @string/player_2_1}"
+                android:text="@{viewModel.playerMap.get(TeamPlayer.PLAYER_2_1).name, default = @string/player_2_1}"
                 android:textSize="30sp"
                 app:active="@{viewModel.activePlayer}"
                 app:player="@{TeamPlayer.PLAYER_2_1}" />
@@ -104,7 +101,7 @@
                 android:maxLines="1"
                 android:onClick="@{() -> viewModel.setActive(TeamPlayer.PLAYER_2_2)}"
                 android:padding="0dp"
-                android:text="@{sharedViewModel.getPlayer(TeamPlayer.PLAYER_2_2).name, default = @string/player_2_2}"
+                android:text="@{viewModel.playerMap.get(TeamPlayer.PLAYER_2_2).name, default = @string/player_2_2}"
                 android:textSize="30sp"
                 android:visibility="@{viewModel.teamPlay ? View.VISIBLE : View.GONE}"
                 app:active="@{viewModel.activePlayer}"

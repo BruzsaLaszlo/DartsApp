@@ -28,8 +28,4 @@ public class X01Settings {
         return count;
     }
 
-    public static X01Settings getDefault() {
-        return new X01Settings();
-    }
-
 }

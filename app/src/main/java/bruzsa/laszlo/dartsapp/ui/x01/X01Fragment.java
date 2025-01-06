@@ -1,7 +1,6 @@
 package bruzsa.laszlo.dartsapp.ui.x01;
 
 import static androidx.recyclerview.widget.LinearLayoutManager.VERTICAL;
-import static bruzsa.laszlo.dartsapp.Helper.getHtmlTemplate;
 
 import android.annotation.SuppressLint;
 import android.content.pm.ActivityInfo;
@@ -22,18 +21,17 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
 import java.util.function.Consumer;
 
-import bruzsa.laszlo.dartsapp.Helper;
 import bruzsa.laszlo.dartsapp.R;
 import bruzsa.laszlo.dartsapp.databinding.FragmentX01Binding;
-import bruzsa.laszlo.dartsapp.model.SharedViewModel;
 import bruzsa.laszlo.dartsapp.model.Team;
 import bruzsa.laszlo.dartsapp.model.x01.X01ViewModel;
 import bruzsa.laszlo.dartsapp.ui.x01.input.InputViews;
+import dagger.hilt.android.AndroidEntryPoint;
 
+@AndroidEntryPoint
 public class X01Fragment extends Fragment {
 
     private X01ViewModel viewModel;
-    private SharedViewModel sharedViewModel;
     private FragmentX01Binding binding;
 
 
@@ -43,8 +41,6 @@ public class X01Fragment extends Fragment {
         super.onCreate(savedInstanceState);
 
         requireActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
-
-        sharedViewModel = new ViewModelProvider(requireActivity()).get(SharedViewModel.class);
 
         viewModel = new ViewModelProvider(this).get(X01ViewModel.class);
     }
@@ -60,12 +56,6 @@ public class X01Fragment extends Fragment {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_x01, container, false);
         binding.setLifecycleOwner(getViewLifecycleOwner());
         binding.setViewModel(viewModel);
-        binding.setSharedViewModel(sharedViewModel);
-
-        viewModel.startGameOrContinue(
-                sharedViewModel.getSelectedPlayersMap(),
-                sharedViewModel.getX01Settings(),
-                getHtmlTemplate(requireContext(), Helper.WEB_GUI_X01));
 
         return binding.getRoot();
     }
@@ -107,8 +97,8 @@ public class X01Fragment extends Fragment {
         binding.includedInputs.inputText.setDisabled();
         new MaterialAlertDialogBuilder(requireContext())
                 .setTitle("The Winner is : \n"
-                        + sharedViewModel.getPlayer(winner.player1()).getName()
-                        + (sharedViewModel.getSelectedPlayersMap().size() == 4 ? "\n" + sharedViewModel.getPlayer(winner.player2()).getName() : ""))
+                        + viewModel.getPlayerMap().get(winner.player1()).getName()
+                        + (viewModel.getPlayerMap().size() == 4 ? "\n" + viewModel.getPlayerMap().get(winner.player2()).getName() : ""))
                 .setPositiveButton("Ok", null)
                 .create().show();
     }

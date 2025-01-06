@@ -5,7 +5,6 @@ import static android.graphics.Color.RED;
 import static java.lang.String.valueOf;
 import static bruzsa.laszlo.dartsapp.model.Team.TEAM1;
 import static bruzsa.laszlo.dartsapp.model.Team.TEAM2;
-import static bruzsa.laszlo.dartsapp.ui.webgui.WebServer.getWebServer;
 
 import android.graphics.Typeface;
 import android.view.View;
@@ -22,14 +21,21 @@ import java.util.Map;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
+import javax.inject.Inject;
+
+import bruzsa.laszlo.dartsapp.AppSettings;
+import bruzsa.laszlo.dartsapp.HtmlTemplateReader;
 import bruzsa.laszlo.dartsapp.enties.Player;
 import bruzsa.laszlo.dartsapp.model.Team;
 import bruzsa.laszlo.dartsapp.model.TeamPlayer;
+import bruzsa.laszlo.dartsapp.ui.webgui.WebGuiServer;
 import bruzsa.laszlo.dartsapp.ui.webgui.WebGuiX01;
 import bruzsa.laszlo.dartsapp.ui.x01.X01ThrowAdapter;
+import dagger.hilt.android.lifecycle.HiltViewModel;
 import lombok.Getter;
 
 @SuppressWarnings("ConstantConditions")
+@HiltViewModel
 public class X01ViewModel extends ViewModel {
 
     @Getter
@@ -43,16 +49,20 @@ public class X01ViewModel extends ViewModel {
     private final MutableLiveData<TeamPlayer> activePlayer = new MutableLiveData<>();
     @Getter
     private final MutableLiveData<Boolean> teamPlay = new MutableLiveData<>();
+    @Getter
+    private final Map<TeamPlayer, Player> playerMap;
+    private final Map<Team, X01ThrowAdapter> throwAdapterMap;
+    private final X01Service service;
+    private final WebGuiX01 webGUI;
 
-    private Map<Team, X01ThrowAdapter> throwAdapterMap;
-    private boolean gameStarted;
-    private X01Service service;
-    private WebGuiX01 webGUI;
+    private final WebGuiServer webGuiServer;
 
-
-    public void startGameOrContinue(Map<TeamPlayer, Player> activePlayersMap, X01Settings settings, String htmlTemplate) {
-        if (gameStarted) return;
-        gameStarted = true;
+    @Inject
+    public X01ViewModel(WebGuiServer webGuiServer, AppSettings appSettings, HtmlTemplateReader htmlTemplate) {
+        X01Settings settings = appSettings.getX01Settings();
+        Map<TeamPlayer, Player> activePlayersMap = appSettings.getSelectedPlayers();
+        this.webGuiServer = webGuiServer;
+        playerMap = appSettings.getSelectedPlayers();
 
         service = new X01Service(activePlayersMap, settings);
 
@@ -71,7 +81,7 @@ public class X01ViewModel extends ViewModel {
 
         set.setValue(settings.getMatchType() == X01MatchType.SET);
 
-        webGUI = new WebGuiX01(htmlTemplate, activePlayersMap, service.getTeamScores(), settings);
+        webGUI = new WebGuiX01(htmlTemplate.getX01Template(), activePlayersMap, service.getTeamScores(), settings);
         updateWebGui(getStats());
     }
 
@@ -141,7 +151,7 @@ public class X01ViewModel extends ViewModel {
 
     private void updateWebGui(Map<Team, Stat> stats) {
         String html = webGUI.createHtml(stats, service.getActive());
-        getWebServer().setWebServerContent(html);
+        webGuiServer.setContent(html);
     }
 
     public void setActive(TeamPlayer player) {

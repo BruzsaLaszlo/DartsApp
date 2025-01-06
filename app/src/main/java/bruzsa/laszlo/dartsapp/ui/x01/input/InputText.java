@@ -82,7 +82,9 @@ public class InputText extends Chip implements InputTextNumber {
     }
 
     public void setPartialResult() {
-        getThrow().ifPresent(onPartialResult::accept);
+        if (onPartialResult != null) {
+            getThrow().ifPresent(onPartialResult::accept);
+        }
     }
 
     public void setOnIconClickEvent(Consumer<Chip> iconEvent) {

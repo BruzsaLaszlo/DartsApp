@@ -6,8 +6,8 @@ import com.google.android.material.chip.Chip;
 
 import java.util.Map;
 
+import bruzsa.laszlo.dartsapp.GeneralSettings;
 import bruzsa.laszlo.dartsapp.enties.Player;
-import bruzsa.laszlo.dartsapp.model.SharedViewModel.Settings;
 import bruzsa.laszlo.dartsapp.model.TeamPlayer;
 import bruzsa.laszlo.dartsapp.model.home.GameMode;
 import bruzsa.laszlo.dartsapp.model.home.GameType;
@@ -18,7 +18,7 @@ public final class HomeBindingAdapters {
     }
 
     @BindingAdapter({"mode", "settings"})
-    public static void setOnClickListener(Chip chip, GameMode mode, Settings settings) {
+    public static void setOnClickListener(Chip chip, GameMode mode, GeneralSettings settings) {
         if (settings.getGameMode() == mode && !chip.isChecked()) {
             chip.setChecked(true);
         }
@@ -28,7 +28,7 @@ public final class HomeBindingAdapters {
     }
 
     @BindingAdapter({"game_type", "settings"})
-    public static void setGameType(Chip chip, GameType type, Settings settings) {
+    public static void setGameType(Chip chip, GameType type, GeneralSettings settings) {
         if (settings.getGameType() == type && !chip.isChecked()) {
             chip.setChecked(true);
         }
