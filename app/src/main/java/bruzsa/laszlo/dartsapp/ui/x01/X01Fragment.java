@@ -19,6 +19,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
 import bruzsa.laszlo.dartsapp.HandleBackButton;
+import bruzsa.laszlo.dartsapp.Permission;
 import bruzsa.laszlo.dartsapp.R;
 import bruzsa.laszlo.dartsapp.databinding.FragmentX01Binding;
 import bruzsa.laszlo.dartsapp.model.Team;
@@ -31,6 +32,7 @@ public class X01Fragment extends Fragment {
 
     private X01ViewModel viewModel;
     private FragmentX01Binding binding;
+    private final Permission permission = new Permission(this);
 
 
     @SuppressLint("SourceLockedOrientationActivity")
@@ -41,6 +43,8 @@ public class X01Fragment extends Fragment {
         requireActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
 
         viewModel = new ViewModelProvider(this).get(X01ViewModel.class);
+
+        permission.registerForActivityResult();
     }
 
     @SuppressLint({"SetTextI18n", "SourceLockedOrientationActivity"})
@@ -64,7 +68,7 @@ public class X01Fragment extends Fragment {
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        InputViews inputViews = new InputViews(this, binding.includedInputs);
+        InputViews inputViews = new InputViews(permission, binding.includedInputs);
         binding.includedInputs.setInputViews(inputViews);
         binding.includedInputs.setLifecycleOwner(getViewLifecycleOwner());
         inputViews.setOnReadyAction(this::newThrow);

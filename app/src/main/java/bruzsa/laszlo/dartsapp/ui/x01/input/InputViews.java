@@ -7,6 +7,7 @@ import static bruzsa.laszlo.dartsapp.ui.x01.input.InputType.VOICE;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.speech.SpeechRecognizer;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
@@ -14,13 +15,13 @@ import android.widget.ImageView;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.databinding.BindingAdapter;
-import androidx.fragment.app.Fragment;
 import androidx.lifecycle.MutableLiveData;
 
 import java.util.Arrays;
 import java.util.List;
 import java.util.function.IntConsumer;
 
+import bruzsa.laszlo.dartsapp.Permission;
 import bruzsa.laszlo.dartsapp.R;
 import bruzsa.laszlo.dartsapp.databinding.InputViewsBinding;
 import bruzsa.laszlo.dartsapp.speech.Language;
@@ -30,43 +31,41 @@ import lombok.Getter;
 @SuppressWarnings("ConstantConditions")
 public class InputViews {
 
-    private Speech speech = null;
+    private Speech speech;
     @Getter
     private final MutableLiveData<InputType> inputType = new MutableLiveData<>(NUMPAD);
     private final InputText inputText;
     private final ImageView imageMicrophone;
 
-    @SuppressLint("ClickableViewAccessibility")
-    public InputViews(Fragment fragment, InputViewsBinding bindingInputs) {
-
+    public InputViews(Permission permission, InputViewsBinding bindingInputs) {
         inputText = bindingInputs.inputText;
-
         imageMicrophone = bindingInputs.imageMicrophone;
-
         bindingInputs.numPad.setInputTextNumber(inputText);
+        inicSpeech(permission);
+    }
 
-        boolean success = inicSpeech(fragment);
-        if (success) {
-            imageMicrophone.setOnTouchListener(this::getOnTouchListener);
-            inputType.setValue(loadInputType(fragment.getContext()));
+    @SuppressLint("ClickableViewAccessibility")
+    private void inicSpeech(Permission permission) {
+        boolean recognitionAvailable = SpeechRecognizer.isRecognitionAvailable(permission.getContext());
+        if (recognitionAvailable) {
+            permission.checkAndRequestPermission(
+                    Speech.NEED_PERMISSION_AUDIO,
+                    granted -> {
+                        if (granted) {
+                            speech = Speech.build(
+                                    permission.getContext(),
+                                    this::onSpeechResult,
+                                    this::onSpeechError);
+                            imageMicrophone.setOnTouchListener(this::getOnTouchListener);
+                            inputType.setValue(loadInputType(permission.getContext()));
+                        } else {
+                            inputType.setValue(NUMPAD);
+                        }
+                    });
         } else {
+            Log.e("InputViews", "Speech recognition is not available!");
             inputType.setValue(NUMPAD);
         }
-
-        inputText.setOnClickListener(getOnClickListener());
-    }
-
-    private static View.OnClickListener getOnClickListener() {
-        return v -> {
-        };
-    }
-
-    private boolean inicSpeech(Fragment fragment) {
-        speech = Speech.build(
-                fragment,
-                this::onSpeechResult,
-                this::onSpeechError);
-        return speech != null;
     }
 
     private boolean getOnTouchListener(View view, MotionEvent event) {

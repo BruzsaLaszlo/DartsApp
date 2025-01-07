@@ -13,7 +13,6 @@ import android.speech.tts.TextToSpeech;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
-import androidx.fragment.app.Fragment;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -22,12 +21,13 @@ import java.util.Locale;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
-import bruzsa.laszlo.dartsapp.Helper;
 import bruzsa.laszlo.dartsapp.speech.events.ErrorEventListener;
 import bruzsa.laszlo.dartsapp.speech.events.ResultEventListener;
 
 public class Speech {
 
+    public static final String NEED_PERMISSION_AUDIO = RECORD_AUDIO;
+    public static final String NEED_PERMISSION_INTERNET = INTERNET;
     private TextToSpeech textToSpeech;
 
     private final SpeechRecognizer speechRecognizer;
@@ -39,12 +39,9 @@ public class Speech {
 
     private static Speech speech;
 
-    public static Speech build(@NonNull Fragment fragment, ResultEventListener resultEventListener, ErrorEventListener errorEventListener) {
-        Helper.requestRecordPermission(fragment, INTERNET);
-        if (Helper.requestRecordPermission(fragment, RECORD_AUDIO)) {
+    public static Speech build(@NonNull Context context, ResultEventListener resultEventListener, ErrorEventListener errorEventListener) {
             if (speech == null)
-                speech = new Speech(fragment.getContext(), resultEventListener, errorEventListener);
-        }
+                speech = new Speech(context, resultEventListener, errorEventListener);
         return speech;
     }
 
@@ -59,7 +56,6 @@ public class Speech {
             }
         });
 
-        Log.i(TAG, "isRecognitionAvailable: " + SpeechRecognizer.isRecognitionAvailable(context));
         speechRecognizer = SpeechRecognizer.createSpeechRecognizer(context);
         speechRecognizer.setRecognitionListener(getCustomRecognizerListener());
     }

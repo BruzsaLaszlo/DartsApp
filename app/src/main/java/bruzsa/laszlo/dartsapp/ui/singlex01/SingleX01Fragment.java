@@ -17,6 +17,7 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.GridLayoutManager;
 
 import bruzsa.laszlo.dartsapp.HandleBackButton;
+import bruzsa.laszlo.dartsapp.Permission;
 import bruzsa.laszlo.dartsapp.R;
 import bruzsa.laszlo.dartsapp.databinding.FragmentSinglex01Binding;
 import bruzsa.laszlo.dartsapp.ui.x01.input.InputViews;
@@ -28,6 +29,8 @@ public class SingleX01Fragment extends Fragment {
     private SingleX01ViewModel viewModel;
     private FragmentSinglex01Binding binding;
 
+    private final Permission permission = new Permission(this);
+
 
     @Override
     @SuppressLint("SourceLockedOrientationActivity")
@@ -36,6 +39,7 @@ public class SingleX01Fragment extends Fragment {
         requireActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_FULL_SENSOR);
 
         viewModel = new ViewModelProvider(this).get(SingleX01ViewModel.class);
+        permission.registerForActivityResult();
     }
 
     @Override
@@ -57,7 +61,7 @@ public class SingleX01Fragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
 
-        InputViews inputViews = new InputViews(this, binding.includedInputs);
+        InputViews inputViews = new InputViews(permission, binding.includedInputs);
         binding.includedInputs.setInputViews(inputViews);
         binding.includedInputs.setLifecycleOwner(getViewLifecycleOwner());
         inputViews.setOnReadyAction(this::newThrow);
