@@ -6,7 +6,6 @@ import android.view.Menu;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.drawerlayout.widget.DrawerLayout;
-import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.fragment.NavHostFragment;
@@ -18,8 +17,6 @@ import com.google.android.material.navigation.NavigationView;
 import java.util.Objects;
 
 import bruzsa.laszlo.dartsapp.databinding.ActivityMainBinding;
-import bruzsa.laszlo.dartsapp.model.SharedViewModel;
-import bruzsa.laszlo.dartsapp.model.cricket.CricketViewModel;
 import dagger.hilt.android.AndroidEntryPoint;
 
 @AndroidEntryPoint
@@ -33,9 +30,6 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
-
-        SharedViewModel sharedViewModel = new ViewModelProvider(this).get(SharedViewModel.class);
-        CricketViewModel cricketViewModel = new ViewModelProvider(this).get(CricketViewModel.class);
 
         ActivityMainBinding binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
@@ -51,13 +45,7 @@ public class MainActivity extends AppCompatActivity {
                 R.id.nav_homeFragment, R.id.nav_X01Fragment, R.id.nav_cricketFragment)
                 .setOpenableLayout(drawer)
                 .build();
-//
-//        getOnBackPressedDispatcher().addCallback(new OnBackPressedCallback(true) {
-//            @Override
-//            public void handleOnBackPressed() {
-//                super.cancel
-//            }
-//        });
+
 
         NavHostFragment navHostFragment = (NavHostFragment) getSupportFragmentManager().findFragmentById(R.id.nav_host_fragment_content_main);
         NavController navController = Objects.requireNonNull(navHostFragment).getNavController();
