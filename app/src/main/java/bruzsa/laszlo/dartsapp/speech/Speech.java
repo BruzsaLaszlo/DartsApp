@@ -40,8 +40,8 @@ public class Speech {
     private static Speech speech;
 
     public static Speech build(@NonNull Context context, ResultEventListener resultEventListener, ErrorEventListener errorEventListener) {
-            if (speech == null)
-                speech = new Speech(context, resultEventListener, errorEventListener);
+        if (speech == null)
+            speech = new Speech(context, resultEventListener, errorEventListener);
         return speech;
     }
 

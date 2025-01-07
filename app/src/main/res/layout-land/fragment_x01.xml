@@ -16,7 +16,7 @@
 
         <variable
             name="homeViewModel"
-            type="bruzsa.laszlo.dartsapp.model.HomeViewModel" />
+            type="bruzsa.laszlo.dartsapp.model.home.HomeViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

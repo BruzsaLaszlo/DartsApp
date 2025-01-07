@@ -12,11 +12,11 @@ import java.util.Map;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
-import bruzsa.laszlo.dartsapp.AppSettings;
-import bruzsa.laszlo.dartsapp.HtmlTemplateReader;
 import bruzsa.laszlo.dartsapp.enties.Player;
 import bruzsa.laszlo.dartsapp.model.PlayersEnum;
 import bruzsa.laszlo.dartsapp.model.cricket.Stat;
+import bruzsa.laszlo.dartsapp.model.home.AppSettings;
+import bruzsa.laszlo.dartsapp.util.HtmlTemplateReader;
 
 @Singleton
 public class WebGuiCricket {

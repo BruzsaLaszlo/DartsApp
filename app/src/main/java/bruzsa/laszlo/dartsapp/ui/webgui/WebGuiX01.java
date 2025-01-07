@@ -16,17 +16,17 @@ import java.util.Objects;
 
 import javax.inject.Inject;
 
-import bruzsa.laszlo.dartsapp.AppSettings;
-import bruzsa.laszlo.dartsapp.HtmlTemplateReader;
 import bruzsa.laszlo.dartsapp.enties.Player;
 import bruzsa.laszlo.dartsapp.enties.x01.X01TeamScores;
 import bruzsa.laszlo.dartsapp.model.PlayersEnum;
 import bruzsa.laszlo.dartsapp.model.Team;
+import bruzsa.laszlo.dartsapp.model.home.AppSettings;
 import bruzsa.laszlo.dartsapp.model.x01.CheckoutTable;
 import bruzsa.laszlo.dartsapp.model.x01.Stat;
 import bruzsa.laszlo.dartsapp.model.x01.X01Service;
 import bruzsa.laszlo.dartsapp.model.x01.X01Settings;
 import bruzsa.laszlo.dartsapp.model.x01.X01Throw;
+import bruzsa.laszlo.dartsapp.util.HtmlTemplateReader;
 import dagger.hilt.android.scopes.ViewModelScoped;
 
 @ViewModelScoped

@@ -3,13 +3,13 @@ package bruzsa.laszlo.dartsapp.ui.home;
 import static android.view.View.VISIBLE;
 import static java.lang.Integer.parseInt;
 import static java.lang.String.valueOf;
-import static bruzsa.laszlo.dartsapp.Helper.getIPv4Address;
 import static bruzsa.laszlo.dartsapp.model.PlayersEnum.PLAYER_1_1;
 import static bruzsa.laszlo.dartsapp.model.PlayersEnum.PLAYER_1_2;
 import static bruzsa.laszlo.dartsapp.model.PlayersEnum.PLAYER_2_1;
 import static bruzsa.laszlo.dartsapp.model.PlayersEnum.PLAYER_2_2;
 import static bruzsa.laszlo.dartsapp.ui.home.HomeFragmentDirections.actionHomeFragmentToPlayerFragment;
 import static bruzsa.laszlo.dartsapp.ui.home.HomeFragmentDirections.actionHomeFragmentToSingleX01Fragment;
+import static bruzsa.laszlo.dartsapp.util.IpAddress.getIPv4Address;
 
 import android.annotation.SuppressLint;
 import android.content.pm.ActivityInfo;
@@ -38,10 +38,10 @@ import java.util.TreeMap;
 import bruzsa.laszlo.dartsapp.R;
 import bruzsa.laszlo.dartsapp.databinding.FragmentHomeBinding;
 import bruzsa.laszlo.dartsapp.enties.Player;
-import bruzsa.laszlo.dartsapp.model.HomeViewModel;
 import bruzsa.laszlo.dartsapp.model.PlayersEnum;
 import bruzsa.laszlo.dartsapp.model.home.GameMode;
 import bruzsa.laszlo.dartsapp.model.home.GameType;
+import bruzsa.laszlo.dartsapp.model.home.HomeViewModel;
 
 public class HomeFragment extends Fragment {
 

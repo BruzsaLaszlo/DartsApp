@@ -21,11 +21,11 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.function.IntConsumer;
 
-import bruzsa.laszlo.dartsapp.Permission;
 import bruzsa.laszlo.dartsapp.R;
 import bruzsa.laszlo.dartsapp.databinding.InputViewsBinding;
 import bruzsa.laszlo.dartsapp.speech.Language;
 import bruzsa.laszlo.dartsapp.speech.Speech;
+import bruzsa.laszlo.dartsapp.util.Permission;
 import lombok.Getter;
 
 @SuppressWarnings("ConstantConditions")

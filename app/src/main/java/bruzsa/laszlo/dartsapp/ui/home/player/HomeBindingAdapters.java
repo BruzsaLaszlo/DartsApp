@@ -6,11 +6,11 @@ import com.google.android.material.chip.Chip;
 
 import java.util.Map;
 
-import bruzsa.laszlo.dartsapp.GeneralSettings;
 import bruzsa.laszlo.dartsapp.enties.Player;
 import bruzsa.laszlo.dartsapp.model.PlayersEnum;
 import bruzsa.laszlo.dartsapp.model.home.GameMode;
 import bruzsa.laszlo.dartsapp.model.home.GameType;
+import bruzsa.laszlo.dartsapp.model.home.GeneralSettings;
 
 public final class HomeBindingAdapters {
 

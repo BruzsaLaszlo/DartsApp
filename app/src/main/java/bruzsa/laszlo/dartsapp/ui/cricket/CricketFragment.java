@@ -19,13 +19,13 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
-import bruzsa.laszlo.dartsapp.HandleBackButton;
 import bruzsa.laszlo.dartsapp.R;
 import bruzsa.laszlo.dartsapp.databinding.FragmentCricketBinding;
 import bruzsa.laszlo.dartsapp.model.Team;
 import bruzsa.laszlo.dartsapp.model.cricket.CricketSettings;
 import bruzsa.laszlo.dartsapp.model.cricket.CricketViewModel;
 import bruzsa.laszlo.dartsapp.ui.cricket.CricketTable.TouchValue;
+import bruzsa.laszlo.dartsapp.util.HandleBackButton;
 import dagger.hilt.android.AndroidEntryPoint;
 
 @AndroidEntryPoint

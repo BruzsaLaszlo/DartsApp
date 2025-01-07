@@ -16,11 +16,11 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.GridLayoutManager;
 
-import bruzsa.laszlo.dartsapp.HandleBackButton;
-import bruzsa.laszlo.dartsapp.Permission;
 import bruzsa.laszlo.dartsapp.R;
 import bruzsa.laszlo.dartsapp.databinding.FragmentSinglex01Binding;
 import bruzsa.laszlo.dartsapp.ui.x01.input.InputViews;
+import bruzsa.laszlo.dartsapp.util.HandleBackButton;
+import bruzsa.laszlo.dartsapp.util.Permission;
 import dagger.hilt.android.AndroidEntryPoint;
 
 @AndroidEntryPoint

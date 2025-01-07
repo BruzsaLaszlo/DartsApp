@@ -1,4 +1,4 @@
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
     <string name="app_name">DartsApp</string>
     <string name="nav_header_desc">Navigation header</string>
     <string name="action_settings">Settings</string>
@@ -22,8 +22,8 @@
     <string name="single">Single</string>
     <string name="player_2_1">Player_2_1</string>
     <string name="player_2_2">Player_2_2</string>
-    <string name="player_1_1">Player_1_1</string>
-    <string name="player_1_2">Player_1_2</string>
+    <string name="player_1_1" tools:ignore="Typos">Player_1_1</string>
+    <string name="player_1_2" tools:ignore="Typos">Player_1_2</string>
     <string name="_100_n60_navg_nmax_nmin_nhc">100+\n60+\nAvg\nMax\nMin\nHC</string>
     <string name="microphone">microphone</string>
     <string name="_0">0</string>

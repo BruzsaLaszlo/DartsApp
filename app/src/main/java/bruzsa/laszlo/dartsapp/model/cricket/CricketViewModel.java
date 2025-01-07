@@ -9,9 +9,9 @@ import androidx.lifecycle.ViewModel;
 
 import javax.inject.Inject;
 
-import bruzsa.laszlo.dartsapp.AppSettings;
 import bruzsa.laszlo.dartsapp.model.PlayersEnum;
 import bruzsa.laszlo.dartsapp.model.Team;
+import bruzsa.laszlo.dartsapp.model.home.AppSettings;
 import bruzsa.laszlo.dartsapp.ui.cricket.CricketThrowsAdapter;
 import bruzsa.laszlo.dartsapp.ui.webgui.WebGuiCricket;
 import bruzsa.laszlo.dartsapp.ui.webgui.WebGuiServer;

@@ -21,8 +21,8 @@ import java.util.List;
 import bruzsa.laszlo.dartsapp.R;
 import bruzsa.laszlo.dartsapp.databinding.FragmentPlayerBinding;
 import bruzsa.laszlo.dartsapp.enties.Player;
-import bruzsa.laszlo.dartsapp.model.HomeViewModel;
 import bruzsa.laszlo.dartsapp.model.PlayersEnum;
+import bruzsa.laszlo.dartsapp.model.home.HomeViewModel;
 
 public class PlayerFragment extends Fragment {
 

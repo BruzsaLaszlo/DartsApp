@@ -1,10 +1,8 @@
-package bruzsa.laszlo.dartsapp;
+package bruzsa.laszlo.dartsapp.model.home;
 
 import static bruzsa.laszlo.dartsapp.model.home.GameMode.PLAYER;
 import static bruzsa.laszlo.dartsapp.model.home.GameType.X01;
 
-import bruzsa.laszlo.dartsapp.model.home.GameMode;
-import bruzsa.laszlo.dartsapp.model.home.GameType;
 import lombok.Getter;
 import lombok.Setter;
 

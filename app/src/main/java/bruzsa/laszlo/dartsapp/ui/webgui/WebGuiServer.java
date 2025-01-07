@@ -27,8 +27,5 @@ public class WebGuiServer {
     public void setContent(String html) {
         webServer.setResponse(html);
     }
-
-    public int getPort() {
-        return webServer.getPort();
-    }
+    
 }

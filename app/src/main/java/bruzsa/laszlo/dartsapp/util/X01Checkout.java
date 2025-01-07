@@ -1,4 +1,4 @@
-package bruzsa.laszlo.dartsapp;
+package bruzsa.laszlo.dartsapp.util;
 
 import android.content.Context;
 

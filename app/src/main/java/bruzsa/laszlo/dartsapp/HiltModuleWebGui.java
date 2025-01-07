@@ -9,6 +9,7 @@ import javax.inject.Singleton;
 
 import bruzsa.laszlo.dartsapp.ui.webgui.WebGuiServer;
 import bruzsa.laszlo.dartsapp.ui.webgui.WebServer;
+import bruzsa.laszlo.dartsapp.util.HtmlTemplateReader;
 import dagger.Module;
 import dagger.Provides;
 import dagger.hilt.InstallIn;
@@ -17,7 +18,7 @@ import dagger.hilt.components.SingletonComponent;
 
 @Module
 @InstallIn(SingletonComponent.class)
-public class WegGuiHiltModule {
+public class HiltModuleWebGui {
 
     @Provides
     @Singleton
@@ -30,7 +31,7 @@ public class WegGuiHiltModule {
     public WebGuiServer getWebGuiServer() {
         try {
             long t = System.currentTimeMillis();
-            WebServer webServer = new WebServer(WebServer.WEBSERVER_DEFAULT_PORT);
+            WebServer webServer = new WebServer();
             webServer.start();
             Log.i("WebServer", "startWebserver: starting time: " + (System.currentTimeMillis() - t) + "ms");
             return new WebGuiServer(webServer);

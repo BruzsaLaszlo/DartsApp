@@ -1,4 +1,4 @@
-package bruzsa.laszlo.dartsapp;
+package bruzsa.laszlo.dartsapp.util;
 
 import static android.content.pm.PackageManager.PERMISSION_GRANTED;
 import static android.provider.Settings.ACTION_APPLICATION_DETAILS_SETTINGS;

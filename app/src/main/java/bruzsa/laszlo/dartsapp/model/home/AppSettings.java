@@ -1,4 +1,4 @@
-package bruzsa.laszlo.dartsapp;
+package bruzsa.laszlo.dartsapp.model.home;
 
 import java.util.Collections;
 import java.util.EnumMap;

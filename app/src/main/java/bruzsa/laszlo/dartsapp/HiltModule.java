@@ -8,6 +8,7 @@ import javax.inject.Singleton;
 
 import bruzsa.laszlo.dartsapp.dabatase.AppDatabase;
 import bruzsa.laszlo.dartsapp.model.cricket.CricketSettings;
+import bruzsa.laszlo.dartsapp.model.home.GeneralSettings;
 import bruzsa.laszlo.dartsapp.model.x01.X01Settings;
 import dagger.Module;
 import dagger.Provides;

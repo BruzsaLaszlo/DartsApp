@@ -1,4 +1,4 @@
-package bruzsa.laszlo.dartsapp.model;
+package bruzsa.laszlo.dartsapp.model.home;
 
 import static bruzsa.laszlo.dartsapp.model.PlayersEnum.PLAYER_1_2;
 import static bruzsa.laszlo.dartsapp.model.PlayersEnum.PLAYER_2_1;
@@ -13,9 +13,9 @@ import java.util.Map;
 
 import javax.inject.Inject;
 
-import bruzsa.laszlo.dartsapp.AppSettings;
 import bruzsa.laszlo.dartsapp.dabatase.AppDatabase;
 import bruzsa.laszlo.dartsapp.enties.Player;
+import bruzsa.laszlo.dartsapp.model.PlayersEnum;
 import dagger.hilt.android.lifecycle.HiltViewModel;
 import lombok.Getter;
 

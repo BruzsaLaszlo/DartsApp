@@ -18,13 +18,13 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
-import bruzsa.laszlo.dartsapp.HandleBackButton;
-import bruzsa.laszlo.dartsapp.Permission;
 import bruzsa.laszlo.dartsapp.R;
 import bruzsa.laszlo.dartsapp.databinding.FragmentX01Binding;
 import bruzsa.laszlo.dartsapp.model.Team;
 import bruzsa.laszlo.dartsapp.model.x01.X01ViewModel;
 import bruzsa.laszlo.dartsapp.ui.x01.input.InputViews;
+import bruzsa.laszlo.dartsapp.util.HandleBackButton;
+import bruzsa.laszlo.dartsapp.util.Permission;
 import dagger.hilt.android.AndroidEntryPoint;
 
 @AndroidEntryPoint

@@ -27,14 +27,14 @@ import java.util.function.Consumer;
 
 import javax.inject.Inject;
 
-import bruzsa.laszlo.dartsapp.AppSettings;
-import bruzsa.laszlo.dartsapp.X01Checkout;
 import bruzsa.laszlo.dartsapp.enties.Player;
 import bruzsa.laszlo.dartsapp.model.PlayersEnum;
 import bruzsa.laszlo.dartsapp.model.Team;
+import bruzsa.laszlo.dartsapp.model.home.AppSettings;
 import bruzsa.laszlo.dartsapp.ui.webgui.WebGuiServer;
 import bruzsa.laszlo.dartsapp.ui.webgui.WebGuiX01;
 import bruzsa.laszlo.dartsapp.ui.x01.X01ThrowAdapter;
+import bruzsa.laszlo.dartsapp.util.X01Checkout;
 import dagger.hilt.android.lifecycle.HiltViewModel;
 import lombok.Getter;
 

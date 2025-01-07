@@ -12,10 +12,10 @@ import java.util.Map;
 
 import javax.inject.Inject;
 
-import bruzsa.laszlo.dartsapp.AppSettings;
 import bruzsa.laszlo.dartsapp.enties.Player;
 import bruzsa.laszlo.dartsapp.model.PlayersEnum;
 import bruzsa.laszlo.dartsapp.model.Team;
+import bruzsa.laszlo.dartsapp.model.home.AppSettings;
 import dagger.hilt.android.scopes.ViewModelScoped;
 
 @SuppressWarnings("ConstantConditions")
