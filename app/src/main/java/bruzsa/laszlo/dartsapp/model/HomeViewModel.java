@@ -38,7 +38,7 @@ public class HomeViewModel extends ViewModel {
     private void inicPlayerList() {
         List<Player> allPlayers = getAllPlayers();
         PlayersEnum[] playersEnum = PlayersEnum.values();
-        for (int i = 0; i < 2 && i <= allPlayers.size(); i++) {
+        for (int i = 0; i < 2 && i < allPlayers.size(); i++) {
             settings.setSelectedPlayer(playersEnum[i], allPlayers.get(i));
         }
     }

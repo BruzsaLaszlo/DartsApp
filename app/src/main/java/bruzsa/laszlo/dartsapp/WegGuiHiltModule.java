@@ -32,7 +32,7 @@ public class WegGuiHiltModule {
             long t = System.currentTimeMillis();
             WebServer webServer = new WebServer(WebServer.WEBSERVER_DEFAULT_PORT);
             webServer.start();
-            Log.i("WebServer", "startWebserver: starting time:" + (System.currentTimeMillis() - t));
+            Log.i("WebServer", "startWebserver: starting time: " + (System.currentTimeMillis() - t) + "ms");
             return new WebGuiServer(webServer);
         } catch (IOException e) {
             Log.e("WebServer", "startWebserver: WebServer can not start!", e);
