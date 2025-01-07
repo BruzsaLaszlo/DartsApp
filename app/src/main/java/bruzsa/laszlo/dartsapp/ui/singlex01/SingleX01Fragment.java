@@ -1,7 +1,6 @@
 package bruzsa.laszlo.dartsapp.ui.singlex01;
 
 import static android.view.View.GONE;
-import static bruzsa.laszlo.dartsapp.Helper.showCheckoutDialog;
 
 import android.annotation.SuppressLint;
 import android.content.pm.ActivityInfo;
@@ -17,6 +16,7 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.GridLayoutManager;
 
+import bruzsa.laszlo.dartsapp.HandleBackButton;
 import bruzsa.laszlo.dartsapp.R;
 import bruzsa.laszlo.dartsapp.databinding.FragmentSinglex01Binding;
 import bruzsa.laszlo.dartsapp.ui.x01.input.InputViews;
@@ -44,14 +44,12 @@ public class SingleX01Fragment extends Fragment {
                              @Nullable Bundle savedInstanceState) {
 
         requireActivity().findViewById(R.id.toolbar).setVisibility(GONE);
+        requireActivity().getOnBackPressedDispatcher()
+                .addCallback(getViewLifecycleOwner(), new HandleBackButton(requireActivity()));
 
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_singlex01, container, false);
         binding.setLifecycleOwner(getViewLifecycleOwner());
         binding.setViewModel(viewModel);
-
-        SingleX01FragmentArgs args = SingleX01FragmentArgs.fromBundle(requireArguments());
-
-
         return binding.getRoot();
     }
 
@@ -70,13 +68,9 @@ public class SingleX01Fragment extends Fragment {
     }
 
     private void newThrow(Integer dartsThrow) {
-        viewModel.newThrow(dartsThrow, this::onCheckout);
+        viewModel.newThrow(dartsThrow, requireContext());
     }
 
-    private void onCheckout(int throwValue) {
-        showCheckoutDialog(throwValue, requireContext(), dartCount ->
-                viewModel.newThrow(throwValue, dartCount));
-    }
 
     @Override
     public void onDestroy() {

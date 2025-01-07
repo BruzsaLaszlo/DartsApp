@@ -19,9 +19,9 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
+import bruzsa.laszlo.dartsapp.HandleBackButton;
 import bruzsa.laszlo.dartsapp.R;
 import bruzsa.laszlo.dartsapp.databinding.FragmentCricketBinding;
-import bruzsa.laszlo.dartsapp.model.SharedViewModel;
 import bruzsa.laszlo.dartsapp.model.Team;
 import bruzsa.laszlo.dartsapp.model.cricket.CricketSettings;
 import bruzsa.laszlo.dartsapp.model.cricket.CricketViewModel;
@@ -33,14 +33,12 @@ public class CricketFragment extends Fragment {
 
     private static final String TAG = "CricketFragment";
     private CricketViewModel viewModel;
-    private SharedViewModel sharedViewModel;
     private FragmentCricketBinding binding;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         viewModel = new ViewModelProvider(this).get(CricketViewModel.class);
-        sharedViewModel = new ViewModelProvider(requireActivity()).get(SharedViewModel.class);
     }
 
     @Nullable
@@ -50,6 +48,8 @@ public class CricketFragment extends Fragment {
         setScreenOrientation(SCREEN_ORIENTATION_LANDSCAPE);
 
         requireActivity().findViewById(R.id.toolbar).setVisibility(GONE);
+        requireActivity().getOnBackPressedDispatcher()
+                .addCallback(getViewLifecycleOwner(), new HandleBackButton(requireActivity()));
 
         binding = FragmentCricketBinding.inflate(inflater, container, false);
         binding.setLifecycleOwner(getViewLifecycleOwner());
@@ -71,15 +71,6 @@ public class CricketFragment extends Fragment {
 //        binding.listThrows.setAdapter(viewModel.getThrowsAdapter());
 
     }
-
-//    private void onRemoveListener(CricketThrow cricketThrow) {
-//        new AlertDialog.Builder(requireActivity())
-//                .setTitle("Do you want to delete?   " + cricketThrow.toString())
-//                .setPositiveButton("Yes", (dialog, which) -> removeThrow(cricketThrow))
-//                .setNegativeButton("No", null)
-//                .create()
-//                .show();
-//    }
 
     private void setScreenOrientation(int screenOrientation) {
         requireActivity().setRequestedOrientation(screenOrientation);

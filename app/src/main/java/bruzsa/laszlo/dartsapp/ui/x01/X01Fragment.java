@@ -11,7 +11,6 @@ import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AlertDialog;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
@@ -19,8 +18,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
-import java.util.function.Consumer;
-
+import bruzsa.laszlo.dartsapp.HandleBackButton;
 import bruzsa.laszlo.dartsapp.R;
 import bruzsa.laszlo.dartsapp.databinding.FragmentX01Binding;
 import bruzsa.laszlo.dartsapp.model.Team;
@@ -53,10 +51,12 @@ public class X01Fragment extends Fragment {
 
         requireActivity().findViewById(R.id.toolbar).setVisibility(View.GONE);
 
+        requireActivity().getOnBackPressedDispatcher()
+                .addCallback(getViewLifecycleOwner(), new HandleBackButton(requireActivity()));
+
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_x01, container, false);
         binding.setLifecycleOwner(getViewLifecycleOwner());
         binding.setViewModel(viewModel);
-
         return binding.getRoot();
     }
 
@@ -73,24 +73,11 @@ public class X01Fragment extends Fragment {
         binding.listThrowsPlayer1.setLayoutManager(new LinearLayoutManager(getActivity(), VERTICAL, true));
         binding.listThrowsPlayer2.setLayoutManager(new LinearLayoutManager(getActivity(), VERTICAL, true));
 
+
     }
 
     private void newThrow(int value) {
-        viewModel.newThrow(value, this::showDialogDartsCount, this::showGameOverScreen);
-    }
-
-    private void showDialogDartsCount(X01ViewModel.Darts darts, Consumer<Integer> dartsCount) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(requireActivity());
-        builder.setTitle("How many darts has been thrown?");
-        CharSequence[] charSequences;
-        if (darts == X01ViewModel.Darts.THREE) {
-            charSequences = new CharSequence[]{"1 dart", "2 darts", "3 darts"};
-            builder.setItems(charSequences, (dialog, which) -> dartsCount.accept(which + 1));
-        } else {
-            charSequences = new CharSequence[]{"2 darts", "3 darts"};
-            builder.setItems(charSequences, (dialog, which) -> dartsCount.accept(which + 2));
-        }
-        builder.create().show();
+        viewModel.newThrow(value, this::showGameOverScreen, requireContext());
     }
 
     private void showGameOverScreen(Team winner) {
