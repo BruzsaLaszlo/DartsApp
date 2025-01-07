@@ -9,43 +9,50 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
 
+import javax.inject.Inject;
+
+import bruzsa.laszlo.dartsapp.AppSettings;
 import bruzsa.laszlo.dartsapp.enties.Player;
 import bruzsa.laszlo.dartsapp.enties.x01.X01TeamScores;
+import bruzsa.laszlo.dartsapp.model.PlayersEnum;
 import bruzsa.laszlo.dartsapp.model.Team;
-import bruzsa.laszlo.dartsapp.model.TeamPlayer;
+import dagger.hilt.android.scopes.ViewModelScoped;
 import lombok.Getter;
 
 @SuppressWarnings("ConstantConditions")
+@ViewModelScoped
 public class X01Service {
 
     @Getter
-    private TeamPlayer active = TEAM1.player1();
-    private TeamPlayer startLeg = TEAM1.player1();
-    private TeamPlayer startSet = TEAM1.player1();
+    private PlayersEnum active = TEAM1.player1();
+    private PlayersEnum startLeg = TEAM1.player1();
+    private PlayersEnum startSet = TEAM1.player1();
     private int legCount;
+    @Getter
     private final X01Settings settings;
     private final boolean teamPlay;
     @Getter
     private final Map<Team, X01TeamScores> teamScores;
     private X01Throw partialThrow;
-    private final Map<TeamPlayer, Player> teamPlayerMap;
+    private final Map<PlayersEnum, Player> PlayersEnumMap;
     @Getter
     boolean gameOver;
 
-    public X01Service(Map<TeamPlayer, Player> teamPlayerMap, X01Settings settings) {
-        this.teamPlayerMap = teamPlayerMap;
-        X01TeamScores team1 = new X01TeamScores(teamPlayerMap.get(TEAM1.player1()), teamPlayerMap.get(TEAM1.player2()));
-        X01TeamScores team2 = new X01TeamScores(teamPlayerMap.get(TEAM2.player1()), teamPlayerMap.get(TEAM2.player2()));
-        teamScores = Map.of(TEAM1, team1, TEAM2, team2);
-        teamPlay = teamPlayerMap.size() == TeamPlayer.values().length;
-        this.settings = settings;
+    @Inject
+    public X01Service(AppSettings appSettings) {
+        this.PlayersEnumMap = appSettings.getSelectedPlayers();
+        teamScores = Map.of(
+                TEAM1, new X01TeamScores(PlayersEnumMap.get(TEAM1.player1()), PlayersEnumMap.get(TEAM1.player2())),
+                TEAM2, new X01TeamScores(PlayersEnumMap.get(TEAM2.player1()), PlayersEnumMap.get(TEAM2.player2())));
+        teamPlay = PlayersEnumMap.size() == PlayersEnum.values().length;
+        this.settings = appSettings.getX01Settings();
     }
 
-    public TeamPlayer newThrow(int throwValue) {
+    public PlayersEnum newThrow(int throwValue) {
         return newThrow(throwValue, 3, null);
     }
 
-    public TeamPlayer newThrow(int throwValue, int dartCount, Consumer<Team> onGameOverEvent) {
+    public PlayersEnum newThrow(int throwValue, int dartCount, Consumer<Team> onGameOverEvent) {
         partialThrow = null;
 
         var actual = active;
@@ -62,7 +69,7 @@ public class X01Service {
                 legCount,
                 dartCount,
                 checkedOut,
-                teamPlayerMap.get(active));
+                PlayersEnumMap.get(active));
         aPlayer.addThrow(newThrow);
 
         if (checkedOut) {
@@ -102,7 +109,7 @@ public class X01Service {
     }
 
     public boolean removeThrow(X01Throw x01Throw, Runnable onThrowRemovedEvent) {
-        if (x01Throw.getLeg() == legCount && !x01Throw.isRemoved()) {
+        if (x01Throw.getLeg() == legCount && x01Throw.isNotRemoved()) {
             x01Throw.setRemoved();
             onThrowRemovedEvent.run();
             return true;
@@ -136,7 +143,7 @@ public class X01Service {
         return getStat(active.team).getScore() == throwValue;
     }
 
-    public void setActive(TeamPlayer active) {
+    public void setActive(PlayersEnum active) {
         partialThrow = null;
         this.active = active;
         if (teamScores.get(TEAM1).getThrowsList().isEmpty() && teamScores.get(TEAM2).getThrowsList().isEmpty()) {
@@ -147,7 +154,7 @@ public class X01Service {
 
     public void newPartialValue(int value) {
         partialThrow = partialThrow == null
-                ? new X01Throw(value, PARTIAL, legCount, 0, false, teamPlayerMap.get(active))
+                ? new X01Throw(value, PARTIAL, legCount, 0, false, PlayersEnumMap.get(active))
                 : null;
     }
 }
