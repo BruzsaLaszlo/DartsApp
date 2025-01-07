@@ -36,7 +36,6 @@ android {
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
-
     buildTypes {
         release {
             isMinifyEnabled = false
@@ -51,42 +50,14 @@ android {
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
 
-//        tasks.withType<JavaCompile> {
-//            val compilerArgs = options.compilerArgs
-//            compilerArgs.add("-Xdoclint:all,-missing")
-//            compilerArgs.add("-Xlint:all")
-//            compilerArgs.add("--enable-preview")
-//        }
-
-//        tasks.withType<Test>{
-//            val jvmArgs = allJvmArgs
-//            jvmArgs.add("--enable-preview")
-//        }
-
     }
     buildFeatures {
         viewBinding = true
-//        compose = true
     }
-
-//    composeOptions {
-//        kotlinCompilerExtensionVersion = "1.5.15"
-//    }
-
-//    testOptions {
-//        unitTests.all {
-//            JUnitPlatformOptions()
-//        }
-//    }
-
 
     dataBinding {
         enable = true
     }
-
-//    kotlinOptions {
-//        jvmTarget = "21"
-//    }
 
     sourceSets {
         named("main") {
@@ -94,23 +65,7 @@ android {
         }
     }
 
-
-//    kotlin {
-//        jvmToolchain(21)
-//    }
-
 }
-
-//kapt {
-//    correctErrorTypes =true
-//    keepJavacAnnotationProcessors = true
-//}
-
-
-//
-//kotlinLombok {
-//    lombokConfigurationFile(file("lombok.config"))
-//}
 
 dependencies {
     compileOnly("org.projectlombok:lombok:1.18.36")
@@ -124,10 +79,6 @@ dependencies {
     implementation("androidx.room:room-runtime:2.6.1")
     annotationProcessor("androidx.room:room-compiler:2.6.1")
     testImplementation("junit:junit:4.13.2")
-    //    compileOnly(libs.lombok)
-//    annotationProcessor(libs.lombok)
-//    testCompileOnly(libs.lombok)
-//    testAnnotationProcessor(libs.lombok)
 
     implementation("org.nanohttpd:nanohttpd:2.3.1")
 
