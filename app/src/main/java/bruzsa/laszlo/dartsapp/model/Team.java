@@ -1,9 +1,9 @@
 package bruzsa.laszlo.dartsapp.model;
 
-import static bruzsa.laszlo.dartsapp.model.TeamPlayer.PLAYER_1_1;
-import static bruzsa.laszlo.dartsapp.model.TeamPlayer.PLAYER_1_2;
-import static bruzsa.laszlo.dartsapp.model.TeamPlayer.PLAYER_2_1;
-import static bruzsa.laszlo.dartsapp.model.TeamPlayer.PLAYER_2_2;
+import static bruzsa.laszlo.dartsapp.model.PlayersEnum.PLAYER_1_1;
+import static bruzsa.laszlo.dartsapp.model.PlayersEnum.PLAYER_1_2;
+import static bruzsa.laszlo.dartsapp.model.PlayersEnum.PLAYER_2_1;
+import static bruzsa.laszlo.dartsapp.model.PlayersEnum.PLAYER_2_2;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -18,11 +18,11 @@ public enum Team {
 
     private final Integer number;
 
-    public TeamPlayer player1() {
+    public PlayersEnum player1() {
         return this == TEAM1 ? PLAYER_1_1 : PLAYER_2_1;
     }
 
-    public TeamPlayer player2() {
+    public PlayersEnum player2() {
         return this == TEAM1 ? PLAYER_1_2 : PLAYER_2_2;
     }
 

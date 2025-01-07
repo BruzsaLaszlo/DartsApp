@@ -21,19 +21,19 @@ import java.util.List;
 import bruzsa.laszlo.dartsapp.R;
 import bruzsa.laszlo.dartsapp.databinding.FragmentPlayerBinding;
 import bruzsa.laszlo.dartsapp.enties.Player;
-import bruzsa.laszlo.dartsapp.model.SharedViewModel;
-import bruzsa.laszlo.dartsapp.model.TeamPlayer;
+import bruzsa.laszlo.dartsapp.model.HomeViewModel;
+import bruzsa.laszlo.dartsapp.model.PlayersEnum;
 
 public class PlayerFragment extends Fragment {
 
-    private SharedViewModel sharedViewModel;
-    private TeamPlayer selectedTeamPlayer;
+    private HomeViewModel homeViewModel;
+    private PlayersEnum selectedPlayersEnum;
 
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        sharedViewModel = new ViewModelProvider(requireActivity()).get(SharedViewModel.class);
+        homeViewModel = new ViewModelProvider(requireActivity()).get(HomeViewModel.class);
     }
 
     @Override
@@ -51,11 +51,11 @@ public class PlayerFragment extends Fragment {
 //        }
 
         PlayerFragmentArgs args = PlayerFragmentArgs.fromBundle(requireArguments());
-        List<Player> players = sharedViewModel.getAllPlayers()
+        List<Player> players = homeViewModel.getAllPlayers()
                 .stream()
                 .filter(player -> stream(args.getPlayerIds()).noneMatch(id -> player.getId().equals(id)))
                 .collect(toList());
-        selectedTeamPlayer = args.getSelectedTeamPlayer();
+        selectedPlayersEnum = args.getSelectedPlayersEnum();
 
         binding.buttonAdd.setOnClickListener(v -> moveToHome(new Player(binding.editTextName.getText().toString()), Action.ADD));
 
@@ -65,9 +65,9 @@ public class PlayerFragment extends Fragment {
 
     private void moveToHome(Player selectedPlayer, Action action) {
         if (action == Action.REMOVE) {
-            sharedViewModel.removePlayer(selectedPlayer);
+            homeViewModel.removePlayer(selectedPlayer);
         } else {
-            sharedViewModel.selectPlayer(selectedTeamPlayer, selectedPlayer);
+            homeViewModel.selectPlayer(selectedPlayersEnum, selectedPlayer);
             Navigation.findNavController(requireView()).navigate(R.id.action_playerFragment_to_homeFragment);
         }
     }

@@ -42,7 +42,7 @@ public class X01SingleService {
     }
 
     public boolean removeThrow(X01Throw x01Throw, Consumer<Stat> onRemoveThrowListener) {
-        boolean removable = x01Throw.getLeg() == scores.getLegs() && !x01Throw.isRemoved();
+        boolean removable = x01Throw.getLeg() == scores.getLegs() && x01Throw.isNotRemoved();
         if (removable) {
             x01Throw.setRemoved();
             onRemoveThrowListener.accept(calculateStat());

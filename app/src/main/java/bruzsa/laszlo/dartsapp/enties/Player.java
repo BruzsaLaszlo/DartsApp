@@ -1,13 +1,10 @@
 package bruzsa.laszlo.dartsapp.enties;
 
-import android.util.Log;
-
 import androidx.annotation.NonNull;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
-import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.Objects;
 
@@ -21,17 +18,12 @@ import lombok.Setter;
 @Getter
 @Setter
 @Entity
-public class Player implements Serializable {
+public class Player {
 
     @PrimaryKey(autoGenerate = true)
     private Long id;
 
     private String name;
-
-    public String getName() {
-        Log.e("error", "getPlayer: " + name);
-        return name;
-    }
 
     @ColumnInfo(name = "nick_name")
     private String nickName;

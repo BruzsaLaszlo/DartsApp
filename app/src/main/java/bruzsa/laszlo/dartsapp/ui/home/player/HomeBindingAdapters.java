@@ -8,7 +8,7 @@ import java.util.Map;
 
 import bruzsa.laszlo.dartsapp.GeneralSettings;
 import bruzsa.laszlo.dartsapp.enties.Player;
-import bruzsa.laszlo.dartsapp.model.TeamPlayer;
+import bruzsa.laszlo.dartsapp.model.PlayersEnum;
 import bruzsa.laszlo.dartsapp.model.home.GameMode;
 import bruzsa.laszlo.dartsapp.model.home.GameType;
 
@@ -38,12 +38,12 @@ public final class HomeBindingAdapters {
     }
 
     @BindingAdapter({"selected_players", "team_player"})
-    public static void setPlayerChip(Chip chip, Map<TeamPlayer, Player> selectedPlayers, TeamPlayer teamPlayer) {
+    public static void setPlayerChip(Chip chip, Map<PlayersEnum, Player> selectedPlayers, PlayersEnum playersEnum) {
         chip.setOnCloseIconClickListener(v -> {
-            selectedPlayers.remove(teamPlayer);
+            selectedPlayers.remove(playersEnum);
             setChipStyle(chip, true, null);
         });
-        Player player = selectedPlayers.get(teamPlayer);
+        Player player = selectedPlayers.get(playersEnum);
         if (player != null) {
             setChipStyle(chip, false, player.getName());
         }

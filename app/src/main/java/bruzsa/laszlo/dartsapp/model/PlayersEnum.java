@@ -6,7 +6,7 @@ import static bruzsa.laszlo.dartsapp.model.Team.TEAM2;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
-public enum TeamPlayer {
+public enum PlayersEnum {
 
     PLAYER_1_1(TEAM1, 0),
     PLAYER_2_1(TEAM2, 1),
@@ -16,8 +16,8 @@ public enum TeamPlayer {
     public final Team team;
     private final int throwingOrder;
 
-    public TeamPlayer nextPlayer(boolean isTeamPlay) {
-        return TeamPlayer.values()[(this.throwingOrder + 1) % (isTeamPlay ? 4 : 2)];
+    public PlayersEnum nextPlayer(boolean isTeamPlay) {
+        return PlayersEnum.values()[(this.throwingOrder + 1) % (isTeamPlay ? 4 : 2)];
     }
 
 }
