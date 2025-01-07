@@ -14,42 +14,50 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
+import javax.inject.Inject;
+
+import bruzsa.laszlo.dartsapp.AppSettings;
+import bruzsa.laszlo.dartsapp.HtmlTemplateReader;
 import bruzsa.laszlo.dartsapp.enties.Player;
 import bruzsa.laszlo.dartsapp.enties.x01.X01TeamScores;
+import bruzsa.laszlo.dartsapp.model.PlayersEnum;
 import bruzsa.laszlo.dartsapp.model.Team;
-import bruzsa.laszlo.dartsapp.model.TeamPlayer;
 import bruzsa.laszlo.dartsapp.model.x01.CheckoutTable;
 import bruzsa.laszlo.dartsapp.model.x01.Stat;
+import bruzsa.laszlo.dartsapp.model.x01.X01Service;
 import bruzsa.laszlo.dartsapp.model.x01.X01Settings;
 import bruzsa.laszlo.dartsapp.model.x01.X01Throw;
+import dagger.hilt.android.scopes.ViewModelScoped;
 
+@ViewModelScoped
 public class WebGuiX01 {
 
     private final TemplateEngine templateEngine = new TemplateEngine();
     private final String htmlTemplate;
     private static final int MAX_THROW = 5;
-    private final Map<TeamPlayer, Player> playerMap;
+    private final Map<PlayersEnum, Player> playerMap;
     private final Map<Team, X01TeamScores> teamScoresMap;
     private final X01Settings x01Settings;
 
-    public WebGuiX01(String htmlTemplate, Map<TeamPlayer, Player> playerMap, Map<Team, X01TeamScores> teamScoresMap, X01Settings x01Settings) {
-        this.htmlTemplate = htmlTemplate;
-        this.playerMap = playerMap;
-        this.teamScoresMap = teamScoresMap;
-        this.x01Settings = x01Settings;
+    @Inject
+    public WebGuiX01(HtmlTemplateReader htmlTemplateReader, AppSettings appSettings, X01Service service) {
+        this.htmlTemplate = htmlTemplateReader.getX01Template();
+        this.playerMap = appSettings.getSelectedPlayers();
+        this.teamScoresMap = service.getTeamScores();
+        this.x01Settings = appSettings.getX01Settings();
         templateEngine.setTemplateResolver(new StringTemplateResolver());
     }
 
-    public String createHtml(Map<Team, Stat> statMap, TeamPlayer active) {
+    public String createHtml(Map<Team, Stat> statMap, PlayersEnum active) {
         var variables = new HashMap<String, Object>();
-        for (TeamPlayer teamPlayer : TeamPlayer.values()) {
-            if (playerMap.containsKey(teamPlayer)) {
-                String element = active == teamPlayer ? "active" : "inactive";
-                String name = Objects.requireNonNull(playerMap.get(teamPlayer)).getName();
+        for (PlayersEnum playersEnum : PlayersEnum.values()) {
+            if (playerMap.containsKey(playersEnum)) {
+                String element = active == playersEnum ? "active" : "inactive";
+                String name = Objects.requireNonNull(playerMap.get(playersEnum)).getName();
                 String formatted = String.format("<%s> %s </%s>", element, name, element);
-                variables.put(teamPlayer.toString(), formatted);
+                variables.put(playersEnum.toString(), formatted);
             } else {
-                variables.put(teamPlayer.toString(), "");
+                variables.put(playersEnum.toString(), "");
             }
         }
         statMap.forEach((team, stat) -> {
@@ -71,7 +79,7 @@ public class WebGuiX01 {
             int size = teamScores.getThrowsList().size();
             for (int i = 1, n = 0; n < MAX_THROW && size - i >= 0; i++) {
                 X01Throw x01Throw = teamScores.getThrowsList().get(size - i);
-                if (!x01Throw.isRemoved()) {
+                if (x01Throw.isNotRemoved()) {
                     variables.put(team + "_LAST_THROW" + i, x01Throw.toString());
                     n++;
                 }

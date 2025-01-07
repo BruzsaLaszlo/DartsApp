@@ -3,18 +3,15 @@ package bruzsa.laszlo.dartsapp.model.cricket;
 import static bruzsa.laszlo.dartsapp.model.Team.TEAM1;
 import static bruzsa.laszlo.dartsapp.model.Team.TEAM2;
 
+import androidx.annotation.NonNull;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
-
-import java.util.Map;
 
 import javax.inject.Inject;
 
 import bruzsa.laszlo.dartsapp.AppSettings;
-import bruzsa.laszlo.dartsapp.HtmlTemplateReader;
-import bruzsa.laszlo.dartsapp.enties.Player;
+import bruzsa.laszlo.dartsapp.model.PlayersEnum;
 import bruzsa.laszlo.dartsapp.model.Team;
-import bruzsa.laszlo.dartsapp.model.TeamPlayer;
 import bruzsa.laszlo.dartsapp.ui.cricket.CricketThrowsAdapter;
 import bruzsa.laszlo.dartsapp.ui.webgui.WebGuiCricket;
 import bruzsa.laszlo.dartsapp.ui.webgui.WebGuiServer;
@@ -32,33 +29,28 @@ public class CricketViewModel extends ViewModel {
     private final CricketService service;
     @Getter
     private final CricketThrowsAdapter throwsAdapter;
-    private final Map<TeamPlayer, Player> players;
     private final WebGuiServer webGuiServer;
     @Getter
     private final CricketSettings settings;
 
     @Inject
-    public CricketViewModel(WebGuiServer webGuiServer, AppSettings settings, HtmlTemplateReader htmlTemplate) {
+    public CricketViewModel(WebGuiCricket webGUI, WebGuiServer webGuiServer,
+                            CricketService service, AppSettings settings) {
+        this.webGUI = webGUI;
+        this.service = service;
         this.webGuiServer = webGuiServer;
         this.settings = settings.getCricketSettings();
-        this.players = settings.getSelectedPlayers();
-        var team1 = new CricketTeam(players.get(TEAM1.player1()), players.get(TEAM1.player2()));
-        var team2 = new CricketTeam(players.get(TEAM2.player1()), players.get(TEAM2.player2()));
-        service = new CricketService(Map.of(TEAM1, team1, TEAM2, team2), settings.getCricketSettings().getActiveNumbers());
-        throwsAdapter = new CricketThrowsAdapter(service.getThrows(), cricketThrow ->
-                service.removeThrow(cricketThrow, this::getOnScoreChangeListener));
+
+        throwsAdapter = getThrowsAdapter(service);
 
         stat.setValue(service.getEmptyStat());
-
-        webGUI = new WebGuiCricket(htmlTemplate.getCricketTemplate(), players, settings.getCricketSettings().getActiveNumbers());
         refreshWebGui(service.getEmptyStat());
     }
 
-    public void startNewGameOrContinue(Map<TeamPlayer, Player> players,
-                                       OnNewGameCallback callback) {
-        if (service != null) return;
-
-
+    @NonNull
+    private CricketThrowsAdapter getThrowsAdapter(CricketService service) {
+        return new CricketThrowsAdapter(service.getThrows(), cricketThrow ->
+                service.removeThrow(cricketThrow, this::getOnScoreChangeListener));
     }
 
     public void newThrow(int multiplier, int value, Team team, Runnable gameOverListener) {
@@ -80,14 +72,8 @@ public class CricketViewModel extends ViewModel {
         webGuiServer.setContent(html);
     }
 
-    public interface OnNewGameCallback {
-        void onNewGame(CricketThrowsAdapter throwsAdapter);
-    }
-
-    public String getPlayerName(TeamPlayer player) {
-        Player p = players.get(player);
-        if (p == null) return "";
-        else return p.getName();
+    public String getPlayerName(PlayersEnum player) {
+        return service.getPlayerName(player);
     }
 
 }

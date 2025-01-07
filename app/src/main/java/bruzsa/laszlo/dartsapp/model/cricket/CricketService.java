@@ -10,21 +10,34 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
+import javax.inject.Inject;
+
+import bruzsa.laszlo.dartsapp.AppSettings;
+import bruzsa.laszlo.dartsapp.enties.Player;
+import bruzsa.laszlo.dartsapp.model.PlayersEnum;
 import bruzsa.laszlo.dartsapp.model.Team;
+import dagger.hilt.android.scopes.ViewModelScoped;
 
 @SuppressWarnings("ConstantConditions")
+@ViewModelScoped
 public class CricketService {
 
     private final Map<Team, CricketTeam> cricketTeamMap;
+    private final Map<PlayersEnum, Player> players;
     private final List<Integer> activeNumbers;
     private final List<CricketThrow> throwList = new ArrayList<>();
 
-    public CricketService(Map<Team, CricketTeam> cricketTeamMap, List<Integer> activeNumbers) {
-        this.cricketTeamMap = cricketTeamMap;
-        this.activeNumbers = activeNumbers;
+    @Inject
+    public CricketService(AppSettings settings) {
+        players = settings.getSelectedPlayers();
+        this.activeNumbers = settings.getCricketSettings().getActiveNumbers();
+        var team1 = new CricketTeam(players.get(TEAM1.player1()), players.get(TEAM1.player2()));
+        var team2 = new CricketTeam(players.get(TEAM2.player1()), players.get(TEAM2.player2()));
+        this.cricketTeamMap = Map.of(TEAM1, team1, TEAM2, team2);
     }
 
-    public void newThrow(int multiplier, int number, Team team, Runnable gameOverListener,
+    public void newThrow(int multiplier, int number, Team team,
+                         Runnable gameOverListener,
                          OnScoreChangeListener onScoreChangeListener) {
         if (!isThrowValid(number, team)) return;
 
@@ -32,7 +45,7 @@ public class CricketService {
 
         Stat stat = recalculateStat();
         onScoreChangeListener.onChange(stat);
-        if (isGameEnd(stat)) gameOverListener.run();
+        if (stat.isGameEnd()) gameOverListener.run();
     }
 
     private boolean isThrowValid(int number, Team team) {
@@ -41,15 +54,6 @@ public class CricketService {
         return value < 3 || (value >= 3 && valueOpponent < 3);
     }
 
-
-    private boolean isGameEnd(Stat stat) {
-        boolean player1ThrowAll = stat.getStatMap().get(TEAM1).size() == 7 &&
-                stat.getStatMap().get(TEAM1).values().stream().allMatch(m -> m >= 3);
-        boolean player2ThrowAll = stat.getStatMap().get(TEAM2).size() == 7 &&
-                stat.getStatMap().get(TEAM2).values().stream().allMatch(m -> m >= 3);
-        return (player1ThrowAll && stat.getScores().get(TEAM1) > stat.getScores().get(TEAM2)) ||
-                (player2ThrowAll && stat.getScores().get(TEAM2) > stat.getScores().get(TEAM1));
-    }
 
     private Map<Integer, Integer> calculateTeamStat(Team team) {
         return getThrows().stream()
@@ -78,5 +82,11 @@ public class CricketService {
 
     public interface OnScoreChangeListener {
         void onChange(Stat stat);
+    }
+
+    public String getPlayerName(PlayersEnum player) {
+        Player p = players.get(player);
+        if (p == null) return "";
+        else return p.getName();
     }
 }

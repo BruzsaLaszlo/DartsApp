@@ -1,7 +1,9 @@
 package bruzsa.laszlo.dartsapp.ui.singlex01;
 
+import static bruzsa.laszlo.dartsapp.model.PlayersEnum.PLAYER_1_1;
 import static bruzsa.laszlo.dartsapp.model.Team.TEAM1;
-import static bruzsa.laszlo.dartsapp.model.TeamPlayer.PLAYER_1_1;
+
+import android.content.Context;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
@@ -9,12 +11,11 @@ import androidx.lifecycle.ViewModel;
 
 import java.util.Locale;
 import java.util.Map;
-import java.util.function.IntConsumer;
 
 import javax.inject.Inject;
 
 import bruzsa.laszlo.dartsapp.AppSettings;
-import bruzsa.laszlo.dartsapp.HtmlTemplateReader;
+import bruzsa.laszlo.dartsapp.X01Checkout;
 import bruzsa.laszlo.dartsapp.enties.Player;
 import bruzsa.laszlo.dartsapp.model.Team;
 import bruzsa.laszlo.dartsapp.model.singlex01.X01SingleService;
@@ -39,9 +40,13 @@ public class SingleX01ViewModel extends ViewModel {
     private final X01SingleService service;
     private final WebGuiX01 webGui;
     private final WebGuiServer webGuiServer;
+    private final X01Checkout x01Checkout;
 
     @Inject
-    public SingleX01ViewModel(AppSettings appSettings, WebGuiServer webGuiServer, HtmlTemplateReader htmlTemplate) {
+    public SingleX01ViewModel(WebGuiServer webGuiServer, WebGuiX01 webGui,
+                              AppSettings appSettings, X01Checkout x01Checkout) {
+        this.webGui = webGui;
+        this.x01Checkout = x01Checkout;
         X01Settings settings = appSettings.getX01Settings();
         Player player = appSettings.getSelectedPlayers().get(PLAYER_1_1);
         int startScore = settings.getStartScore();
@@ -53,19 +58,13 @@ public class SingleX01ViewModel extends ViewModel {
         score.setValue(startScore);
         throwsAdapter = new X01ThrowAdapter(service.getThrowsList(), this::removeThrow, TEAM1);
 
-        webGui = new WebGuiX01(
-                htmlTemplate.getX01Template(),
-                Map.of(PLAYER_1_1, player),
-                Map.of(TEAM1, service.getScores()),
-                settings);
-
         updateWebGui(Stat.getEmptyStat(startScore));
     }
 
     @SuppressWarnings("ConstantConditions")
-    public void newThrow(int throwValue, IntConsumer onCheckoutEventListener) {
+    public void newThrow(int throwValue, Context context) {
         if (score.getValue() == throwValue) {
-            onCheckoutEventListener.accept(throwValue);
+            x01Checkout.getCheckoutDartsCount(throwValue, context, count -> newThrow(throwValue, count));
         } else {
             newThrow(throwValue, 3);
         }
@@ -122,5 +121,6 @@ public class SingleX01ViewModel extends ViewModel {
     public String getPlayerName() {
         return service.getScores().getPlayer1().getName();
     }
+
 
 }

@@ -8,30 +8,36 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
+
+import bruzsa.laszlo.dartsapp.AppSettings;
+import bruzsa.laszlo.dartsapp.HtmlTemplateReader;
 import bruzsa.laszlo.dartsapp.enties.Player;
-import bruzsa.laszlo.dartsapp.model.TeamPlayer;
+import bruzsa.laszlo.dartsapp.model.PlayersEnum;
 import bruzsa.laszlo.dartsapp.model.cricket.Stat;
 
+@Singleton
 public class WebGuiCricket {
 
     private final TemplateEngine templateEngine = new TemplateEngine();
     private final String htmlTemplate;
-    private final Map<TeamPlayer, Player> players;
+    private final Map<PlayersEnum, Player> players;
     private final List<Integer> activeNumbers;
 
-    public WebGuiCricket(String htmlTemplate, Map<TeamPlayer, Player> players, List<Integer> activeNumbers) {
-        this.htmlTemplate = htmlTemplate;
-        this.players = players;
-        this.activeNumbers = activeNumbers;
+    @Inject
+    public WebGuiCricket(HtmlTemplateReader htmlTemplateReader, AppSettings appSettings) {
+        this.htmlTemplate = htmlTemplateReader.getCricketTemplate();
+        this.players = appSettings.getSelectedPlayers();
+        this.activeNumbers = appSettings.getCricketSettings().getActiveNumbers();
         templateEngine.setTemplateResolver(new StringTemplateResolver());
     }
 
     public String createHtml(Stat stat) {
         var variables = new HashMap<String, Object>();
 
-        players.forEach((teamPlayer, player) -> variables.put(teamPlayer.toString(), player.getName()));
+        players.forEach((PlayersEnum, player) -> variables.put(PlayersEnum.toString(), player.getName()));
         stat.getScores().forEach((team, score) -> variables.put(team.toString() + "_SCORE", score));
 
         ArrayList<Integer> sorted = new ArrayList<>(activeNumbers);
@@ -42,7 +48,7 @@ public class WebGuiCricket {
             int finalI = i;
             stat.getStatMap().forEach((team, scores) -> {
                 Integer value = scores.get(key);
-                variables.put(team + "_" + finalI, getMark(Objects.requireNonNull(value)));
+                variables.put(team + "_" + finalI, getMark(value == null ? 0 : value));
             });
         }
 
