@@ -10,6 +10,8 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
+
 import java.util.List;
 import java.util.function.Consumer;
 
@@ -18,12 +20,12 @@ import bruzsa.laszlo.dartsapp.model.cricket.CricketThrow;
 
 public class CricketThrowsAdapter extends RecyclerView.Adapter<CricketThrowsAdapter.ViewHolder> {
 
-    private final List<CricketThrow> mDataSet;
+    private final List<CricketThrow> dataSet;
     private final Consumer<CricketThrow> removeEventListener;
     private RecyclerView recyclerView;
 
-    public CricketThrowsAdapter(List<CricketThrow> mDataSet, Consumer<CricketThrow> removeEventListener) {
-        this.mDataSet = mDataSet;
+    public CricketThrowsAdapter(List<CricketThrow> dataSet, Consumer<CricketThrow> removeEventListener) {
+        this.dataSet = dataSet;
         this.removeEventListener = removeEventListener;
     }
 
@@ -38,7 +40,7 @@ public class CricketThrowsAdapter extends RecyclerView.Adapter<CricketThrowsAdap
 
     @Override
     public void onBindViewHolder(ViewHolder viewHolder, final int position) {
-        CricketThrow cricketThrow = mDataSet.get(position);
+        CricketThrow cricketThrow = dataSet.get(position);
         viewHolder.cricketThrow = cricketThrow;
         viewHolder.throwTextView.setText(cricketThrow.toString());
         if (cricketThrow.isRemoved()) {
@@ -58,8 +60,16 @@ public class CricketThrowsAdapter extends RecyclerView.Adapter<CricketThrowsAdap
         public ViewHolder(View v) {
             super(v);
             v.setOnLongClickListener(v1 -> {
-                removeEventListener.accept(cricketThrow);
-                notifyItemChanged(mDataSet.indexOf(cricketThrow));
+                if (!cricketThrow.isRemoved()) {
+                    new MaterialAlertDialogBuilder(v.getContext())
+                            .setTitle("Delete: " + cricketThrow.toString())
+                            .setNegativeButton("CANCEL", null)
+                            .setPositiveButton("DELETE", (dialog, which) -> {
+                                removeEventListener.accept(cricketThrow);
+                                notifyItemChanged(dataSet.indexOf(cricketThrow));
+                            })
+                            .show();
+                }
                 return true;
             });
             throwTextView = v.findViewById(R.id.cricketThrowItem);
@@ -73,7 +83,7 @@ public class CricketThrowsAdapter extends RecyclerView.Adapter<CricketThrowsAdap
 
     @Override
     public int getItemCount() {
-        return mDataSet.size();
+        return dataSet.size();
     }
 
     public void addNewThrow() {

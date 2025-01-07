@@ -11,6 +11,8 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
+
 import java.util.List;
 import java.util.function.BiPredicate;
 
@@ -62,9 +64,17 @@ public class X01ThrowAdapter extends RecyclerView.Adapter<X01ThrowAdapter.ViewHo
             }
         }
         if (!viewHolder.throwTextView.hasOnClickListeners()) {
-            viewHolder.throwTextView.setOnLongClickListener(v1 -> {
-                if (removeCallback.test(x01Throw, team)) {
-                    notifyItemChanged(position);
+            viewHolder.throwTextView.setOnLongClickListener(v -> {
+                if (x01Throw.isNotRemoved()) {
+                    new MaterialAlertDialogBuilder(v.getContext())
+                            .setTitle("Delete: " + x01Throw)
+                            .setNegativeButton("CANCEL", null)
+                            .setPositiveButton("DELETE", (dialog, which) -> {
+                                if (removeCallback.test(x01Throw, team)) {
+                                    notifyItemChanged(position);
+                                }
+                            })
+                            .show();
                 }
                 return true;
             });
