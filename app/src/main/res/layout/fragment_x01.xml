@@ -6,7 +6,7 @@
 
         <import type="bruzsa.laszlo.dartsapp.model.Team" />
 
-        <import type="bruzsa.laszlo.dartsapp.model.TeamPlayer" />
+        <import type="bruzsa.laszlo.dartsapp.model.PlayersEnum" />
 
         <import type="android.view.View" />
 
@@ -42,12 +42,12 @@
                 android:layout_height="wrap_content"
                 android:checkable="false"
                 android:maxLines="1"
-                android:onClick="@{() -> viewModel.setActive(TeamPlayer.PLAYER_1_1)}"
+                android:onClick="@{() -> viewModel.setActive(PlayersEnum.PLAYER_1_1)}"
                 android:padding="0dp"
-                android:text="@{viewModel.playerMap.get(TeamPlayer.PLAYER_1_1).name, default = @string/player_1_1}"
+                android:text="@{viewModel.playerMap.get(PlayersEnum.PLAYER_1_1).name, default = @string/player_1_1}"
                 android:textSize="30sp"
                 app:active="@{viewModel.activePlayer}"
-                app:player="@{TeamPlayer.PLAYER_1_1}" />
+                app:player="@{PlayersEnum.PLAYER_1_1}" />
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/textNamePlayer12"
@@ -56,13 +56,13 @@
                 android:layout_height="wrap_content"
                 android:checkable="false"
                 android:maxLines="1"
-                android:onClick="@{() -> viewModel.setActive(TeamPlayer.PLAYER_1_2)}"
+                android:onClick="@{() -> viewModel.setActive(PlayersEnum.PLAYER_1_2)}"
                 android:padding="0dp"
-                android:text="@{viewModel.playerMap.get(TeamPlayer.PLAYER_1_2).name, default = @string/player_1_2}"
+                android:text="@{viewModel.playerMap.get(PlayersEnum.PLAYER_1_2).name, default = @string/player_1_2}"
                 android:textSize="30sp"
                 android:visibility="@{viewModel.teamPlay ? View.VISIBLE : View.GONE}"
                 app:active="@{viewModel.activePlayer}"
-                app:player="@{TeamPlayer.PLAYER_1_2}" />
+                app:player="@{PlayersEnum.PLAYER_1_2}" />
         </LinearLayout>
 
         <LinearLayout
@@ -85,12 +85,12 @@
                 android:layout_height="wrap_content"
                 android:checkable="false"
                 android:maxLines="1"
-                android:onClick="@{() -> viewModel.setActive(TeamPlayer.PLAYER_2_1)}"
+                android:onClick="@{() -> viewModel.setActive(PlayersEnum.PLAYER_2_1)}"
                 android:padding="0dp"
-                android:text="@{viewModel.playerMap.get(TeamPlayer.PLAYER_2_1).name, default = @string/player_2_1}"
+                android:text="@{viewModel.playerMap.get(PlayersEnum.PLAYER_2_1).name, default = @string/player_2_1}"
                 android:textSize="30sp"
                 app:active="@{viewModel.activePlayer}"
-                app:player="@{TeamPlayer.PLAYER_2_1}" />
+                app:player="@{PlayersEnum.PLAYER_2_1}" />
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/textNamePlayer22"
@@ -99,13 +99,13 @@
                 android:layout_height="wrap_content"
                 android:checkable="false"
                 android:maxLines="1"
-                android:onClick="@{() -> viewModel.setActive(TeamPlayer.PLAYER_2_2)}"
+                android:onClick="@{() -> viewModel.setActive(PlayersEnum.PLAYER_2_2)}"
                 android:padding="0dp"
-                android:text="@{viewModel.playerMap.get(TeamPlayer.PLAYER_2_2).name, default = @string/player_2_2}"
+                android:text="@{viewModel.playerMap.get(PlayersEnum.PLAYER_2_2).name, default = @string/player_2_2}"
                 android:textSize="30sp"
                 android:visibility="@{viewModel.teamPlay ? View.VISIBLE : View.GONE}"
                 app:active="@{viewModel.activePlayer}"
-                app:player="@{TeamPlayer.PLAYER_2_2}" />
+                app:player="@{PlayersEnum.PLAYER_2_2}" />
         </LinearLayout>
 
         <FrameLayout
@@ -136,6 +136,7 @@
 
             <FrameLayout
                 android:id="@+id/frameSetsLegs"
+                android:onClick="@{view -> viewModel.showGameInfo(view)}"
                 android:layout_width="72dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="bottom|center"

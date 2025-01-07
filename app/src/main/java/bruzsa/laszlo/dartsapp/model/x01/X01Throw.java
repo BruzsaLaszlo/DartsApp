@@ -30,8 +30,8 @@ public class X01Throw {
         status = Status.REMOVED;
     }
 
-    public boolean isRemoved() {
-        return status == Status.REMOVED;
+    public boolean isNotRemoved() {
+        return status != Status.REMOVED;
     }
 
     public boolean isValid() {
@@ -42,7 +42,7 @@ public class X01Throw {
     @Override
     public String toString() {
         return checkout
-                ? String.format(US, "%d(%d)", value, dartCount)
+                ? String.format(US, "%d|%d", value, dartCount)
                 : String.valueOf(value);
     }
 

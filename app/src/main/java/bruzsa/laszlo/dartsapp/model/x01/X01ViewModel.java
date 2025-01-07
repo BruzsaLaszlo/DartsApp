@@ -2,10 +2,13 @@ package bruzsa.laszlo.dartsapp.model.x01;
 
 import static android.graphics.Color.BLACK;
 import static android.graphics.Color.RED;
+import static java.lang.String.format;
 import static java.lang.String.valueOf;
+import static java.util.Locale.US;
 import static bruzsa.laszlo.dartsapp.model.Team.TEAM1;
 import static bruzsa.laszlo.dartsapp.model.Team.TEAM2;
 
+import android.content.Context;
 import android.graphics.Typeface;
 import android.view.View;
 import android.widget.Button;
@@ -14,27 +17,27 @@ import androidx.databinding.BindingAdapter;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
+
 import java.util.EnumMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
 import javax.inject.Inject;
 
 import bruzsa.laszlo.dartsapp.AppSettings;
-import bruzsa.laszlo.dartsapp.HtmlTemplateReader;
+import bruzsa.laszlo.dartsapp.X01Checkout;
 import bruzsa.laszlo.dartsapp.enties.Player;
+import bruzsa.laszlo.dartsapp.model.PlayersEnum;
 import bruzsa.laszlo.dartsapp.model.Team;
-import bruzsa.laszlo.dartsapp.model.TeamPlayer;
 import bruzsa.laszlo.dartsapp.ui.webgui.WebGuiServer;
 import bruzsa.laszlo.dartsapp.ui.webgui.WebGuiX01;
 import bruzsa.laszlo.dartsapp.ui.x01.X01ThrowAdapter;
 import dagger.hilt.android.lifecycle.HiltViewModel;
 import lombok.Getter;
 
-@SuppressWarnings("ConstantConditions")
 @HiltViewModel
 public class X01ViewModel extends ViewModel {
 
@@ -46,25 +49,28 @@ public class X01ViewModel extends ViewModel {
     @Getter
     private final MutableLiveData<Boolean> set = new MutableLiveData<>();
     @Getter
-    private final MutableLiveData<TeamPlayer> activePlayer = new MutableLiveData<>();
+    private final MutableLiveData<PlayersEnum> activePlayer = new MutableLiveData<>();
     @Getter
     private final MutableLiveData<Boolean> teamPlay = new MutableLiveData<>();
     @Getter
-    private final Map<TeamPlayer, Player> playerMap;
+    private final Map<PlayersEnum, Player> playerMap;
     private final Map<Team, X01ThrowAdapter> throwAdapterMap;
     private final X01Service service;
     private final WebGuiX01 webGUI;
-
     private final WebGuiServer webGuiServer;
+    private final X01Checkout x01Checkout;
 
     @Inject
-    public X01ViewModel(WebGuiServer webGuiServer, AppSettings appSettings, HtmlTemplateReader htmlTemplate) {
+    public X01ViewModel(WebGuiServer webGuiServer, WebGuiX01 webGUI,
+                        AppSettings appSettings, X01Service service,
+                        X01Checkout x01Checkout) {
+        this.service = service;
+        this.webGUI = webGUI;
+        this.x01Checkout = x01Checkout;
         X01Settings settings = appSettings.getX01Settings();
-        Map<TeamPlayer, Player> activePlayersMap = appSettings.getSelectedPlayers();
+        Map<PlayersEnum, Player> activePlayersMap = appSettings.getSelectedPlayers();
         this.webGuiServer = webGuiServer;
         playerMap = appSettings.getSelectedPlayers();
-
-        service = new X01Service(activePlayersMap, settings);
 
         activePlayer.setValue(service.getActive());
 
@@ -74,28 +80,19 @@ public class X01ViewModel extends ViewModel {
 
         throwAdapterMap = new EnumMap<>(Map.of(
                 TEAM1, new X01ThrowAdapter(service.getThrowList(TEAM1), this::removeThrow, TEAM1),
-                TEAM2, new X01ThrowAdapter(service.getThrowList(TEAM2), this::removeThrow, TEAM2)
-        ));
+                TEAM2, new X01ThrowAdapter(service.getThrowList(TEAM2), this::removeThrow, TEAM2)));
         liveDatasMap.get(TEAM1).getScore().setValue(valueOf(settings.getStartScore()));
         liveDatasMap.get(TEAM2).getScore().setValue(valueOf(settings.getStartScore()));
 
         set.setValue(settings.getMatchType() == X01MatchType.SET);
 
-        webGUI = new WebGuiX01(htmlTemplate.getX01Template(), activePlayersMap, service.getTeamScores(), settings);
         updateWebGui(getStats());
     }
 
-    public void newThrow(int throwValue, BiConsumer<Darts, Consumer<Integer>> onDartsCount, Consumer<Team> onGameOverEventListener) {
+    public void newThrow(int throwValue, Consumer<Team> onGameOverEventListener, Context context) {
         if (service.isCheckout(throwValue)) {
-            if (throwValue > 110 || List.of(109, 108, 106, 105, 103, 102).contains(throwValue)) {
-                newThrow(throwValue, 3, onGameOverEventListener);
-            } else if ((throwValue > 40 && throwValue != 50) || throwValue % 2 == 1) {
-                onDartsCount.accept(Darts.TWO, dartsCount ->
-                        newThrow(throwValue, dartsCount, onGameOverEventListener));
-            } else {
-                onDartsCount.accept(Darts.THREE, dartsCount ->
-                        newThrow(throwValue, dartsCount, onGameOverEventListener));
-            }
+            x01Checkout.getCheckoutDartsCount(throwValue, context, count ->
+                    newThrow(throwValue, count, onGameOverEventListener));
         } else {
             newThrow(throwValue, 3, onGameOverEventListener);
         }
@@ -106,27 +103,24 @@ public class X01ViewModel extends ViewModel {
         refreshGui();
     }
 
-    public enum Darts {TWO, THREE}
-
     private void newThrow(int throwValue, int dartsCount, Consumer<Team> onGameOverEventListener) {
         if (service.gameOver) return;
         if (service.isCheckout(throwValue)) {
             newCheckoutThrow(throwValue, dartsCount, onGameOverEventListener);
         } else {
-            TeamPlayer player = service.newThrow(throwValue);
+            PlayersEnum player = service.newThrow(throwValue);
             refreshGuiAfterNewThrow(player);
         }
     }
 
-
     private void newCheckoutThrow(int throwValue, int dartCount, Consumer<Team> onGameOverEventListener) {
-        TeamPlayer player = service.newThrow(throwValue, dartCount, onGameOverEventListener);
+        PlayersEnum player = service.newThrow(throwValue, dartCount, onGameOverEventListener);
         throwAdapterMap.get(player.team).inserted();
         activePlayer.setValue(service.getActive());
         refreshGui();
     }
 
-    private void refreshGuiAfterNewThrow(TeamPlayer player) {
+    private void refreshGuiAfterNewThrow(PlayersEnum player) {
         throwAdapterMap.get(player.team).inserted();
         refreshGui();
         activePlayer.setValue(service.getActive());
@@ -154,7 +148,7 @@ public class X01ViewModel extends ViewModel {
         webGuiServer.setContent(html);
     }
 
-    public void setActive(TeamPlayer player) {
+    public void setActive(PlayersEnum player) {
         if (service.gameOver) return;
         service.setActive(player);
         activePlayer.setValue(player);
@@ -173,7 +167,7 @@ public class X01ViewModel extends ViewModel {
 
     private String getStatAsString(Stat stat) {
         if (stat.isEmpty()) return "";
-        return String.format(Locale.ENGLISH, """
+        return format(Locale.ENGLISH, """
                         %d
                         %d
                         %d
@@ -193,7 +187,7 @@ public class X01ViewModel extends ViewModel {
     }
 
     @BindingAdapter(value = {"active", "player"}, requireAll = false)
-    public static void setColorAndFaceTypeForNameButtons(View view, MutableLiveData<TeamPlayer> active, TeamPlayer player) {
+    public static void setColorAndFaceTypeForNameButtons(View view, MutableLiveData<PlayersEnum> active, PlayersEnum player) {
         if (view instanceof Button button) {
             if (active.getValue() == player) {
                 button.setTextColor(RED);
@@ -205,13 +199,21 @@ public class X01ViewModel extends ViewModel {
         }
     }
 
-//    public void getGameInfo(View view){
-//        new AlertDialog.Builder(view.getContext())
-//                .setTitle("Game info")
-//                .setTitle(String.format(US,
-//                        """
-//                               %s"""),)
-//    }
+    public void showGameInfo(View view) {
+        X01Settings settings = service.getSettings();
+        new MaterialAlertDialogBuilder(view.getContext())
+                .setTitle("Game info")
+                .setMessage(format(US,
+                        """
+                                %s %d %s
+                                Start from: %d
+                                WinByTwoClearLeg %s""",
+                        settings.getFirstToBestOf(), settings.getCount(), settings.getMatchType(),
+                        settings.getStartScore(),
+                        settings.isWinByTwoClearLeg()))
+                .setPositiveButton("OK", null)
+                .show();
+    }
 
     @Getter
     public static class LiveDatas {
@@ -222,7 +224,7 @@ public class X01ViewModel extends ViewModel {
 
         private final MutableLiveData<String> stat = new MutableLiveData<>("");
 
-        private final MutableLiveData<String> score = new MutableLiveData<>();
+        private final MutableLiveData<String> score = new MutableLiveData<>("");
 
         private final MutableLiveData<Boolean> possibleCheckout = new MutableLiveData<>(false);
 

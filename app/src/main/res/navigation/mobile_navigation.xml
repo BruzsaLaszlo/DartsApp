@@ -37,15 +37,7 @@
         android:id="@+id/nav_single_x01"
         android:name="bruzsa.laszlo.dartsapp.ui.singlex01.SingleX01Fragment"
         android:label="fragment_dartsX01_single_player"
-        tools:layout="@layout/fragment_singlex01">
-        <argument
-            android:name="Player"
-            app:argType="bruzsa.laszlo.dartsapp.enties.Player" />
-        <argument
-            android:name="StartScore"
-            app:argType="integer"
-            android:defaultValue="501" />
-    </fragment>
+        tools:layout="@layout/fragment_singlex01" />
     <fragment
         android:id="@+id/nav_playerFragment"
         android:name="bruzsa.laszlo.dartsapp.ui.home.player.PlayerFragment"
@@ -58,7 +50,7 @@
             android:name="playerIds"
             app:argType="long[]" />
         <argument
-            android:name="selectedTeamPlayer"
-            app:argType="bruzsa.laszlo.dartsapp.model.TeamPlayer" />
+            android:name="selectedPlayersEnum"
+            app:argType="bruzsa.laszlo.dartsapp.model.PlayersEnum" />
     </fragment>
 </navigation>

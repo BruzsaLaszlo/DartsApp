@@ -25,7 +25,7 @@ public class X01SummaryStatistics {
 
     @NonNull
     private Stream<X01Throw> notRemovedThrows() {
-        return throwList.stream().filter(x01Throw -> !x01Throw.isRemoved());
+        return throwList.stream().filter(x01Throw -> x01Throw.isNotRemoved());
     }
 
     @NonNull

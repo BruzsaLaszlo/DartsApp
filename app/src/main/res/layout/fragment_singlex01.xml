@@ -5,7 +5,7 @@
 
     <data>
 
-        <import type="bruzsa.laszlo.dartsapp.model.TeamPlayer" />
+        <import type="bruzsa.laszlo.dartsapp.model.PlayersEnum" />
 
         <variable
             name="viewModel"
