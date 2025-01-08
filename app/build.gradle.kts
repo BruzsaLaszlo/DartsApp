@@ -5,7 +5,7 @@ plugins {
 
     id("com.android.application")
 
-    id("de.mannodermaus.android-junit5")
+    id("de.mannodermaus.android-junit5") version "1.11.2.0"
 
     id("androidx.navigation.safeargs")
 
@@ -14,6 +14,10 @@ plugins {
 
 
 android {
+
+    hilt {
+        enableAggregatingTask = true
+    }
 
     idea {
         module {
@@ -31,9 +35,11 @@ android {
         targetSdk = 35
         versionCode = 3
         versionName = "0.1"
-        multiDexEnabled = true
+//        multiDexEnabled = true
 
-        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+//        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunner = "bruzsa.laszlo.dartsapp.MyTestRunner"
+
     }
 
     buildTypes {
@@ -68,17 +74,51 @@ android {
 }
 
 dependencies {
+    testImplementation("androidx.test:runner:1.6.2")
+    testImplementation("androidx.test.ext:junit:1.2.1")
+
     compileOnly("org.projectlombok:lombok:1.18.36")
     annotationProcessor("org.projectlombok:lombok:1.18.36")
     testCompileOnly("org.projectlombok:lombok:1.18.36")
     testAnnotationProcessor("org.projectlombok:lombok:1.18.36")
 
+    // Hilt
     implementation("com.google.dagger:hilt-android:2.54")
     annotationProcessor("com.google.dagger:hilt-compiler:2.54")
+    testImplementation("com.google.dagger:hilt-android-testing:2.54")
+    testAnnotationProcessor("com.google.dagger:hilt-android-compiler:2.54")
+    androidTestImplementation("com.google.dagger:hilt-android-testing:2.54")
+    androidTestAnnotationProcessor("com.google.dagger:hilt-compiler:2.54")
+
+    // LiveData Test - InstantTaskExecutorRule
+    androidTestImplementation("androidx.arch.core:core-testing:2.2.0")
+
+    // (Required) Writing and executing Unit Tests on the JUnit Platform
+    testImplementation("org.junit.jupiter:junit-jupiter-api:5.11.4")
+    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.11.4")
+    // (Optional) If you need "Parameterized Tests"
+    testImplementation("org.junit.jupiter:junit-jupiter-params:5.11.4")
+    // (Optional) If you also have JUnit 4-based tests
+    testImplementation("junit:junit:4.13.2")
+    testRuntimeOnly("org.junit.vintage:junit-vintage-engine:5.11.4")
+    androidTestImplementation("org.junit.jupiter:junit-jupiter-api:5.11.4")
+    // @ExtendWith(InstantExecutorExtension.class)
+    testImplementation("io.github.neboskreb:instant-task-executor-extension:1.0.0")
+
+    // AssertJ
+    androidTestCompileOnly("com.squareup.assertj:assertj-android:1.2.0")
+
+    // For local unit tests
+//    testImplementation 'com.google.dagger:hilt-android-testing:2.54'
+//    testAnnotationProcessor ("com.google.dagger:hilt-compiler:2.54")
+
+    //Unit test
+//    testImplementation ("org.robolectric:robolectric:4.14.1")
+    //UI test
+//    androidTestImplementation ("org.robolectric:robolectric:4.14.1")
 
     implementation("androidx.room:room-runtime:2.6.1")
     annotationProcessor("androidx.room:room-compiler:2.6.1")
-    testImplementation("junit:junit:4.13.2")
 
     implementation("org.nanohttpd:nanohttpd:2.3.1")
 
@@ -118,8 +158,4 @@ dependencies {
     androidTestImplementation("androidx.test:rules:1.6.1")
     // Optional -- UI testing with Espresso
     androidTestImplementation("androidx.test.espresso:espresso-core:3.6.1")
-    // Optional -- UI testing with UI Automator
-    androidTestImplementation("androidx.test.uiautomator:uiautomator:2.3.0")
-    // Optional -- UI testing with Compose
-    androidTestImplementation("androidx.compose.ui:ui-test-junit4:1.7.6")
 }
