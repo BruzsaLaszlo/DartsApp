@@ -1,10 +1,11 @@
 package bruzsa.laszlo.dartsapp.ui.x01.input;
 
+import static bruzsa.laszlo.dartsapp.model.x01.ThrowValidator.isValidThrow;
+
 import android.widget.EditText;
 
 import java.util.Arrays;
 import java.util.Optional;
-import java.util.Set;
 
 public class InputValidator {
 
@@ -40,7 +41,7 @@ public class InputValidator {
                 .mapToInt(Integer::parseInt)
                 .sum();
 
-        return sum <= 180 && !Set.of(179, 178, 176, 175, 173, 172, 169, 166, 163).contains(sum);
+        return isValidThrow(sum);
     }
 
     public Optional<Integer> getValidThrow(String text) {

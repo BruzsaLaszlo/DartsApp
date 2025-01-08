@@ -1,18 +1,25 @@
 package bruzsa.laszlo.dartsapp.model.singlex01;
 
+import static bruzsa.laszlo.dartsapp.model.PlayersEnum.PLAYER_1_1;
 import static bruzsa.laszlo.dartsapp.model.x01.Status.getStatus;
+import static bruzsa.laszlo.dartsapp.model.x01.ThrowValidator.isValidCheckout;
+import static bruzsa.laszlo.dartsapp.model.x01.ThrowValidator.isValidThrow;
 
 import java.util.Collections;
 import java.util.List;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
-import bruzsa.laszlo.dartsapp.enties.Player;
+import javax.inject.Inject;
+
 import bruzsa.laszlo.dartsapp.enties.x01.X01TeamScores;
+import bruzsa.laszlo.dartsapp.model.home.AppSettings;
 import bruzsa.laszlo.dartsapp.model.x01.Stat;
 import bruzsa.laszlo.dartsapp.model.x01.X01Throw;
+import dagger.hilt.android.scopes.ViewModelScoped;
 import lombok.Getter;
 
+@ViewModelScoped
 public class X01SingleService {
 
     private final int startScore;
@@ -21,9 +28,10 @@ public class X01SingleService {
     private final X01TeamScores scores;
 
 
-    public X01SingleService(Player player, int startScore) {
-        this.scores = new X01TeamScores(player);
-        this.startScore = startScore;
+    @Inject
+    public X01SingleService(AppSettings appSettings) {
+        this.scores = new X01TeamScores(appSettings.getSelectedPlayers().get(PLAYER_1_1));
+        this.startScore = appSettings.getX01Settings().getStartScore();
     }
 
     public void newThrow(int throwValue, int dartCount, BiConsumer<Integer, Stat> onNewThrowListener) {
@@ -31,7 +39,7 @@ public class X01SingleService {
         boolean checkedOut = newScore == 0;
         X01Throw newThrow = new X01Throw(
                 throwValue,
-                getStatus(newScore > 1 || checkedOut),
+                getStatus(checkedOut ? isValidCheckout(throwValue) : newScore > 1 && isValidThrow(throwValue)),
                 scores.getLegs(),
                 dartCount,
                 checkedOut,

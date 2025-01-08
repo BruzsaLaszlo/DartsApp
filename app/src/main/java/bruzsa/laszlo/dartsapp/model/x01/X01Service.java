@@ -3,6 +3,9 @@ package bruzsa.laszlo.dartsapp.model.x01;
 import static bruzsa.laszlo.dartsapp.model.Team.TEAM1;
 import static bruzsa.laszlo.dartsapp.model.Team.TEAM2;
 import static bruzsa.laszlo.dartsapp.model.x01.Status.PARTIAL;
+import static bruzsa.laszlo.dartsapp.model.x01.Status.getStatus;
+import static bruzsa.laszlo.dartsapp.model.x01.ThrowValidator.isValidCheckout;
+import static bruzsa.laszlo.dartsapp.model.x01.ThrowValidator.isValidThrow;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -65,7 +68,7 @@ public class X01Service {
         boolean checkedOut = newScore == 0;
         X01Throw newThrow = new X01Throw(
                 throwValue,
-                Status.getStatus(newScore > 1 || checkedOut),
+                getStatus(checkedOut ? isValidCheckout(throwValue) : newScore > 1 && isValidThrow(throwValue)),
                 legCount,
                 dartCount,
                 checkedOut,

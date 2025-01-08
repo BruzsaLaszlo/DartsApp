@@ -1,6 +1,7 @@
 package bruzsa.laszlo.dartsapp.model.x01;
 
 import static java.lang.Integer.valueOf;
+import static java.util.Collections.unmodifiableMap;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -127,5 +128,9 @@ public class CheckoutTable {
 
     public static String getCheckoutFor(int number) {
         return map.getOrDefault(number, "");
+    }
+
+    public static Map<Integer, String> getCheckoutMap() {
+        return unmodifiableMap(map);
     }
 }
