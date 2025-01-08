@@ -32,7 +32,7 @@ import lombok.Getter;
 public class SingleX01ViewModel extends ViewModel {
 
     private final MutableLiveData<Integer> leg = new MutableLiveData<>(0);
-    private final MutableLiveData<Integer> score = new MutableLiveData<>();
+    private final MutableLiveData<Integer> score = new MutableLiveData<>(0);
     private final MutableLiveData<String> stat = new MutableLiveData<>("");
 
     @Getter
@@ -44,16 +44,16 @@ public class SingleX01ViewModel extends ViewModel {
 
     @Inject
     public SingleX01ViewModel(WebGuiServer webGuiServer, WebGuiX01 webGui,
-                              AppSettings appSettings, X01Checkout x01Checkout) {
+                              AppSettings appSettings, X01SingleService service,
+                              X01Checkout x01Checkout) {
         this.webGui = webGui;
+        this.service = service;
         this.x01Checkout = x01Checkout;
         X01Settings settings = appSettings.getX01Settings();
         Player player = appSettings.getSelectedPlayers().get(PLAYER_1_1);
         int startScore = settings.getStartScore();
 
         this.webGuiServer = webGuiServer;
-
-        service = new X01SingleService(player, startScore);
 
         score.setValue(startScore);
         throwsAdapter = new X01ThrowAdapter(service.getThrowsList(), this::removeThrow, TEAM1);

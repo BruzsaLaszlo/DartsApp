@@ -4,10 +4,9 @@ import androidx.databinding.BindingAdapter;
 
 import com.google.android.material.chip.Chip;
 
-import java.util.Map;
-
 import bruzsa.laszlo.dartsapp.enties.Player;
 import bruzsa.laszlo.dartsapp.model.PlayersEnum;
+import bruzsa.laszlo.dartsapp.model.home.AppSettings;
 import bruzsa.laszlo.dartsapp.model.home.GameMode;
 import bruzsa.laszlo.dartsapp.model.home.GameType;
 import bruzsa.laszlo.dartsapp.model.home.GeneralSettings;
@@ -38,12 +37,12 @@ public final class HomeBindingAdapters {
     }
 
     @BindingAdapter({"selected_players", "team_player"})
-    public static void setPlayerChip(Chip chip, Map<PlayersEnum, Player> selectedPlayers, PlayersEnum playersEnum) {
+    public static void setPlayerChip(Chip chip, AppSettings settings, PlayersEnum playersEnum) {
         chip.setOnCloseIconClickListener(v -> {
-            selectedPlayers.remove(playersEnum);
+            settings.removePlayersForSelection(playersEnum);
             setChipStyle(chip, true, null);
         });
-        Player player = selectedPlayers.get(playersEnum);
+        Player player = settings.getSelectedPlayer(playersEnum);
         if (player != null) {
             setChipStyle(chip, false, player.getName());
         }

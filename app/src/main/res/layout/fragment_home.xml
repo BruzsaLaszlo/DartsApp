@@ -63,7 +63,7 @@
                 app:closeIconVisible="false"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/textInfoPlayerTeam1"
-                app:selected_players="@{homeViewModel.settings.selectedPlayers}"
+                app:selected_players="@{homeViewModel.settings}"
                 app:team_player="@{PlayersEnum.PLAYER_1_1}" />
 
             <com.google.android.material.chip.Chip
@@ -81,7 +81,7 @@
                 app:closeIconVisible="false"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/chipTeam2Player1"
-                app:selected_players="@{homeViewModel.settings.selectedPlayers}"
+                app:selected_players="@{homeViewModel.settings}"
                 app:team_player="@{PlayersEnum.PLAYER_2_2}" />
 
             <View
@@ -123,7 +123,7 @@
                 app:closeIconVisible="false"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/textInfoPlayerTeam2"
-                app:selected_players="@{homeViewModel.settings.selectedPlayers}"
+                app:selected_players="@{homeViewModel.settings}"
                 app:team_player="@{PlayersEnum.PLAYER_2_1}" />
 
             <com.google.android.material.chip.Chip
@@ -141,7 +141,7 @@
                 app:closeIconVisible="false"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/chipTeam1Player1"
-                app:selected_players="@{homeViewModel.settings.selectedPlayers}"
+                app:selected_players="@{homeViewModel.settings}"
                 app:team_player="@{PlayersEnum.PLAYER_1_2}" />
 
             <com.google.android.material.chip.ChipGroup
