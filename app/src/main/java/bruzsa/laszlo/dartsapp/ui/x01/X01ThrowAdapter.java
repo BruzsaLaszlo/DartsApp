@@ -36,7 +36,8 @@ public class X01ThrowAdapter extends RecyclerView.Adapter<X01ThrowAdapter.ViewHo
     public void inserted() {
         int pos = getItemCount() - 1;
         notifyItemInserted(pos);
-        recyclerView.smoothScrollToPosition(pos);
+        if (recyclerView != null)
+            recyclerView.smoothScrollToPosition(pos);
     }
 
     @NonNull
