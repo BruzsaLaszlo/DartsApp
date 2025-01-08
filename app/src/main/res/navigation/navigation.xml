@@ -27,17 +27,29 @@
         android:id="@+id/nav_cricketFragment"
         android:name="bruzsa.laszlo.dartsapp.ui.cricket.CricketFragment"
         android:label="CricketFragment"
-        tools:layout="@layout/fragment_cricket" />
+        tools:layout="@layout/fragment_cricket">
+        <action
+            android:id="@+id/action_nav_cricketFragment_to_nav_homeFragment"
+            app:destination="@id/nav_homeFragment" />
+    </fragment>
     <fragment
         android:id="@+id/nav_X01Fragment"
         android:name="bruzsa.laszlo.dartsapp.ui.x01.X01Fragment"
         android:label="DartsX01Fragment"
-        tools:layout="@layout/fragment_x01" />
+        tools:layout="@layout/fragment_x01">
+        <action
+            android:id="@+id/action_nav_X01Fragment_to_nav_homeFragment"
+            app:destination="@id/nav_homeFragment" />
+    </fragment>
     <fragment
         android:id="@+id/nav_single_x01"
         android:name="bruzsa.laszlo.dartsapp.ui.singlex01.SingleX01Fragment"
         android:label="fragment_dartsX01_single_player"
-        tools:layout="@layout/fragment_singlex01" />
+        tools:layout="@layout/fragment_singlex01">
+        <action
+            android:id="@+id/action_nav_single_x01_to_nav_homeFragment"
+            app:destination="@id/nav_homeFragment" />
+    </fragment>
     <fragment
         android:id="@+id/nav_playerFragment"
         android:name="bruzsa.laszlo.dartsapp.ui.home.player.PlayerFragment"
