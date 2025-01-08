@@ -50,7 +50,7 @@ class VersionTest {
         int reduceM = IntStream.of(1, 2, 3, 4)
                 .reduce(100, Integer::sum);
 
-        List<String> c = null;
-        c.stream().reduce(0, (integer, s) -> integer + s.length(), Integer::sum);
+        List<String> c = List.of("ize", "Mize");
+        Integer reduce1 = c.stream().reduce(0, (integer, s) -> integer + s.length(), Integer::sum);
     }
 }

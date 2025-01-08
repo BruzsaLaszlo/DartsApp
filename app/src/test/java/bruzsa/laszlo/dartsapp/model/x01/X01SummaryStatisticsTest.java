@@ -1,6 +1,8 @@
 package bruzsa.laszlo.dartsapp.model.x01;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static bruzsa.laszlo.dartsapp.model.x01.Status.INVALID;
+import static bruzsa.laszlo.dartsapp.model.x01.Status.VALID;
 
 import org.assertj.core.util.DoubleComparator;
 import org.junit.jupiter.api.BeforeEach;
@@ -16,24 +18,24 @@ class X01SummaryStatisticsTest {
 
     List<X01SummaryStatistics> stats = List.of(
             new X01SummaryStatistics(List.of(
-                    new X01Throw(180, true, 0, 3, false, null),
-                    new X01Throw(180, true, 0, 3, false, null),
-                    new X01Throw(180, false, 0, 3, false, null),
-                    new X01Throw(141, true, 0, 3, true, null)), START_SCORE),
+                    new X01Throw(180, VALID, 0, 3, false, null),
+                    new X01Throw(180, VALID, 0, 3, false, null),
+                    new X01Throw(180, INVALID, 0, 3, false, null),
+                    new X01Throw(141, VALID, 0, 3, true, null)), START_SCORE),
             new X01SummaryStatistics(List.of(
-                    new X01Throw(180, true, 0, 3, false, null),
-                    new X01Throw(180, true, 0, 3, false, null),
-                    new X01Throw(101, true, 0, 3, false, null),
-                    new X01Throw(40, true, 0, 1, true, null)), START_SCORE),
+                    new X01Throw(180, VALID, 0, 3, false, null),
+                    new X01Throw(180, VALID, 0, 3, false, null),
+                    new X01Throw(101, VALID, 0, 3, false, null),
+                    new X01Throw(40, VALID, 0, 1, true, null)), START_SCORE),
             new X01SummaryStatistics(List.of(
-                    new X01Throw(170, true, 0, 3, false, null),
-                    new X01Throw(170, true, 0, 3, false, null),
-                    new X01Throw(161, true, 0, 3, true, null),
-                    new X01Throw(100, true, 1, 3, false, null)), START_SCORE),
+                    new X01Throw(170, VALID, 0, 3, false, null),
+                    new X01Throw(170, VALID, 0, 3, false, null),
+                    new X01Throw(161, VALID, 0, 3, true, null),
+                    new X01Throw(100, VALID, 1, 3, false, null)), START_SCORE),
             new X01SummaryStatistics(List.of(
-                    new X01Throw(60, true, 0, 3, false, null),
-                    new X01Throw(60, true, 0, 3, false, null),
-                    new X01Throw(26, true, 0, 3, false, null)), START_SCORE)
+                    new X01Throw(60, VALID, 0, 3, false, null),
+                    new X01Throw(60, VALID, 0, 3, false, null),
+                    new X01Throw(26, VALID, 0, 3, false, null)), START_SCORE)
     );
 
     @BeforeEach
