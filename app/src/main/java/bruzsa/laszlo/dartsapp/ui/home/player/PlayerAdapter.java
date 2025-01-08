@@ -6,8 +6,9 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AlertDialog;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
 import java.util.List;
 import java.util.function.BiConsumer;
@@ -37,7 +38,7 @@ public class PlayerAdapter extends RecyclerView.Adapter<PlayerAdapter.ViewHolder
         Player player = players.get(position);
         holder.mContentView.setOnClickListener(v -> selected.accept(player, Action.ADD));
         holder.mContentView.setOnLongClickListener(v -> {
-            new AlertDialog.Builder(v.getContext())
+            new MaterialAlertDialogBuilder(v.getContext())
                     .setTitle("Remove Player")
                     .setMessage("Are you sure you delete: " + player.getName())
                     .setPositiveButton("DELETE", (dialog, which) -> {

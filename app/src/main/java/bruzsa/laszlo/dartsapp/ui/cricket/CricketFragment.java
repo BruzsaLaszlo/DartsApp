@@ -1,7 +1,7 @@
 package bruzsa.laszlo.dartsapp.ui.cricket;
 
 import static android.content.pm.ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE;
-import static android.content.pm.ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED;
+import static android.content.pm.ActivityInfo.SCREEN_ORIENTATION_PORTRAIT;
 import static android.view.View.GONE;
 import static androidx.recyclerview.widget.LinearLayoutManager.VERTICAL;
 
@@ -64,8 +64,8 @@ public class CricketFragment extends Fragment {
         CricketSettings cricketSettings = viewModel.getSettings();
 
         cricketSettings.updateSize(requireActivity());
-        binding.cricketTable1.inic(cricketSettings, this::getOnTouchEventListener);
-        binding.cricketTable2.inic(cricketSettings, this::getOnTouchEventListener);
+        binding.cricketTable1.inic(cricketSettings, this::onTouchEventListener);
+        binding.cricketTable2.inic(cricketSettings, this::onTouchEventListener);
 
         binding.listThrows.setLayoutManager(new LinearLayoutManager(getActivity(), VERTICAL, true));
 //        binding.listThrows.setAdapter(viewModel.getThrowsAdapter());
@@ -80,11 +80,11 @@ public class CricketFragment extends Fragment {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        setScreenOrientation(SCREEN_ORIENTATION_UNSPECIFIED);
+        setScreenOrientation(SCREEN_ORIENTATION_PORTRAIT);
         binding = null;
     }
 
-    private void getOnTouchEventListener(Team team, TouchValue touchValue) {
+    private void onTouchEventListener(Team team, TouchValue touchValue) {
         viewModel.newThrow(touchValue.getMultiplier(), touchValue.getValue(), team, this::gameOver);
     }
 

@@ -29,16 +29,15 @@ public class HiltModuleWebGui {
     @Provides
     @Singleton
     public WebGuiServer getWebGuiServer() {
+        WebServer webServer = new WebServer();
         try {
             long t = System.currentTimeMillis();
-            WebServer webServer = new WebServer();
             webServer.start();
             Log.i("WebServer", "startWebserver: starting time: " + (System.currentTimeMillis() - t) + "ms");
-            return new WebGuiServer(webServer);
         } catch (IOException e) {
             Log.e("WebServer", "startWebserver: WebServer can not start!", e);
-            throw new IllegalStateException("WebServer can not start!");
         }
+        return new WebGuiServer(webServer);
     }
 
 

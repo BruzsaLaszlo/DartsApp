@@ -1,6 +1,7 @@
 package bruzsa.laszlo.dartsapp.model.cricket;
 
 import static java.util.Map.of;
+import static java.util.function.Predicate.not;
 import static java.util.stream.Collectors.toMap;
 import static bruzsa.laszlo.dartsapp.model.Team.TEAM1;
 import static bruzsa.laszlo.dartsapp.model.Team.TEAM2;
@@ -18,24 +19,24 @@ import lombok.Getter;
 public class Stat {
 
     private final Map<Team, Map<Integer, Integer>> statMap;
-    private final Map<Team, Integer> scores = new EnumMap<>(of(
-            TEAM1, 0,
-            TEAM2, 0));
+    private final Map<Team, Integer> scores;
 
     public Stat(List<CricketThrow> throwList, List<Integer> activeNumbers) {
+        // all number must mapped !
         var def = activeNumbers.stream().collect(toMap(number -> number, n -> 0));
         statMap = new EnumMap<>(of(TEAM1, def, TEAM2, new HashMap<>(def)));
-        calculateStat(throwList);
-    }
-
-    private void calculateStat(List<CricketThrow> throwList) {
-        for (CricketThrow cricketThrow : throwList) {
-            if (!cricketThrow.isRemoved()) {
-                int addScore = addThrow(cricketThrow);
-                scores.compute(cricketThrow.getTeam(), (team, score) ->
-                        score == null ? addScore : score + addScore);
-            }
-        }
+        scores = throwList.stream()
+                .filter(not(CricketThrow::isRemoved))
+                .collect(
+                        () -> new EnumMap<>(of(TEAM1, 0, TEAM2, 0)),
+                        (teamMapMap, cricketThrow) -> {
+                            int addScore = addThrow(cricketThrow);
+                            teamMapMap.compute(
+                                    cricketThrow.getTeam(),
+                                    (team, score) -> score + addScore);
+                        },
+                        Map::putAll
+                );
     }
 
     private int addThrow(CricketThrow cricketThrow) {
@@ -43,12 +44,12 @@ public class Stat {
         int multiplier = cricketThrow.getMultiply();
         Team team = cricketThrow.getTeam();
 
-        int sumMultiplier = statMap.get(team).compute(number, (n, m) ->
-                m == null ? multiplier : m + multiplier);
+        int actual = statMap.get(team).get(number);
+        int sum = statMap.get(team).compute(number, (n, m) -> m + multiplier);
 
         Integer opponentMultiplier = statMap.get(team.opponent()).get(number);
-        if (sumMultiplier > 3 && (opponentMultiplier == null || opponentMultiplier < 3)) {
-            int sm = multiplier >= 3 ? multiplier : sumMultiplier - 3;
+        if (sum > 3 && (opponentMultiplier == null || opponentMultiplier < 3)) {
+            int sm = actual >= 3 ? multiplier : sum - 3;
             return sm * number;
         }
         return 0;

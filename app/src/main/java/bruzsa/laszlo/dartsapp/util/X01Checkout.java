@@ -34,13 +34,13 @@ public class X01Checkout {
         if (throwValue > 110 || List.of(109, 108, 106, 105, 103, 102).contains(throwValue)) {
             onClickListener.accept(3);
         } else {
-            boolean three = (throwValue > 40 && throwValue != 50) || throwValue % 2 == 1;
+            boolean two = (throwValue > 40 && throwValue != 50) || throwValue % 2 == 1;
             new MaterialAlertDialogBuilder(context)
                     .setTitle("How many darts has been thrown?")
-                    .setItems(three ? new CharSequence[]{"1 dart", "2 darts", "3 darts"}
-                                    : new CharSequence[]{"2 darts", "3 darts"},
+                    .setItems(two ? new CharSequence[]{"2 darts", "3 darts"}
+                                    : new CharSequence[]{"1 dart", "2 darts", "3 darts"},
                             (dialog, which) ->
-                                    onClickListener.accept(three ? which + 1 : which + 2))
+                                    onClickListener.accept(two ? which + 2 : which + 1))
                     .show();
         }
     }

@@ -27,5 +27,5 @@ public class WebGuiServer {
     public void setContent(String html) {
         webServer.setResponse(html);
     }
-    
+
 }

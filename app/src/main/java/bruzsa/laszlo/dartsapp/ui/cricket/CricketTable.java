@@ -208,9 +208,9 @@ public class CricketTable extends View {
             lastTouchValue = BULL;
             return super.onTouchEvent(event);
         }
-        if (distance <= radius * CLICK_PERCENT) {
+        if (distance <= radius * CLICK_PERCENT && distance > radius) {
             lastTouchValue = INVALID;
-            return super.onTouchEvent(event);
+            return true;
         }
 
         // calculate degree of touch
@@ -220,10 +220,11 @@ public class CricketTable extends View {
         int index = (int) (((theta + 99) % 360) / DEGREE);
         if (activeNumbers.contains(ALL_NUMBERS.get(index))) {
             lastTouchValue = ALL_NUMBERS.get(index);
+            return super.onTouchEvent(event);
         } else {
             lastTouchValue = INVALID;
+            return true;
         }
-        return super.onTouchEvent(event);
     }
 
     @BindingAdapter("state")
