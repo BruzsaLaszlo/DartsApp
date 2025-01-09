@@ -14,6 +14,8 @@ plugins {
     id("idea")
 
     jacoco
+    
+    id("com.autonomousapps.dependency-analysis")
 }
 
 
@@ -168,7 +170,7 @@ dependencies {
     androidTestImplementation("androidx.test.espresso:espresso-core:3.6.1")
 }
 
-// --------------------- JACOCO START ---------------------
+// --------------------- JACOCO START -------------------    gradlew JacocoDebugCodeCoverage
 val exclusions = listOf(
     "**/R.class",
     "**/R\$*.class",
