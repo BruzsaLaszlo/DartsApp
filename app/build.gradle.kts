@@ -1,3 +1,5 @@
+import java.util.Locale
+
 plugins {
     id("com.google.dagger.hilt.android")
 
@@ -10,6 +12,8 @@ plugins {
     id("androidx.navigation.safeargs")
 
     id("idea")
+
+    jacoco
 }
 
 
@@ -49,6 +53,10 @@ android {
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
+        }
+        debug {
+            enableAndroidTestCoverage = true
+            enableUnitTestCoverage = true
         }
     }
 
@@ -159,3 +167,55 @@ dependencies {
     // Optional -- UI testing with Espresso
     androidTestImplementation("androidx.test.espresso:espresso-core:3.6.1")
 }
+
+// --------------------- JACOCO START ---------------------
+val exclusions = listOf(
+    "**/R.class",
+    "**/R\$*.class",
+    "**/BuildConfig.*",
+    "**/Manifest*.*",
+    "**/*Test*.*"
+)
+
+tasks.withType(Test::class) {
+    configure<JacocoTaskExtension> {
+        isIncludeNoLocationClasses = true
+        excludes = listOf("jdk.internal.*")
+    }
+}
+
+android {
+    applicationVariants.all(closureOf<com.android.build.gradle.internal.api.BaseVariantImpl> {
+        val variant = this@closureOf.name.replaceFirstChar {
+            if (it.isLowerCase()) it.titlecase(
+                Locale.getDefault()
+            ) else it.toString()
+        }
+
+        val unitTests = "test${variant}UnitTest"
+        val androidTests = "connected${variant}AndroidTest"
+
+        tasks.register<JacocoReport>("Jacoco${variant}CodeCoverage") {
+            dependsOn(listOf(unitTests, androidTests))
+            group = "Reporting"
+            description = "Execute ui and unit tests, generate and combine Jacoco coverage report"
+            reports {
+                xml.required.set(true)
+                html.required.set(true)
+            }
+            sourceDirectories.setFrom(layout.projectDirectory.dir("src/main"))
+            classDirectories.setFrom(files(
+                fileTree(layout.buildDirectory.dir("intermediates/javac/")) {
+                    exclude(exclusions)
+                },
+                fileTree(layout.buildDirectory.dir("tmp/kotlin-classes/")) {
+                    exclude(exclusions)
+                }
+            ))
+            executionData.setFrom(files(
+                fileTree(layout.buildDirectory) { include(listOf("**/*.exec", "**/*.ec")) }
+            ))
+        }
+    })
+}
+//---------------------- JACOCO END -----------------------
