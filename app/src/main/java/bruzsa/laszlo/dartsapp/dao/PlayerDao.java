@@ -5,6 +5,7 @@ import androidx.room.Delete;
 import androidx.room.Insert;
 import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
+import androidx.room.Transaction;
 import androidx.room.Update;
 
 import java.util.List;
@@ -27,7 +28,16 @@ public interface PlayerDao {
     void insertAll(Player... players);
 
     @Insert
-    void insert(Player player);
+    long insert(Player player);
+
+    @Transaction
+    default Player insertAndGet(Player player) {
+        insert(player);
+        return findByName(player.getName());
+    }
+
+    ;
+
 
     @Update
     void update(Player player);

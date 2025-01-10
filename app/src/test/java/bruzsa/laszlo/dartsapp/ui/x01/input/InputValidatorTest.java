@@ -2,6 +2,7 @@ package bruzsa.laszlo.dartsapp.ui.x01.input;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.junit.jupiter.api.Test;
@@ -15,10 +16,10 @@ class InputValidatorTest {
 
     @Test
     void validateInput() {
-        assertEquals(null, validator.validateInput(null, null));
+        assertNull(validator.validateInput(null, null));
         assertEquals("", validator.validateInput("", null));
-        assertEquals(null, validator.validateInput(null, ""));
-        assertEquals(null, validator.validateInput(null, "+"));
+        assertNull(validator.validateInput(null, ""));
+        assertNull(validator.validateInput(null, "+"));
         assertEquals("", validator.validateInput("", "+"));
         assertEquals("6", validator.validateInput("", "+6"));
         assertEquals("66", validator.validateInput("", "66"));

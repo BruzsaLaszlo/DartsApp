@@ -143,6 +143,7 @@ dependencies {
     implementation("androidx.navigation:navigation-ui-ktx:2.8.5")
     implementation("androidx.legacy:legacy-support-v4:1.0.0")
     implementation("androidx.recyclerview:recyclerview:1.3.2")
+    implementation("androidx.window:window:1.3.0")
 
     testImplementation("org.assertj:assertj-core:3.27.0")
     testImplementation("org.junit.jupiter:junit-jupiter-api:5.11.4")
@@ -168,6 +169,10 @@ dependencies {
     androidTestImplementation("androidx.test:rules:1.6.1")
     // Optional -- UI testing with Espresso
     androidTestImplementation("androidx.test.espresso:espresso-core:3.6.1")
+}
+
+tasks.withType(JavaCompile::class.java) {
+    options.compilerArgs.add("-Xlint:deprecation")
 }
 
 // --------------------- JACOCO START -------------------    gradlew JacocoDebugCodeCoverage

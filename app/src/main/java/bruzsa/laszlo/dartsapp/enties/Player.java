@@ -3,6 +3,7 @@ package bruzsa.laszlo.dartsapp.enties;
 import androidx.annotation.NonNull;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
+import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 
 import java.time.LocalDate;
@@ -10,11 +11,9 @@ import java.util.Objects;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @AllArgsConstructor
-@NoArgsConstructor
 @Getter
 @Setter
 @Entity
@@ -33,7 +32,7 @@ public class Player {
 
     private byte[] image;
 
-
+    @Ignore
     public Player(String name) {
         if (name == null || name.isBlank()) {
             this.name = "Anonymus";
@@ -56,12 +55,11 @@ public class Player {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof Player player)) return false;
-        return Objects.equals(getId(), player.getId());
+        return Objects.equals(id, player.id);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getId());
+        return Objects.hashCode(id);
     }
-
 }

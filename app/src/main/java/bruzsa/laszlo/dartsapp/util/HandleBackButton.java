@@ -1,16 +1,15 @@
 package bruzsa.laszlo.dartsapp.util;
 
-import android.app.Activity;
-
 import androidx.activity.OnBackPressedCallback;
+import androidx.fragment.app.FragmentActivity;
 
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
 public class HandleBackButton extends OnBackPressedCallback {
 
-    private final Activity activity;
+    private final FragmentActivity activity;
 
-    public HandleBackButton(Activity activity) {
+    public HandleBackButton(FragmentActivity activity) {
         super(true);
         this.activity = activity;
     }
@@ -22,7 +21,7 @@ public class HandleBackButton extends OnBackPressedCallback {
                 .setMessage("Are you sure?")
                 .setPositiveButton("EXIT", (dialog, which) -> {
                     remove();
-                    activity.onBackPressed();
+                    activity.getOnBackPressedDispatcher().onBackPressed();
                 })
                 .setNegativeButton("CANCEL", (dialog, which) -> handleOnBackCancelled())
                 .show();

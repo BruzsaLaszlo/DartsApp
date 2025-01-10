@@ -3,7 +3,6 @@ package bruzsa.laszlo.dartsapp;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
-import static java.time.LocalDate.now;
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule;
 import androidx.lifecycle.ViewModelProvider;
@@ -13,7 +12,6 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 
-import bruzsa.laszlo.dartsapp.enties.Player;
 import bruzsa.laszlo.dartsapp.ui.singlex01.SingleX01ViewModel;
 import dagger.hilt.android.testing.HiltAndroidRule;
 import dagger.hilt.android.testing.HiltAndroidTest;
@@ -29,10 +27,6 @@ public class SingleX01ViewModelTest {
 
     @Rule
     public InstantTaskExecutorRule instantTaskExecutorRule = new InstantTaskExecutorRule();
-
-
-    static final Player player = new Player(1L, "Joe", "J", now(), null);
-    static final int startScore = 501;
 
     SingleX01ViewModel viewModel;
 
