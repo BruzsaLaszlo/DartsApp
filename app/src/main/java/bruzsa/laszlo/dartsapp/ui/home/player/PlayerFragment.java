@@ -1,8 +1,6 @@
 package bruzsa.laszlo.dartsapp.ui.home.player;
 
 import static android.content.pm.ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE;
-import static java.util.Arrays.stream;
-import static java.util.stream.Collectors.toList;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -16,24 +14,21 @@ import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import java.util.List;
-
 import bruzsa.laszlo.dartsapp.R;
 import bruzsa.laszlo.dartsapp.databinding.FragmentPlayerBinding;
 import bruzsa.laszlo.dartsapp.enties.Player;
 import bruzsa.laszlo.dartsapp.model.PlayersEnum;
-import bruzsa.laszlo.dartsapp.model.home.HomeViewModel;
 
 public class PlayerFragment extends Fragment {
 
-    private HomeViewModel homeViewModel;
+    private PlayerViewModel playerViewModel;
     private PlayersEnum selectedPlayersEnum;
 
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        homeViewModel = new ViewModelProvider(requireActivity()).get(HomeViewModel.class);
+        playerViewModel = new ViewModelProvider(requireActivity()).get(PlayerViewModel.class);
     }
 
     @Override
@@ -51,23 +46,19 @@ public class PlayerFragment extends Fragment {
 //        }
 
         PlayerFragmentArgs args = PlayerFragmentArgs.fromBundle(requireArguments());
-        List<Player> players = homeViewModel.getAllPlayers()
-                .stream()
-                .filter(player -> stream(args.getPlayerIds()).noneMatch(id -> player.getId().equals(id)))
-                .collect(toList());
         selectedPlayersEnum = args.getSelectedPlayersEnum();
 
         binding.buttonAdd.setOnClickListener(v -> moveToHome(new Player(binding.editTextName.getText().toString()), Action.ADD));
 
-        recyclerView.setAdapter(new PlayerAdapter(players, this::moveToHome));
+        recyclerView.setAdapter(new PlayerAdapter(playerViewModel.getPlayers(), this::moveToHome));
         return binding.getRoot();
     }
 
     private void moveToHome(Player selectedPlayer, Action action) {
         if (action == Action.REMOVE) {
-            homeViewModel.removePlayer(selectedPlayer);
+            playerViewModel.removePlayer(selectedPlayer);
         } else {
-            homeViewModel.selectPlayer(selectedPlayersEnum, selectedPlayer);
+            playerViewModel.selectPlayer(selectedPlayersEnum, selectedPlayer);
             Navigation.findNavController(requireView()).navigate(R.id.action_playerFragment_to_homeFragment);
         }
     }

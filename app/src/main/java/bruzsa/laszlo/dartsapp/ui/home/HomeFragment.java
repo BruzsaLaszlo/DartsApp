@@ -32,7 +32,6 @@ import com.google.android.material.snackbar.BaseTransientBottomBar;
 import com.google.android.material.snackbar.Snackbar;
 
 import java.util.Map;
-import java.util.Objects;
 import java.util.TreeMap;
 
 import bruzsa.laszlo.dartsapp.R;
@@ -75,11 +74,7 @@ public class HomeFragment extends Fragment {
     }
 
     public void choosePlayerFor(PlayersEnum playersEnum) {
-        long[] playerIds = homeViewModel.getSelectedPlayersMap().values().stream()
-                .filter(player -> Objects.nonNull(player.getId()))
-                .mapToLong(Player::getId)
-                .toArray();
-        navigateToFragment(actionHomeFragmentToPlayerFragment(playerIds, playersEnum));
+        navigateToFragment(actionHomeFragmentToPlayerFragment(playersEnum));
     }
 
     private boolean validSelectedPlayers(GameMode gameMode) {

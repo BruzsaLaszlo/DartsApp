@@ -56,24 +56,11 @@ public class HomeViewModel extends ViewModel {
         return settings.getSelectedPlayer(player);
     }
 
-    public void selectPlayer(PlayersEnum playersEnum, Player player) {
-        Player foundPlayer = database.playerDao().findByName(player.getName());
-        if (foundPlayer == null) {
-            database.playerDao().insert(player);
-            settings.setSelectedPlayer(playersEnum, player);
-        } else {
-            settings.setSelectedPlayer(playersEnum, foundPlayer);
-        }
-    }
 
     public List<Player> getAllPlayers() {
         Log.d(TAG, "getAllPlayers: " + database.playerDao().getAll());
         return database.playerDao().getAll();
     }
 
-    public void removePlayer(Player player) {
-        Log.d(TAG, "removePlayer: " + player);
-        database.playerDao().delete(player);
-    }
 
 }

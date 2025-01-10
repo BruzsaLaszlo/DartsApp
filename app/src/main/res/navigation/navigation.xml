@@ -59,9 +59,6 @@
             android:id="@+id/action_playerFragment_to_homeFragment"
             app:destination="@id/nav_homeFragment" />
         <argument
-            android:name="playerIds"
-            app:argType="long[]" />
-        <argument
             android:name="selectedPlayersEnum"
             app:argType="bruzsa.laszlo.dartsapp.model.PlayersEnum" />
     </fragment>
