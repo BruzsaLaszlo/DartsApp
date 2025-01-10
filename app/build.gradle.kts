@@ -138,10 +138,6 @@ dependencies {
     implementation("com.google.android.material:material:1.12.0")
     implementation("androidx.constraintlayout:constraintlayout:2.2.0")
     implementation("androidx.lifecycle:lifecycle-viewmodel-savedstate:2.8.7")
-    implementation("androidx.lifecycle:lifecycle-livedata-ktx:2.8.7")
-    implementation("androidx.navigation:navigation-fragment-ktx:2.8.5")
-    implementation("androidx.navigation:navigation-ui-ktx:2.8.5")
-    implementation("androidx.legacy:legacy-support-v4:1.0.0")
     implementation("androidx.recyclerview:recyclerview:1.3.2")
     implementation("androidx.window:window:1.3.0")
 
@@ -153,9 +149,6 @@ dependencies {
     androidTestImplementation("androidx.test.espresso:espresso-core:3.6.1")
     testImplementation("org.mockito:mockito-core:5.14.2")
 
-
-    implementation("androidx.lifecycle:lifecycle-extensions:2.2.0")
-    implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.8.7")
 
     // https://mvnrepository.com/artifact/org.thymeleaf/thymeleaf
     implementation("org.thymeleaf:thymeleaf:3.1.3.RELEASE")
@@ -169,6 +162,30 @@ dependencies {
     androidTestImplementation("androidx.test:rules:1.6.1")
     // Optional -- UI testing with Espresso
     androidTestImplementation("androidx.test.espresso:espresso-core:3.6.1")
+
+
+    androidTestImplementation("androidx.test:core:1.6.1")
+    androidTestImplementation("androidx.test:monitor:1.7.2")
+    annotationProcessor("com.google.dagger:dagger-compiler:2.54")
+    implementation("androidx.activity:activity:1.9.3")
+    implementation("androidx.annotation:annotation:1.9.1")
+    implementation("androidx.coordinatorlayout:coordinatorlayout:1.2.0")
+    implementation("androidx.core:core:1.15.0")
+    implementation("androidx.customview:customview:1.1.0")
+    implementation("androidx.drawerlayout:drawerlayout:1.2.0")
+    implementation("androidx.fragment:fragment:1.8.5")
+    implementation("androidx.lifecycle:lifecycle-common:2.8.7")
+    implementation("androidx.lifecycle:lifecycle-livedata-core:2.8.7")
+    implementation("androidx.lifecycle:lifecycle-viewmodel:2.8.7")
+    implementation("androidx.navigation:navigation-common:2.8.5")
+    implementation("androidx.navigation:navigation-fragment:2.8.5")
+    implementation("androidx.navigation:navigation-runtime:2.8.5")
+    implementation("androidx.navigation:navigation-ui:2.8.5")
+    implementation("androidx.room:room-common:2.6.1")
+    implementation("androidx.sqlite:sqlite:2.4.0")
+    implementation("com.google.dagger:dagger:2.54")
+    implementation("com.google.dagger:hilt-core:2.54")
+    implementation("javax.inject:javax.inject:1")
 }
 
 tasks.withType(JavaCompile::class.java) {
