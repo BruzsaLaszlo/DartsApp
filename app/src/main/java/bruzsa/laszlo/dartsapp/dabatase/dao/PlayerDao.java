@@ -1,4 +1,4 @@
-package bruzsa.laszlo.dartsapp.dao;
+package bruzsa.laszlo.dartsapp.dabatase.dao;
 
 import androidx.room.Dao;
 import androidx.room.Delete;

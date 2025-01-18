@@ -1,12 +1,10 @@
 package bruzsa.laszlo.dartsapp.enties;
 
 import androidx.annotation.NonNull;
-import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 
-import java.time.LocalDate;
 import java.util.Objects;
 
 import lombok.AllArgsConstructor;
@@ -24,13 +22,6 @@ public class Player {
 
     private String name;
 
-    @ColumnInfo(name = "nick_name")
-    private String nickName;
-
-    @ColumnInfo(name = "date_of_birth")
-    private LocalDate dateOfBirth;
-
-    private byte[] image;
 
     @Ignore
     public Player(String name) {

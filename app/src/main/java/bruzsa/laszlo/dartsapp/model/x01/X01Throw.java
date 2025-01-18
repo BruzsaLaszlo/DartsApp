@@ -4,27 +4,42 @@ import static java.util.Locale.US;
 
 import androidx.annotation.NonNull;
 import androidx.room.Entity;
+import androidx.room.Ignore;
+import androidx.room.PrimaryKey;
 
 import java.time.LocalDateTime;
 
-import bruzsa.laszlo.dartsapp.enties.Player;
-import lombok.AllArgsConstructor;
-import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
+@NoArgsConstructor
 @Getter
-@EqualsAndHashCode
-@AllArgsConstructor
-@Entity
+@Setter
+@Entity(tableName = "x01throw")
 public class X01Throw {
 
-    private final int value;
+    @PrimaryKey(autoGenerate = true)
+    private Long id;
+
+    private int value;
     private Status status;
-    private final int leg;
-    private final int dartCount;
-    private final boolean checkout;
-    private final Player player;
-    private final LocalDateTime time = LocalDateTime.now();
+    private int leg;
+    private int dartCount;
+    private boolean checkout;
+    private Long playerId;
+    private LocalDateTime time;
+
+    @Ignore
+    public X01Throw(int value, Status status, int leg, int dartCount, boolean checkout, Long playerId) {
+        this.value = value;
+        this.status = status;
+        this.leg = leg;
+        this.dartCount = dartCount;
+        this.checkout = checkout;
+        this.playerId = playerId;
+        time = LocalDateTime.now();
+    }
 
     public void setRemoved() {
         status = Status.REMOVED;

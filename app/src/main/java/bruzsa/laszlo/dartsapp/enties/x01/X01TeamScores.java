@@ -17,7 +17,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
-@Entity(tableName = "team_score")
+@Entity(tableName = "x01-team_score")
 public class X01TeamScores {
 
     @PrimaryKey(autoGenerate = true)
