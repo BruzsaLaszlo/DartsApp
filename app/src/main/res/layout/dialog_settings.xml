@@ -1,0 +1,57 @@
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+
+        <import type="bruzsa.laszlo.dartsapp.ui.x01.input.InputType" />
+
+        <import type="android.view.View" />
+
+        <variable
+            name="inputViews"
+            type="bruzsa.laszlo.dartsapp.ui.x01.input.InputViews" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/inputSettingsDialog"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+
+        <CheckBox
+            android:id="@+id/checkBoxTextToSpeech"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:enabled="@{inputViews.isTextToSpeechAvailable() == true}"
+            android:checked="@={inputViews.isTextToSpeechEnable}"
+            android:text="@string/repeat_throw_by_text_to_speech"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <RadioGroup
+            android:id="@+id/radioGroup"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/checkBoxTextToSpeech">
+
+            <RadioButton
+                android:id="@+id/radioButtonVoice"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:enabled="@{inputViews.isSpeechRecognizerAvailable == true}"
+                android:checked="@{inputViews.inputType == InputType.VOICE}"
+                android:onClick="@{() -> inputViews.setInputType(InputType.VOICE)}"
+                android:text="@string/speech_recognizer" />
+
+            <RadioButton
+                android:id="@+id/radioButtonNumpad"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:checked="@{inputViews.inputType == InputType.NUMPAD}"
+                android:onClick="@{() -> inputViews.setInputType(InputType.NUMPAD)}"
+                android:text="@string/number_pad" />
+        </RadioGroup>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

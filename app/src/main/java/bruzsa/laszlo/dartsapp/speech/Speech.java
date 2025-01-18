@@ -2,6 +2,7 @@ package bruzsa.laszlo.dartsapp.speech;
 
 import static android.Manifest.permission.INTERNET;
 import static android.Manifest.permission.RECORD_AUDIO;
+import static android.speech.tts.TextToSpeech.LANG_AVAILABLE;
 
 import android.content.Context;
 import android.content.Intent;
@@ -23,6 +24,7 @@ import java.util.stream.Collectors;
 
 import bruzsa.laszlo.dartsapp.speech.events.ErrorEventListener;
 import bruzsa.laszlo.dartsapp.speech.events.ResultEventListener;
+import lombok.Getter;
 
 public class Speech {
 
@@ -32,11 +34,12 @@ public class Speech {
 
     private final SpeechRecognizer speechRecognizer;
     private Language language = Language.HUNGARIAN;
-    private static final String TAG = "Speech";
+    private static final String TAG = Speech.class.getSimpleName();
 
     private final ResultEventListener resultEventListener;
     private final ErrorEventListener errorEventListener;
-
+    @Getter
+    private final boolean isSpeechRecognizerAvailable;
     private static Speech speech;
 
     public static Speech build(@NonNull Context context, ResultEventListener resultEventListener, ErrorEventListener errorEventListener) {
@@ -48,9 +51,10 @@ public class Speech {
     private Speech(Context context, ResultEventListener resultEventListener, ErrorEventListener errorEventListener) {
         this.resultEventListener = resultEventListener;
         this.errorEventListener = errorEventListener;
+        isSpeechRecognizerAvailable = SpeechRecognizer.isRecognitionAvailable(context);
 
         textToSpeech = new TextToSpeech(context, status -> {
-            Log.d(TAG, "Speech: " + textToSpeech.getAvailableLanguages());
+            Log.d(TAG, "Text-To-Speech: " + textToSpeech.getAvailableLanguages());
             if (status != TextToSpeech.ERROR) {
                 textToSpeech.setLanguage(new Locale(language.getCountryCode()));
             }
@@ -130,7 +134,8 @@ public class Speech {
 
 
     public void startListening() {
-        speechRecognizer.startListening(getSpeechRecognizerIntent());
+        if (isSpeechRecognizerAvailable)
+            speechRecognizer.startListening(getSpeechRecognizerIntent());
     }
 
     public void setLanguage(Language language) {
@@ -168,7 +173,15 @@ public class Speech {
     }
 
     public void textToSpeech(CharSequence text) {
-        textToSpeech.speak(text, TextToSpeech.QUEUE_FLUSH, null, "valami");
+        if (isTextToSpeechAvailable()) {
+            textToSpeech.speak(text, TextToSpeech.QUEUE_FLUSH, null, "valami");
+        }
     }
+
+    public boolean isTextToSpeechAvailable() {
+        return textToSpeech != null
+                && textToSpeech.isLanguageAvailable(Locale.forLanguageTag(language.getCountryCode())) == LANG_AVAILABLE;
+    }
+
 
 }

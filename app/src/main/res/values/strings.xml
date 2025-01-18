@@ -8,7 +8,7 @@
     <string name="_X01">X01</string>
     <string name="ok">OK</string>
     <string name="_10_n100_n180_n26">10\n100\n180\n26</string>
-    <string name="stat">100+\n60+\nAvg\nMax\nMin\nHC</string>
+    <string name="stat">Avg\n100+\n60+\nMax\nMin\nHC</string>
     <string name="player22">Player2</string>
     <string name="cricket">Cricket</string>
     <string name="dartsapp">DartsApp</string>
@@ -38,4 +38,7 @@
     <string name="first_to">first to</string>
     <string name="_2">2</string>
     <string name="enter_throw_value">Enter throw value</string>
+    <string name="repeat_throw_by_text_to_speech">Repeat throw by text-to-speech</string>
+    <string name="speech_recognizer">Speech recognizer</string>
+    <string name="number_pad">Number Pad</string>
 </resources>
