@@ -7,9 +7,7 @@ import androidx.room.Room;
 import javax.inject.Singleton;
 
 import bruzsa.laszlo.dartsapp.dabatase.AppDatabase;
-import bruzsa.laszlo.dartsapp.model.cricket.CricketSettings;
-import bruzsa.laszlo.dartsapp.model.home.GeneralSettings;
-import bruzsa.laszlo.dartsapp.model.x01.X01Settings;
+import bruzsa.laszlo.dartsapp.model.home.AppSettings;
 import dagger.Module;
 import dagger.Provides;
 import dagger.hilt.InstallIn;
@@ -22,20 +20,8 @@ public class HiltModule {
 
     @Provides
     @Singleton
-    public X01Settings getX01Settings() {
-        return new X01Settings();
-    }
-
-    @Provides
-    @Singleton
-    public CricketSettings getCricketSettings() {
-        return new CricketSettings();
-    }
-
-    @Provides
-    @Singleton
-    public GeneralSettings getSettings() {
-        return new GeneralSettings();
+    public AppSettings getAppSettings() {
+        return new AppSettings();
     }
 
     @Provides

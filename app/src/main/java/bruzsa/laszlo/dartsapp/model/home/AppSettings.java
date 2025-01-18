@@ -4,33 +4,21 @@ import java.util.Collections;
 import java.util.EnumMap;
 import java.util.Map;
 
-import javax.inject.Inject;
-import javax.inject.Singleton;
-
 import bruzsa.laszlo.dartsapp.enties.Player;
 import bruzsa.laszlo.dartsapp.model.PlayersEnum;
 import bruzsa.laszlo.dartsapp.model.cricket.CricketSettings;
 import bruzsa.laszlo.dartsapp.model.x01.X01Settings;
 import lombok.Getter;
 
-@Singleton
 public class AppSettings {
 
     @Getter
-    private final X01Settings x01Settings;
+    private final X01Settings x01Settings = new X01Settings();
     @Getter
-    private final CricketSettings cricketSettings;
+    private final CricketSettings cricketSettings = new CricketSettings();
     @Getter
-    private final GeneralSettings generalSettings;
+    private final GeneralSettings generalSettings = new GeneralSettings();
     private final Map<PlayersEnum, Player> selectedPlayers = new EnumMap<>(PlayersEnum.class);
-
-
-    @Inject
-    public AppSettings(X01Settings x01Settings, CricketSettings cricketSettings, GeneralSettings generalSettings) {
-        this.x01Settings = x01Settings;
-        this.cricketSettings = cricketSettings;
-        this.generalSettings = generalSettings;
-    }
 
     public Map<PlayersEnum, Player> getSelectedPlayers() {
         return Collections.unmodifiableMap(selectedPlayers);
