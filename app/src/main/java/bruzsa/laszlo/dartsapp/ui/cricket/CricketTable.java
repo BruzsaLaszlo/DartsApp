@@ -41,7 +41,7 @@ import lombok.Setter;
 public class CricketTable extends View {
 
     private static final String TAG = "CricketTable";
-    private static final float CLICK_PERCENT = 0.5f;
+    private static final float CLICK_PERCENT = 0.4f;
     public static final List<Integer> ALL_NUMBERS = List.of(20, 1, 18, 4, 13, 6, 10, 15, 2, 17, 3, 19, 7, 16, 8, 11, 14, 9, 12, 5);
     private List<Integer> activeNumbers = CricketSettings.defaultNumbers;
     private final Paint paint = new Paint();
@@ -208,7 +208,7 @@ public class CricketTable extends View {
             lastTouchValue = BULL;
             return super.onTouchEvent(event);
         }
-        if (distance <= radius * CLICK_PERCENT && distance > radius) {
+        if (distance <= radius * CLICK_PERCENT || distance > radius) {
             lastTouchValue = INVALID;
             return true;
         }

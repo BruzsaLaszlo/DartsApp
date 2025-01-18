@@ -29,12 +29,9 @@ public class Stat {
                 .filter(not(CricketThrow::isRemoved))
                 .collect(
                         () -> new EnumMap<>(of(TEAM1, 0, TEAM2, 0)),
-                        (teamMapMap, cricketThrow) -> {
-                            int addScore = addThrow(cricketThrow);
-                            teamMapMap.compute(
-                                    cricketThrow.getTeam(),
-                                    (team, score) -> score + addScore);
-                        },
+                        (teamMapMap, cricketThrow) -> teamMapMap.compute(
+                                cricketThrow.getTeam(),
+                                (team, score) -> score + addThrow(cricketThrow)),
                         Map::putAll
                 );
     }
@@ -63,12 +60,12 @@ public class Stat {
     }
 
     public boolean isGameEnd() {
-        boolean player1ThrowAll = statMap.get(TEAM1).size() == 7 &&
+        boolean player1AllGot = statMap.get(TEAM1).size() == 7 &&
                 statMap.get(TEAM1).values().stream().allMatch(m -> m >= 3);
-        boolean player2ThrowAll = statMap.get(TEAM2).size() == 7 &&
+        boolean player2AllGot = statMap.get(TEAM2).size() == 7 &&
                 statMap.get(TEAM2).values().stream().allMatch(m -> m >= 3);
-        return (player1ThrowAll && scores.get(TEAM1) > scores.get(TEAM2)) ||
-                (player2ThrowAll && scores.get(TEAM2) > scores.get(TEAM1));
+        return (player1AllGot && scores.get(TEAM1) >= scores.get(TEAM2)) ||
+                (player2AllGot && scores.get(TEAM2) >= scores.get(TEAM1));
     }
 
 }

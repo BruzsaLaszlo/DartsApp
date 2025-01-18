@@ -11,11 +11,11 @@ import androidx.lifecycle.ViewModel;
 
 import java.util.Locale;
 import java.util.Map;
+import java.util.function.Consumer;
 
 import javax.inject.Inject;
 
 import bruzsa.laszlo.dartsapp.enties.Player;
-import bruzsa.laszlo.dartsapp.model.Team;
 import bruzsa.laszlo.dartsapp.model.home.AppSettings;
 import bruzsa.laszlo.dartsapp.model.singlex01.X01SingleService;
 import bruzsa.laszlo.dartsapp.model.x01.Stat;
@@ -56,7 +56,7 @@ public class SingleX01ViewModel extends ViewModel {
         this.webGuiServer = webGuiServer;
 
         score.setValue(startScore);
-        throwsAdapter = new X01ThrowAdapter(service.getThrowsList(), this::removeThrow, TEAM1);
+        throwsAdapter = new X01ThrowAdapter(service.getThrowsList(), this::removeThrow);
 
         updateWebGui(Stat.getEmptyStat(startScore));
     }
@@ -78,8 +78,8 @@ public class SingleX01ViewModel extends ViewModel {
         });
     }
 
-    public boolean removeThrow(X01Throw x01Throw, Team team) {
-        return service.removeThrow(x01Throw, this::updateGui);
+    public void removeThrow(X01Throw x01Throw, Context context, Consumer<Boolean> callback) {
+        service.removeThrow(x01Throw, this::updateGui);
     }
 
     private void updateGui(Stat stat) {
