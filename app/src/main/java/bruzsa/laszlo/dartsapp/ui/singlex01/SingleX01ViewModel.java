@@ -68,6 +68,8 @@ public class SingleX01ViewModel extends ViewModel {
             x01Checkout.getCheckoutDartsCount(throwValue, context, count -> {
                 if (Set.of(1, 2, 3).contains(count))
                     newThrow(throwValue, count);
+                else
+                    newThrow(0, 3);
             });
         } else {
             newThrow(throwValue, 3);

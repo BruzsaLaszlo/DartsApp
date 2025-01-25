@@ -107,6 +107,8 @@ public class X01ViewModel extends ViewModel {
             x01Checkout.getCheckoutDartsCount(throwValue, context, count -> {
                 if (Set.of(1, 2, 3).contains(count))
                     newThrow(throwValue, count, winnerTeam::setValue);
+                else
+                    newThrow(0, 3, winnerTeam::setValue);
             });
         } else {
             newThrow(throwValue, 3, winnerTeam::setValue);
