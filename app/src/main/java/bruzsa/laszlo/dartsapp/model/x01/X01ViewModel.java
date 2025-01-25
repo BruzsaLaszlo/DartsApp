@@ -15,6 +15,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
+import androidx.annotation.NonNull;
 import androidx.databinding.BindingAdapter;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
@@ -188,20 +189,28 @@ public class X01ViewModel extends ViewModel {
     private boolean changeThrow(X01Throw x01Throw, Context context, Integer newThrowValue) {
         boolean isRemoved = service.removeThrow(x01Throw);
         if (isRemoved)
-            if (newThrowValue == DELETE) return isRemoved;
+            if (newThrowValue == DELETE) {
+                refreshGui();
+                return isRemoved;
+            }
 
         if (isRemoved) {
             PlayersEnum current = activePlayer.getValue();
-            var player = playerMap.entrySet().stream()
-                    .filter(map -> x01Throw.getPlayerId().equals(map.getValue().getId()))
-                    .findFirst()
-                    .map(Map.Entry::getKey)
-                    .get();
+            var player = getPlayerByThrowId(x01Throw.getPlayerId());
             activePlayer.setValue(player);
             newThrow(newThrowValue, context);
             activePlayer.setValue(current);
         }
         return isRemoved;
+    }
+
+    @NonNull
+    private PlayersEnum getPlayerByThrowId(Long id) {
+        return playerMap.entrySet().stream()
+                .filter(map -> id.equals(map.getValue().getId()))
+                .findFirst()
+                .map(Map.Entry::getKey)
+                .get();
     }
 
 
