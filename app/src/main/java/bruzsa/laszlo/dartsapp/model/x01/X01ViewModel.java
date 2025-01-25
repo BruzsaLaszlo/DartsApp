@@ -24,6 +24,7 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import java.util.EnumMap;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Set;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
 
@@ -103,8 +104,10 @@ public class X01ViewModel extends ViewModel {
 
     public void newThrow(int throwValue, Context context) {
         if (service.isCheckout(throwValue)) {
-            x01Checkout.getCheckoutDartsCount(throwValue, context, count ->
-                    newThrow(throwValue, count, winnerTeam::setValue));
+            x01Checkout.getCheckoutDartsCount(throwValue, context, count -> {
+                if (Set.of(1, 2, 3).contains(count))
+                    newThrow(throwValue, count, winnerTeam::setValue);
+            });
         } else {
             newThrow(throwValue, 3, winnerTeam::setValue);
         }

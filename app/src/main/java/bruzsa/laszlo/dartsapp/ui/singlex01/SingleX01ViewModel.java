@@ -11,6 +11,7 @@ import androidx.lifecycle.ViewModel;
 
 import java.util.Locale;
 import java.util.Map;
+import java.util.Set;
 import java.util.function.Consumer;
 
 import javax.inject.Inject;
@@ -64,7 +65,10 @@ public class SingleX01ViewModel extends ViewModel {
     @SuppressWarnings("ConstantConditions")
     public void newThrow(int throwValue, Context context) {
         if (score.getValue() == throwValue) {
-            x01Checkout.getCheckoutDartsCount(throwValue, context, count -> newThrow(throwValue, count));
+            x01Checkout.getCheckoutDartsCount(throwValue, context, count -> {
+                if (Set.of(1, 2, 3).contains(count))
+                    newThrow(throwValue, count);
+            });
         } else {
             newThrow(throwValue, 3);
         }
