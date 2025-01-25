@@ -1,31 +1,30 @@
 package bruzsa.laszlo.dartsapp.ui.webgui;
 
+import static java.util.Locale.US;
+
 import javax.inject.Inject;
+
+import bruzsa.laszlo.dartsapp.util.IpAddress;
 
 public class WebGuiServer {
 
     private final WebServer webServer;
-    public static final String DEFAULT_HTML = """
-            <!DOCTYPE html>
-            <html lang="hu">
-            <head>
-                <title>Darts</title>
-                <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
-                <meta http-equiv="refresh" content="1"/>
-            </head>
-            <body>
-                Nothing to show now...
-            </body>
-            </html>""";
+    private String host;
 
     @Inject
-    public WebGuiServer(WebServer webServer) {
+    public WebGuiServer(WebServer webServer, IpAddress ipAddress) {
         this.webServer = webServer;
-        webServer.setResponse(DEFAULT_HTML);
+        ipAddress.getIPv4Address().ifPresentOrElse(
+                hostIp -> host = String.format(US, "http://%s:%d", hostIp, webServer.getListeningPort()),
+                () -> host = "Can not find ip address");
+
     }
 
     public void setContent(String html) {
         webServer.setResponse(html);
     }
 
+    public String getHostIpAddress() {
+        return host;
+    }
 }

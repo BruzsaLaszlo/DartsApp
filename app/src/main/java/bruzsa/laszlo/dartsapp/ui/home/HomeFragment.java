@@ -9,7 +9,6 @@ import static bruzsa.laszlo.dartsapp.model.PlayersEnum.PLAYER_2_1;
 import static bruzsa.laszlo.dartsapp.model.PlayersEnum.PLAYER_2_2;
 import static bruzsa.laszlo.dartsapp.ui.home.HomeFragmentDirections.actionHomeFragmentToPlayerFragment;
 import static bruzsa.laszlo.dartsapp.ui.home.HomeFragmentDirections.actionHomeFragmentToSingleX01Fragment;
-import static bruzsa.laszlo.dartsapp.util.IpAddress.getIPv4Address;
 
 import android.annotation.SuppressLint;
 import android.content.pm.ActivityInfo;
@@ -180,14 +179,6 @@ public class HomeFragment extends Fragment {
             homeViewModel.getSettings().getX01Settings().setFirstToBestOf(homeViewModel.getSettings().getX01Settings().getFirstToBestOf().opposit());
             text.setText(homeViewModel.getSettings().getX01Settings().getFirstToBestOf().getLabel());
         }
-    }
-
-    public void setIpAddress(View v) {
-        if (v instanceof TextView t) t.setText("WebGUI: " + getIpAddress());
-    }
-
-    public String getIpAddress() {
-        return getIPv4Address(requireContext()).orElse("Can not find ip address");
     }
 
 }

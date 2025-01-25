@@ -363,8 +363,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="7dp"
             android:layout_marginBottom="8dp"
-            android:onClick="@{(v) -> fragment.setIpAddress(v)}"
-            android:text="@{fragment.ipAddress,default = @string/textipadress}"
+            android:text="@{homeViewModel.hostIpAddress,default = @string/textipadress}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
 
