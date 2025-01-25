@@ -283,11 +283,13 @@ public class X01ViewModel extends ViewModel {
                 .setMessage(format(US,
                         """
                                 %s %d %s
-                                Start from: %d
-                                WinByTwoClearLeg %s""",
+                                Start from %d
+                                WinByTwoClearLeg %s
+                                WebUI ip address:%n%s""",
                         settings.getFirstToBestOf(), settings.getCount(), settings.getMatchType(),
                         settings.getStartScore(),
-                        settings.isWinByTwoClearLeg()))
+                        settings.isWinByTwoClearLeg(),
+                        webGuiServer.getHostIpAddress()))
                 .setPositiveButton("OK", null)
                 .show();
     }
