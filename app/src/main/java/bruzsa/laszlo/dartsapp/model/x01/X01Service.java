@@ -69,8 +69,8 @@ public class X01Service {
     public PlayersEnum newThrow(int throwValue, int dartCount, Consumer<Team> onGameOverEvent) {
         partialThrow = null;
 
-        var actual = active;
-        Team team = actual.team;
+        var currentPlayer = active;
+        Team team = currentPlayer.team;
         X01TeamScores aPlayer = teamScores.get(team);
         X01TeamScores opponent = teamScores.get(team.opponent());
 
@@ -83,18 +83,18 @@ public class X01Service {
                 legCount,
                 dartCount,
                 checkedOut,
-                PlayersEnumMap.get(active).getId());
+                PlayersEnumMap.get(currentPlayer).getId());
         aPlayer.addThrow(newThrow);
         x01ThrowDao.insert(newThrow);
         Log.d(TAG, "newThrow: " + newThrow);
 
         if (checkedOut) {
             checkout(aPlayer, opponent, settings.getCount());
-            if (gameOver) onGameOverEvent.accept(active.team);
+            if (gameOver) onGameOverEvent.accept(currentPlayer.team);
         } else {
             active = active.nextPlayer(teamPlay);
         }
-        return actual;
+        return currentPlayer;
     }
 
     private void checkout(X01TeamScores aPlayer, X01TeamScores opponent, int maxLegSet) {
@@ -181,7 +181,7 @@ public class X01Service {
                 .getThrowsList()
                 .stream()
                 .anyMatch(X01Throw::isValid)
-                && teamScores.get(TEAM2)
+                || teamScores.get(TEAM2)
                 .getThrowsList()
                 .stream()
                 .anyMatch(X01Throw::isValid);
