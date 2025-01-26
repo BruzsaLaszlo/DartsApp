@@ -11,26 +11,20 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.google.android.material.dialog.MaterialAlertDialogBuilder;
-
 import java.util.List;
-import java.util.function.BiPredicate;
 
 import bruzsa.laszlo.dartsapp.R;
-import bruzsa.laszlo.dartsapp.model.Team;
 import bruzsa.laszlo.dartsapp.model.x01.X01Throw;
 
 public class X01ThrowAdapter extends RecyclerView.Adapter<X01ThrowAdapter.ViewHolder> {
 
     private final List<X01Throw> mDataSet;
-    private final BiPredicate<X01Throw, Team> removeCallback;
-    private final Team team;
+    private final OnChangeThrow onChangeThrow;
     private RecyclerView recyclerView;
 
-    public X01ThrowAdapter(List<X01Throw> mDataSet, BiPredicate<X01Throw, Team> removeCallback, Team team) {
+    public X01ThrowAdapter(List<X01Throw> mDataSet, OnChangeThrow onChangeThrow) {
         this.mDataSet = mDataSet;
-        this.removeCallback = removeCallback;
-        this.team = team;
+        this.onChangeThrow = onChangeThrow;
     }
 
     public void inserted() {
@@ -67,15 +61,12 @@ public class X01ThrowAdapter extends RecyclerView.Adapter<X01ThrowAdapter.ViewHo
         if (!viewHolder.throwTextView.hasOnClickListeners()) {
             viewHolder.throwTextView.setOnLongClickListener(v -> {
                 if (x01Throw.isNotRemoved()) {
-                    new MaterialAlertDialogBuilder(v.getContext())
-                            .setTitle("Delete: " + x01Throw)
-                            .setNegativeButton("CANCEL", null)
-                            .setPositiveButton("DELETE", (dialog, which) -> {
-                                if (removeCallback.test(x01Throw, team)) {
-                                    notifyItemChanged(position);
-                                }
-                            })
-                            .show();
+                    onChangeThrow.change(
+                            x01Throw,
+                            recyclerView.getContext(),
+                            changed -> {
+                                if (changed) notifyItemChanged(position);
+                            });
                 }
                 return true;
             });

@@ -8,11 +8,14 @@ import android.util.Log;
 
 import java.util.Optional;
 
-import bruzsa.laszlo.dartsapp.ui.webgui.WebServer;
+import lombok.RequiredArgsConstructor;
 
+@RequiredArgsConstructor
 public class IpAddress {
 
-    public static Optional<String> getIPv4Address(Context context) {
+    private final Context context;
+
+    public Optional<String> getIPv4Address() {
         var connectivityManager = context.getSystemService(Context.CONNECTIVITY_SERVICE);
         if (connectivityManager instanceof ConnectivityManager cm) {
             LinkProperties link = cm.getLinkProperties(cm.getActiveNetwork());
@@ -23,7 +26,7 @@ public class IpAddress {
                     .filter(linkAddress -> linkAddress.getAddress().getAddress().length == 4)
                     .findFirst()
                     .map(LinkAddress::toString)
-                    .map(s -> s.substring(0, s.indexOf("/")) + ":" + WebServer.WEBSERVER_DEFAULT_PORT);
+                    .map(s -> s.substring(0, s.indexOf("/")));
         }
         return Optional.empty();
     }

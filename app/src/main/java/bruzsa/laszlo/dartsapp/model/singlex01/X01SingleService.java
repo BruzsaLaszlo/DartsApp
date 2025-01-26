@@ -43,7 +43,7 @@ public class X01SingleService {
                 scores.getLegs(),
                 dartCount,
                 checkedOut,
-                scores.getPlayer1());
+                scores.getPlayer1().getId());
         scores.addThrow(newThrow);
         if (checkedOut) scores.wonLeg();
         onNewThrowListener.accept(scores.getLegs(), calculateStat());

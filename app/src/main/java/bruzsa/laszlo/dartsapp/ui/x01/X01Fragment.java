@@ -19,6 +19,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
 import bruzsa.laszlo.dartsapp.R;
+import bruzsa.laszlo.dartsapp.databinding.DialogSettingsBinding;
 import bruzsa.laszlo.dartsapp.databinding.FragmentX01Binding;
 import bruzsa.laszlo.dartsapp.model.Team;
 import bruzsa.laszlo.dartsapp.model.x01.X01ViewModel;
@@ -31,6 +32,8 @@ import dagger.hilt.android.AndroidEntryPoint;
 public class X01Fragment extends Fragment {
 
     private X01ViewModel viewModel;
+    private InputViews inputViews;
+
     private FragmentX01Binding binding;
     private final Permission permission = new Permission(this);
 
@@ -61,6 +64,15 @@ public class X01Fragment extends Fragment {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_x01, container, false);
         binding.setLifecycleOwner(getViewLifecycleOwner());
         binding.setViewModel(viewModel);
+
+        inputViews = new InputViews(permission, binding.includedInputs, this::showSettingsDialog);
+        binding.includedInputs.setInputViews(inputViews);
+        binding.includedInputs.setLifecycleOwner(getViewLifecycleOwner());
+        inputViews.setOnReadyAction(this::newThrow);
+        inputViews.setOnPartialResultAction(value -> viewModel.newPartialValue(value));
+
+        viewModel.getWinnerTeam().observe(getViewLifecycleOwner(), this::showGameOverScreen);
+
         return binding.getRoot();
     }
 
@@ -68,20 +80,25 @@ public class X01Fragment extends Fragment {
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        InputViews inputViews = new InputViews(permission, binding.includedInputs);
-        binding.includedInputs.setInputViews(inputViews);
-        binding.includedInputs.setLifecycleOwner(getViewLifecycleOwner());
-        inputViews.setOnReadyAction(this::newThrow);
-        inputViews.setOnPartialResultAction(value -> viewModel.newPartialValue(value));
-
         binding.listThrowsPlayer1.setLayoutManager(new LinearLayoutManager(getActivity(), VERTICAL, true));
         binding.listThrowsPlayer2.setLayoutManager(new LinearLayoutManager(getActivity(), VERTICAL, true));
-
-
     }
 
     private void newThrow(int value) {
-        viewModel.newThrow(value, this::showGameOverScreen, requireContext());
+        viewModel.newThrow(value, requireContext());
+        inputViews.textToSpeech(value);
+    }
+
+    private void showSettingsDialog() {
+        DialogSettingsBinding settingsDialog = DataBindingUtil.inflate(
+                getLayoutInflater(), R.layout.dialog_settings,
+                this.binding.constraintLayoutData, false);
+        settingsDialog.setLifecycleOwner(getViewLifecycleOwner());
+        settingsDialog.setInputViews(inputViews);
+        new MaterialAlertDialogBuilder(requireContext())
+                .setView(settingsDialog.inputSettingsDialog)
+                .setPositiveButton("OK", (dialog, which) -> dialog.cancel())
+                .show();
     }
 
     private void showGameOverScreen(Team winner) {

@@ -58,7 +58,10 @@ public class Stat {
                 (k, v) -> v == null ? value : v + value);
 
         if (max < value) max = value;
-        if (min > value) min = value;
+        if (value > 0
+                && startScore - sum > 80
+                && min > value)
+            min = value;
 
         if (value >= 100) plus100++;
         else if (value >= 60) plus60++;

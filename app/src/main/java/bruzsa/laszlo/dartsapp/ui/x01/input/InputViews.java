@@ -7,7 +7,6 @@ import static bruzsa.laszlo.dartsapp.ui.x01.input.InputType.VOICE;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.speech.SpeechRecognizer;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
@@ -31,41 +30,54 @@ import lombok.Getter;
 @SuppressWarnings("ConstantConditions")
 public class InputViews {
 
+    private static final String TAG = "InputViews";
     private Speech speech;
     @Getter
     private final MutableLiveData<InputType> inputType = new MutableLiveData<>(NUMPAD);
+    @Getter
+    private final MutableLiveData<Boolean> isTextToSpeechEnable = new MutableLiveData<>(true);
+    @Getter
+    private final MutableLiveData<Boolean> isSpeechRecognizerAvailable = new MutableLiveData<>();
     private final InputText inputText;
     private final ImageView imageMicrophone;
+    private final Runnable onChangeSettings;
 
-    public InputViews(Permission permission, InputViewsBinding bindingInputs) {
+    public void setInputType(InputType inputType) {
+        this.inputType.setValue(inputType);
+    }
+
+    public InputViews(Permission permission, InputViewsBinding bindingInputs, Runnable onChangeSettings) {
         inputText = bindingInputs.inputText;
         imageMicrophone = bindingInputs.imageMicrophone;
+        this.onChangeSettings = onChangeSettings;
         bindingInputs.numPad.setInputTextNumber(inputText);
         inicSpeech(permission);
     }
 
     @SuppressLint("ClickableViewAccessibility")
     private void inicSpeech(Permission permission) {
-        boolean recognitionAvailable = SpeechRecognizer.isRecognitionAvailable(permission.getContext());
-        if (recognitionAvailable) {
-            permission.checkAndRequestPermission(
-                    Speech.NEED_PERMISSION_AUDIO,
-                    granted -> {
-                        if (granted) {
-                            speech = Speech.build(
-                                    permission.getContext(),
-                                    this::onSpeechResult,
-                                    this::onSpeechError);
-                            imageMicrophone.setOnTouchListener(this::getOnTouchListener);
-                            inputType.setValue(loadInputType(permission.getContext()));
-                        } else {
+        permission.checkAndRequestPermission(
+                Speech.NEED_PERMISSION_AUDIO,
+                granted -> {
+                    if (granted) {
+                        speech = Speech.build(
+                                permission.getContext(),
+                                this::onSpeechResult,
+                                this::onSpeechError);
+                        imageMicrophone.setOnTouchListener(this::getOnTouchListener);
+                        inputType.setValue(loadInputType(permission.getContext()));
+                        isSpeechRecognizerAvailable.setValue(speech.isSpeechRecognizerAvailable());
+                        if (!speech.isSpeechRecognizerAvailable()) {
+                            Log.e("InputViews", "Speech recognition is not available!");
                             inputType.setValue(NUMPAD);
                         }
-                    });
-        } else {
-            Log.e("InputViews", "Speech recognition is not available!");
-            inputType.setValue(NUMPAD);
-        }
+                    } else {
+                        inputType.setValue(NUMPAD);
+                    }
+                });
+        inputType.observeForever(inputType -> Log.d(TAG, "InputType changed: " + inputType));
+        isTextToSpeechEnable.observeForever(isEnable -> Log.d(TAG, "TextToSpeech changed: " + isEnable));
+        isSpeechRecognizerAvailable.observeForever(isEnable -> Log.d(TAG, "isSpeechRecognizerAvailable: " + isEnable));
     }
 
     private boolean getOnTouchListener(View view, MotionEvent event) {
@@ -92,19 +104,7 @@ public class InputViews {
     }
 
     public boolean createAlertDialogChangeInputType(View view) {
-        if (speech == null) {
-            Log.e("onLongClick", "Speech is not available");
-            return true;
-        }
-
-        AlertDialog.Builder builder = new AlertDialog.Builder(view.getContext());
-        builder.setTitle("Control by : ");
-        builder.setItems(new CharSequence[]{"Numpad", "Voice"}, (dialog, which) -> {
-            if (which == 0) setInputToNumPad();
-            else setInputToVoice();
-            saveInputType(inputType.getValue(), view.getContext());
-        });
-        builder.create().show();
+        onChangeSettings.run();
         return true;
     }
 
@@ -188,5 +188,14 @@ public class InputViews {
             inputText.setHint(error);
             imageMicrophone.setImageResource(R.drawable.mute);
         }
+    }
+
+    public void textToSpeech(int value) {
+        if (speech != null && isTextToSpeechEnable.getValue())
+            speech.textToSpeech(String.valueOf(value));
+    }
+
+    public boolean isTextToSpeechAvailable() {
+        return speech != null && speech.isTextToSpeechAvailable();
     }
 }

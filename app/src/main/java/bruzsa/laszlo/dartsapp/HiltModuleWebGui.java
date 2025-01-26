@@ -10,6 +10,7 @@ import javax.inject.Singleton;
 import bruzsa.laszlo.dartsapp.ui.webgui.WebGuiServer;
 import bruzsa.laszlo.dartsapp.ui.webgui.WebServer;
 import bruzsa.laszlo.dartsapp.util.HtmlTemplateReader;
+import bruzsa.laszlo.dartsapp.util.IpAddress;
 import dagger.Module;
 import dagger.Provides;
 import dagger.hilt.InstallIn;
@@ -28,7 +29,7 @@ public class HiltModuleWebGui {
 
     @Provides
     @Singleton
-    public WebGuiServer getWebGuiServer() {
+    public WebGuiServer getWebGuiServer(@ApplicationContext Context context) {
         WebServer webServer = new WebServer();
         try {
             long t = System.currentTimeMillis();
@@ -37,7 +38,7 @@ public class HiltModuleWebGui {
         } catch (IOException e) {
             Log.e("WebServer", "startWebserver: WebServer can not start!", e);
         }
-        return new WebGuiServer(webServer);
+        return new WebGuiServer(webServer, new IpAddress(context));
     }
 
 

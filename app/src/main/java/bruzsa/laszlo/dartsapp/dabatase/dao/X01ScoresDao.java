@@ -1,4 +1,4 @@
-package bruzsa.laszlo.dartsapp.dao;
+package bruzsa.laszlo.dartsapp.dabatase.dao;
 
 import androidx.room.Dao;
 import androidx.room.Delete;
@@ -22,15 +22,15 @@ public interface X01ScoresDao {
     List<X01TeamScores> loadAllByIds(int[] teamScoreIds);
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    void insertAll(X01TeamScores... players);
+    void insertAll(X01TeamScores... x01TeamScoress);
 
     @Insert
-    void insert(X01TeamScores player);
+    void insert(X01TeamScores x01TeamScores);
 
     @Update
-    void update(X01TeamScores player);
+    void update(X01TeamScores x01TeamScores);
 
     @Delete
-    void delete(X01TeamScores team_score);
+    void delete(X01TeamScores x01TeamScores);
 
 }
