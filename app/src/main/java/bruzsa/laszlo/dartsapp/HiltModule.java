@@ -30,7 +30,7 @@ public class HiltModule {
         return Room
                 .databaseBuilder(context, AppDatabase.class, AppDatabase.DB_NAME)
                 .allowMainThreadQueries()
-                .fallbackToDestructiveMigration()
+                .fallbackToDestructiveMigrationOnDowngrade(true)
                 .build();
     }
 
