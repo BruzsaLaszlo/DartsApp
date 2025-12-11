@@ -56,7 +56,7 @@ public class Speech {
         textToSpeech = new TextToSpeech(context, status -> {
             Log.d(TAG, "Text-To-Speech: " + textToSpeech.getAvailableLanguages());
             if (status != TextToSpeech.ERROR) {
-                textToSpeech.setLanguage(new Locale(language.getCountryCode()));
+                textToSpeech.setLanguage(Locale.forLanguageTag(language.getCountryCode()));
             }
         });
 
@@ -140,7 +140,7 @@ public class Speech {
 
     public void setLanguage(Language language) {
         this.language = language;
-        textToSpeech.setLanguage(new Locale(language.getCountryCode()));
+        textToSpeech.setLanguage(Locale.forLanguageTag(language.getCountryCode()));
     }
 
     private Intent getSpeechRecognizerIntent() {
