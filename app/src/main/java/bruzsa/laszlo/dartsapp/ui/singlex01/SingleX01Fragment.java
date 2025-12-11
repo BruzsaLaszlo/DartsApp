@@ -61,7 +61,8 @@ public class SingleX01Fragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
 
-        InputViews inputViews = new InputViews(permission, binding.includedInputs);
+        InputViews inputViews = new InputViews(permission, binding.includedInputs, () -> {
+        }); //TODO
         binding.includedInputs.setInputViews(inputViews);
         binding.includedInputs.setLifecycleOwner(getViewLifecycleOwner());
         inputViews.setOnReadyAction(this::newThrow);
