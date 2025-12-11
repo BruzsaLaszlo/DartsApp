@@ -14,7 +14,7 @@ public class WebGuiServer {
     @Inject
     public WebGuiServer(WebServer webServer, IpAddress ipAddress) {
         this.webServer = webServer;
-        ipAddress.getIPv4Address().ifPresentOrElse(
+        ipAddress.getIPv4AddressAlternative().ifPresentOrElse(
                 hostIp -> host = String.format(US, "http://%s:%d", hostIp, webServer.getListeningPort()),
                 () -> host = "Can not find ip address");
 
