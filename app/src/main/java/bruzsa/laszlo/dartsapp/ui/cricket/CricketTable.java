@@ -2,6 +2,7 @@ package bruzsa.laszlo.dartsapp.ui.cricket;
 
 import static android.graphics.Color.BLACK;
 import static android.graphics.Color.GRAY;
+import static android.graphics.Color.RED;
 import static java.lang.Math.cos;
 import static java.lang.Math.sin;
 import static java.util.Collections.emptyList;
@@ -13,6 +14,7 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.Path;
 import android.graphics.Point;
 import android.graphics.RectF;
 import android.util.AttributeSet;
@@ -168,6 +170,17 @@ public class CricketTable extends View {
         Map<Integer, Integer> statMap = stat.getStatMap().get(team);
         activeNumbers.forEach(number -> {
             Integer count = statMap.get(number);
+            int position = ALL_NUMBERS.indexOf(number);
+
+            // text
+            Point textPoint = getPoint(position * DEGREE, (int) (radius - 5 * SIZE));
+            Paint textPaint = new Paint();
+            textPaint.setColor(RED);
+            textPaint.setTextSize(radius / 10);
+            if (number != BULL) {
+                drawText(canvas, position, String.valueOf(number), textPaint);
+            }
+
             if (count == null || count == 0 || count > 2) return;
             if (number == BULL) {
                 if (count == 2) {
@@ -175,7 +188,6 @@ public class CricketTable extends View {
                 }
                 canvas.drawCircle(circleCentreX - SIZE, circleCentreY, SIZE, paint);
             } else {
-                int position = ALL_NUMBERS.indexOf(number);
                 if (count == 2) {
                     Point point = getPoint(position * DEGREE, (int) (radius - 3 * SIZE));
                     canvas.drawCircle(point.x, point.y, SIZE, paint);
@@ -185,6 +197,33 @@ public class CricketTable extends View {
             }
         });
 
+    }
+
+    private void drawText(Canvas canvas, int position, String text, Paint paint) {
+        // Create a path for the text to follow the curve
+        Path textPath = new Path();
+        // The radius for the text path, placing it in the outer single-score area.
+        float textRadius = radius * 0.4f;
+        RectF arcRect = new RectF(circleCentreX - textRadius, circleCentreY - textRadius, circleCentreX + textRadius, circleCentreY + textRadius);
+
+        // Angle for the center of the text
+        final double angle = 2 * Math.PI / 20;
+        float centerAngleDegrees = (float) Math.toDegrees(angle * position - Math.PI / 2);
+
+        // Arc for the text path. The sector is 18 degrees. We'll use a slightly smaller arc.
+        float sweepAngle = 16.0f;
+        float startAngle = centerAngleDegrees - sweepAngle / 2;
+        textPath.addArc(arcRect, startAngle, sweepAngle);
+
+        // Center the text horizontally on the arc
+        float textWidth = paint.measureText(text);
+        float arcLength = (float) (Math.toRadians(sweepAngle) * textRadius);
+        float hOffset = (arcLength - textWidth) / 2;
+
+        // Center the text vertically. A negative vOffset moves the text up.
+        float vOffset = -paint.getTextSize() / 4;
+
+        canvas.drawTextOnPath(text, textPath, hOffset, vOffset, paint);
     }
 
     public Point getPoint(int degree, int margin) {
